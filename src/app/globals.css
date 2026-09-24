@@ -1,26 +1,128 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Design tokens from connect-crm/docs/ARCHITECTURE.md (prototype palette). */
+@theme {
+  --color-navy: #1b2c5c;
+  --color-navy-deep: #13204a;
+  --color-navy-soft: #eef1f8;
+  --color-saffron: #c9731c;
+  --color-brown: #8a4608;
+  --color-success: #1f7a4d;
+  --color-success-soft: #e4f2ea;
+  --color-maroon: #7a2e1f;
+  --color-maroon-soft: #f6ebe7;
+  --color-purple: #5b4b8a;
+  --color-purple-soft: #efecf6;
+  --color-store: #2f5d50;
+  --color-ground: #fbf7f0;
+  --color-sand: #f4efe6;
+  --color-card: #ffffff;
+  --color-line: #e8e0d2;
+  --color-ink: #1e1c18;
+  --color-muted: #5e5a52;
+  --color-danger: #b3261e;
+  --color-danger-soft: #fbeae8;
+  --color-warning: #8a4608;
+  --color-warning-soft: #fbf1e4;
+
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* Visible focus for keyboard users everywhere. */
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-navy) 55%, transparent);
+  outline-offset: 2px;
+}
+
+/* 44px minimum touch targets for controls. */
+@utility field-input {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  color: var(--color-ink);
+  &:disabled {
+    background: var(--color-sand);
+    color: var(--color-muted);
+  }
+}
+
+@utility btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 120ms, filter 120ms;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+@utility btn-primary {
+  background: var(--color-navy);
+  color: #fff;
+  &:hover:not(:disabled) {
+    background: var(--color-navy-deep);
+  }
+}
+@utility btn-secondary {
+  border: 1px solid var(--color-line);
+  background: #fff;
+  color: var(--color-navy);
+  &:hover:not(:disabled) {
+    background: var(--color-navy-soft);
+  }
+}
+@utility btn-danger {
+  border: 1px solid color-mix(in srgb, var(--color-danger) 35%, transparent);
+  background: #fff;
+  color: var(--color-danger);
+  &:hover:not(:disabled) {
+    background: var(--color-danger-soft);
+  }
+}
+@utility btn-success {
+  background: var(--color-success);
+  color: #fff;
+  &:hover:not(:disabled) {
+    filter: brightness(0.95);
+  }
+}
+@utility btn-purple {
+  background: var(--color-purple);
+  color: #fff;
+  &:hover:not(:disabled) {
+    filter: brightness(0.95);
+  }
+}
+@utility btn-maroon {
+  background: var(--color-maroon);
+  color: #fff;
+  &:hover:not(:disabled) {
+    filter: brightness(0.95);
+  }
 }
