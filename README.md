@@ -1,5 +1,12 @@
 # Connect Admin
 
+> **Scope (owner decision 2026-09-24): the event-day app only, for now.** Community Connect is
+> **connect-crm** (the admin portal for everything an organization manages) and
+> **connect-mobile** (the app for all members). This app is used only on event day — check-in,
+> the kitchen display, the day-of view — and grows only after those two have matured. New
+> features go to connect-crm or connect-mobile, not here. The other areas described below still
+> exist in the code but are managed in connect-crm.
+
 The operations console of the **Connect** community platform — used by the people who run
 programs, not by members. Jain Society of Houston (JSH) is tenant #1.
 
