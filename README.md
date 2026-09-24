@@ -91,3 +91,10 @@ tests/                     vitest
 - Bolis take **pledges** (never "bids").
 - Sends to all members need two different approvers (DB-enforced; the UI shows "Waiting for a
   second approver").
+
+## Deploy
+
+Every push to `main` builds this app and releases it on the DigitalOcean droplet
+(`.github/workflows/deploy.yml`, served on port 8081 until a domain is set). To redeploy
+without a code change: Actions › Deploy › Run workflow. Setup, secrets and
+troubleshooting: `docs/DEPLOY.md` in connect-crm.
