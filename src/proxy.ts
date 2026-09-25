@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/lib/database.types";
 import { readEnv } from "@/lib/env";
+import { requestIsHttps } from "@/lib/https";
 
 // Proxy (formerly "middleware" — renamed in Next.js 16) does two jobs:
 //  1. keeps the Supabase session cookie fresh on every navigation, and
@@ -28,6 +29,8 @@ export async function proxy(request: NextRequest) {
 
   const supabase = createServerClient<Database, "app">(env.supabaseUrl, env.supabaseAnonKey, {
     db: { schema: "app" },
+    // Secure session cookies whenever the request came over HTTPS (Caddy sets X-Forwarded-Proto).
+    cookieOptions: { secure: requestIsHttps(request.headers.get("x-forwarded-proto")) },
     cookies: {
       getAll() {
         return request.cookies.getAll();

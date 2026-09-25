@@ -102,6 +102,8 @@ tests/                     vitest
 ## Deploy
 
 Every push to `main` builds this app and releases it on the DigitalOcean droplet
-(`.github/workflows/deploy.yml`, served on port 8081 until a domain is set). To redeploy
+(`.github/workflows/deploy.yml`, served on `http://<droplet IP>:8081` until a domain is set, and over
+HTTPS on port 8444 — `https://<droplet IP>:8444`, `https://<portal domain>:8444` — once connect-crm's
+HTTPS is set up). To redeploy
 without a code change: Actions › Deploy › Run workflow. Setup, secrets and
 troubleshooting: `docs/DEPLOY.md` in connect-crm.

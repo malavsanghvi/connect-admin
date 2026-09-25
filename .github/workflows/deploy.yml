@@ -64,14 +64,27 @@ jobs:
           printf '%s\n' "$KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
           ssh-keyscan -T 15 "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
           ssh_() { ssh -i ~/.ssh/deploy -o BatchMode=yes "root@$HOST" "$@"; }
-          ssh_ "mkdir -p /tmp/connect-deploy"
-          scp -i ~/.ssh/deploy -o BatchMode=yes deploy/droplet-setup.sh deploy/release.sh "root@$HOST:/tmp/connect-deploy/"
+          # Its own upload directory: connect-crm deploys at the same time into /tmp/connect-deploy.
+          dir=/tmp/connect-deploy-$APP
+          ssh_ "mkdir -p $dir"
+          # e-https-admin: the Caddy site generator (a copy of connect-crm's) travels with release.sh.
+          scp -i ~/.ssh/deploy -o BatchMode=yes deploy/droplet-setup.sh deploy/release.sh deploy/caddy-sites.mjs "root@$HOST:$dir/"
           scp -i ~/.ssh/deploy -o BatchMode=yes "connect-$APP-$GITHUB_SHA.tgz" "root@$HOST:/tmp/"
-          ssh_ "bash /tmp/connect-deploy/droplet-setup.sh && bash /tmp/connect-deploy/release.sh $APP $GITHUB_SHA node 3001 '$SITE'"
+          # PORTAL_HTTPS=1: join the portal's HTTPS on this app's own port (8444) once connect-crm
+          # has set it up; until then nothing changes (docs/DEPLOY.md in connect-crm, "HTTPS for
+          # the event-day app"). http://<droplet IP>:8081 keeps working either way.
+          set -o pipefail   # a failed release must fail this step through the tee below
+          ssh_ "bash $dir/droplet-setup.sh && PORTAL_HTTPS=1 bash $dir/release.sh $APP $GITHUB_SHA node 3001 '$SITE'" | tee release.log
           echo "### Released $APP" >> "$GITHUB_STEP_SUMMARY"
+          https_port=$(sed -n 's/.* on HTTPS port \([0-9]*\).*/\1/p' release.log | tail -1)
           if [[ "$SITE" == :* ]]; then
             port=${SITE#:}
             if [ "$port" = 80 ]; then echo "Open http://$HOST" >> "$GITHUB_STEP_SUMMARY"; else echo "Open http://$HOST:$port" >> "$GITHUB_STEP_SUMMARY"; fi
           else
             echo "Open https://$SITE" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -n "$https_port" ]; then
+            echo "HTTPS: https://$HOST:$https_port and https://<portal domain>:$https_port (http:// sends there once the portal's HTTPS check confirms a name)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "HTTPS for this app is not set up yet: see the release log (it starts after connect-crm's HTTPS is set up)" >> "$GITHUB_STEP_SUMMARY"
           fi
