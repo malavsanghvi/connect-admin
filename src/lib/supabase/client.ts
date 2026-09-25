@@ -14,6 +14,8 @@ export function getBrowserClient() {
     const env = requireEnv();
     browserClient = createBrowserClient<Database, "app">(env.supabaseUrl, env.supabaseAnonKey, {
       db: { schema: "app" },
+      // Secure cookies on the HTTPS address (port 8444); plain ones on http://…:8081.
+      cookieOptions: { secure: typeof window !== "undefined" && window.location.protocol === "https:" },
     });
   }
   return browserClient;
