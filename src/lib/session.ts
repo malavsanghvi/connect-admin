@@ -6,6 +6,7 @@ import { computeAccess, type Access } from "@/lib/access";
 import { pickOpsEvent, scopedEventIdsForOps } from "@/lib/nav";
 import { friendlyError } from "@/lib/result";
 import { requireEnv } from "@/lib/env";
+import type { Json } from "@/lib/database.types";
 import { createClient, type ServerSupabase } from "@/lib/supabase/server";
 
 export type Center = {
@@ -14,6 +15,8 @@ export type Center = {
   name: string;
   short_name: string | null;
   time_zone: string;
+  /** centers.branding: the brand kit (logo and mark files) the header shows. */
+  branding: Json;
 };
 
 export type Viewer = {
@@ -55,7 +58,7 @@ export const getViewer = cache(async (): Promise<ViewerResult> => {
 
   const { data: center, error: centerError } = await supabase
     .from("centers")
-    .select("id, slug, name, short_name, time_zone")
+    .select("id, slug, name, short_name, time_zone, branding")
     .eq("slug", env.centerSlug)
     .maybeSingle();
   if (centerError) {
