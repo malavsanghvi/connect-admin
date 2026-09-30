@@ -889,6 +889,9 @@ export type Database = {
           created_at: string;
           updated_at: string;
           custom: Json;
+          active: boolean;
+          visible_from: string | null;
+          visible_until: string | null;
         };
         Insert: {
           id?: string;
@@ -906,6 +909,9 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           custom?: Json;
+          active?: boolean;
+          visible_from?: string | null;
+          visible_until?: string | null;
         };
         Update: {
           id?: string;
@@ -923,6 +929,9 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           custom?: Json;
+          active?: boolean;
+          visible_from?: string | null;
+          visible_until?: string | null;
         };
         Relationships: [];
       };
@@ -2128,6 +2137,10 @@ export type Database = {
           updated_at: string;
           event_number: string;
           custom: Json;
+          flyer_source: string | null;
+          flyer_prompt: string | null;
+          flyer_generated_at: string | null;
+          flyer_job_id: number | null;
         };
         Insert: {
           id?: string;
@@ -2166,6 +2179,10 @@ export type Database = {
           updated_at?: string;
           event_number?: string;
           custom?: Json;
+          flyer_source?: string | null;
+          flyer_prompt?: string | null;
+          flyer_generated_at?: string | null;
+          flyer_job_id?: number | null;
         };
         Update: {
           id?: string;
@@ -2204,6 +2221,10 @@ export type Database = {
           updated_at?: string;
           event_number?: string;
           custom?: Json;
+          flyer_source?: string | null;
+          flyer_prompt?: string | null;
+          flyer_generated_at?: string | null;
+          flyer_job_id?: number | null;
         };
         Relationships: [];
       };
@@ -4235,6 +4256,12 @@ export type Database = {
           options: Json;
           subtitle: string | null;
           custom: Json;
+          allow_recurring: boolean;
+          recurring_frequencies: string[];
+          notification_template_key: string | null;
+          active: boolean;
+          visible_from: string | null;
+          visible_until: string | null;
         };
         Insert: {
           id?: string;
@@ -4256,6 +4283,12 @@ export type Database = {
           options?: Json;
           subtitle?: string | null;
           custom?: Json;
+          allow_recurring?: boolean;
+          recurring_frequencies?: string[];
+          notification_template_key?: string | null;
+          active?: boolean;
+          visible_from?: string | null;
+          visible_until?: string | null;
         };
         Update: {
           id?: string;
@@ -4277,6 +4310,12 @@ export type Database = {
           options?: Json;
           subtitle?: string | null;
           custom?: Json;
+          allow_recurring?: boolean;
+          recurring_frequencies?: string[];
+          notification_template_key?: string | null;
+          active?: boolean;
+          visible_from?: string | null;
+          visible_until?: string | null;
         };
         Relationships: [];
       };
@@ -6625,6 +6664,7 @@ export type Database = {
           end_count: number | null;
           end_on: string | null;
           custom: Json;
+          opportunity_id: string | null;
         };
         Insert: {
           id?: string;
@@ -6648,6 +6688,7 @@ export type Database = {
           end_count?: number | null;
           end_on?: string | null;
           custom?: Json;
+          opportunity_id?: string | null;
         };
         Update: {
           id?: string;
@@ -6671,6 +6712,7 @@ export type Database = {
           end_count?: number | null;
           end_on?: string | null;
           custom?: Json;
+          opportunity_id?: string | null;
         };
         Relationships: [];
       };
@@ -9078,6 +9120,7 @@ export type Database = {
           p_end_count?: number;
           p_end_on?: string;
           p_special_day?: string;
+          p_opportunity?: string;
         };
         Returns: string;
       };
@@ -9279,6 +9322,19 @@ export type Database = {
         };
         Returns: { checked_in_at: string; household_label: string; lunch_slot_label: string }[];
       };
+      events_flyer_result: {
+        Args: {
+          p_event: string;
+        };
+        Returns: Json;
+      };
+      events_request_flyer: {
+        Args: {
+          p_event: string;
+          p_prompt: string;
+        };
+        Returns: Json;
+      };
       fail_checkout: {
         Args: {
           p_checkout: string;
@@ -9330,6 +9386,14 @@ export type Database = {
           p_center: string;
         };
         Returns: Json;
+      };
+      giving_row_visible: {
+        Args: {
+          p_active: boolean;
+          p_visible_from: string;
+          p_visible_until: string;
+        };
+        Returns: boolean;
       };
       golive_approval_status: {
         Args: {
@@ -9841,6 +9905,33 @@ export type Database = {
       };
       new_join_code: {
         Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
+      niva_ask: {
+        Args: {
+          p_center: string;
+          p_question: string;
+        };
+        Returns: string;
+      };
+      niva_import_pages: {
+        Args: {
+          p_center: string;
+          p_urls: string[];
+        };
+        Returns: number;
+      };
+      niva_import_status: {
+        Args: {
+          p_center: string;
+          p_limit?: number;
+        };
+        Returns: { job_id: number; url: string; status: string; attempts: number; last_error: string; result: Json; created_at: string; finished_at: string }[];
+      };
+      niva_regenerate: {
+        Args: {
+          p_id: string;
+        };
         Returns: string;
       };
       normalize_ein: {
