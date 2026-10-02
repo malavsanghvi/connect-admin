@@ -1,7 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { httpBaseUrl, portalUrl } from "@/lib/env";
-import { FLYER_LINK_SECONDS, flyerLoadError, flyerRef, flyerSourceLabel, portalFlyerLink } from "@/lib/logic/event-flyer";
+import {
+  FLYER_LINK_SECONDS,
+  FLYER_STALE_HINT,
+  flyerImageError,
+  flyerLoadError,
+  flyerRef,
+  flyerSourceLabel,
+  flyerUnsupported,
+  portalFlyerLink,
+} from "@/lib/logic/event-flyer";
 
 // The Server Action is exercised with its session and Next.js plumbing stubbed out, so the test can
 // read the exact payload it sends to app.events.
@@ -128,19 +137,49 @@ describe("portalUrl", () => {
 });
 
 describe("flyerLoadError", () => {
+  const notFound = { name: "StorageApiError", message: "Object not found", status: 400, statusCode: "404" };
   it("explains the usual storage failures in plain English", () => {
-    expect(flyerLoadError({ name: "StorageApiError", message: "Object not found", status: 400, statusCode: "404" })).toBe(
+    expect(flyerLoadError(notFound, true)).toBe(
       "Could not load the flyer — the image file wasn't found, or you don't have access to it. Make or change the flyer in the portal.",
     );
-    expect(flyerLoadError({ name: "StorageApiError", message: "jwt expired", status: 400, statusCode: "403" })).toMatch(/^Could not load the flyer — you don't have access to it, or your session has ended/);
-    expect(flyerLoadError({ name: "StorageUnknownError", message: "fetch failed" })).toBe(
+    expect(flyerLoadError({ name: "StorageApiError", message: "jwt expired", status: 400, statusCode: "403" }, true)).toMatch(
+      /^Could not load the flyer — you don't have access to it, or your session has ended/,
+    );
+    expect(flyerLoadError({ name: "StorageUnknownError", message: "fetch failed" }, true)).toBe(
       "Could not load the flyer — the file server can't be reached. Check your connection and try again.",
     );
-    expect(flyerLoadError(new Error("Something odd."))).toBe("Could not load the flyer — Something odd.");
-    expect(flyerLoadError(null)).toBe("Could not load the flyer — something went wrong. Please try again.");
+    expect(flyerLoadError(new Error("Something odd."), true)).toBe("Could not load the flyer — Something odd.");
+    expect(flyerLoadError(null, true)).toBe("Could not load the flyer — something went wrong. Please try again.");
+  });
+  it("points viewers who cannot edit the event at the people who can", () => {
+    expect(flyerLoadError(notFound, false)).toBe(
+      "Could not load the flyer — the image file wasn't found, or you don't have access to it. Ask the event lead or an event manager to make or change it in the portal.",
+    );
   });
   it("signs for ten minutes", () => {
     expect(FLYER_LINK_SECONDS).toBe(600);
+  });
+});
+
+describe("flyer card wording", () => {
+  it("explains a saved value the console can't show, by role", () => {
+    expect(flyerUnsupported(true)).toBe(
+      "Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Connect). Make or change the flyer in the portal to replace it.",
+    );
+    expect(flyerUnsupported(false)).toBe(
+      "Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Connect). Ask the event lead or an event manager to make or change it in the portal to replace it.",
+    );
+  });
+  it("explains an image that does not load in the browser, by role", () => {
+    expect(flyerImageError(true)).toBe(
+      "Could not show the flyer image — the link may have expired or the file has moved. Try again, or make or change the flyer in the portal.",
+    );
+    expect(flyerImageError(false)).toBe(
+      "Could not show the flyer image — the link may have expired or the file has moved. Try again, or ask the event lead or an event manager to make or change it in the portal.",
+    );
+  });
+  it("reminds editors that the flyer keeps the details it was made with", () => {
+    expect(FLYER_STALE_HINT).toBe("The flyer shows the details from when it was made. After changing the name, date, time or venue, update it in the portal.");
   });
 });
 

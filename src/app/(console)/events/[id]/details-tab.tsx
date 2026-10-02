@@ -3,8 +3,9 @@ import { Card, DefinitionList } from "@/components/ui";
 import type { Tables } from "@/lib/database.types";
 import { portalUrl } from "@/lib/env";
 import { formatCents, formatDateTime, humanize } from "@/lib/format";
-import { FLYER_LINK_SECONDS, flyerSourceLabel, portalFlyerLink, type FlyerView } from "@/lib/logic/event-flyer";
+import { FLYER_LINK_SECONDS, FLYER_STALE_HINT, flyerImageError, flyerSourceLabel, portalFlyerLink, type FlyerView } from "@/lib/logic/event-flyer";
 import { EventForm } from "../event-form";
+import { FlyerImage } from "./flyer-image";
 
 let loggedNoPortalUrl = false;
 
@@ -39,19 +40,17 @@ function FlyerCard({ event, flyer, canEdit }: { event: Tables<"events">; flyer: 
         </div>
       )}
       {flyer.url ? (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={flyer.url} alt={`Flyer for ${event.name}`} className="w-full rounded-lg border border-line" />
-          {flyer.signed && (
-            <p className="mt-2 text-xs text-muted">
-              This preview link works for {Math.round(FLYER_LINK_SECONDS / 60)} minutes. If the image stops showing, reload the page.
-            </p>
-          )}
-        </>
+        <FlyerImage
+          src={flyer.url}
+          alt={`Flyer for ${event.name}`}
+          signedMinutes={flyer.signed ? Math.round(FLYER_LINK_SECONDS / 60) : null}
+          failedMessage={flyerImageError(canEdit)}
+        />
       ) : (
         !hasFlyer && <p className="text-sm text-muted">No flyer yet.</p>
       )}
       {label && <p className="mt-2 text-sm text-muted">{label}</p>}
+      {hasFlyer && canEdit && <p className="mt-2 text-sm text-muted">{FLYER_STALE_HINT}</p>}
       {canEdit &&
         (link ? (
           <a href={link} target="_blank" rel="noopener noreferrer" className="btn btn-secondary mt-3">

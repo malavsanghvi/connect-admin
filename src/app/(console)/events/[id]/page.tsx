@@ -6,7 +6,7 @@ import { Badge, LoadProblem, NoAccess, PageHeader, Tabs } from "@/components/ui"
 import { areas, can, hasScopedRole } from "@/lib/access";
 import { resolvePeopleNames } from "@/lib/data/people";
 import { formatDateTime, humanize } from "@/lib/format";
-import { FLYER_LINK_SECONDS, FLYER_UNSUPPORTED, flyerLoadError, flyerRef, type FlyerView } from "@/lib/logic/event-flyer";
+import { FLYER_LINK_SECONDS, flyerLoadError, flyerRef, flyerUnsupported, type FlyerView } from "@/lib/logic/event-flyer";
 import { getSupabase, load, LoadError, requireViewer, row } from "@/lib/session";
 import type { ServerSupabase } from "@/lib/supabase/server";
 import { setEventStatus } from "../actions";
@@ -49,13 +49,13 @@ const NEXT_STATUS: Record<string, { to: string; label: string; cls: string }[]> 
  * flyer_path is used as is. A failure is logged here and returned in plain English for the card,
  * so the rest of the page still loads.
  */
-async function loadFlyer(supabase: ServerSupabase, path: string | null): Promise<FlyerView> {
+async function loadFlyer(supabase: ServerSupabase, path: string | null, canEdit: boolean): Promise<FlyerView> {
   const ref = flyerRef(path);
   if (ref.kind === "url") return { url: ref.url, error: null };
   if (ref.kind === "none") {
     if (!path?.trim()) return { url: null, error: null };
     console.error("[load the flyer] flyer_path is neither an https link nor a storage key:", path);
-    return { url: null, error: FLYER_UNSUPPORTED, retry: false };
+    return { url: null, error: flyerUnsupported(canEdit), retry: false };
   }
   const res = await load(async () => {
     const signed = await supabase.storage
@@ -64,11 +64,11 @@ async function loadFlyer(supabase: ServerSupabase, path: string | null): Promise
       .catch((error: unknown) => {
         // storage-js returns its own errors; anything else (a network failure) is thrown.
         console.error(`[load the flyer] signing content/${ref.key} failed`, error);
-        throw new LoadError(flyerLoadError(error));
+        throw new LoadError(flyerLoadError(error, canEdit));
       });
     if (signed.error || !signed.data?.signedUrl) {
       console.error(`[load the flyer] signing content/${ref.key} failed`, signed.error ?? "no signed URL returned");
-      throw new LoadError(flyerLoadError(signed.error));
+      throw new LoadError(flyerLoadError(signed.error, canEdit));
     }
     return signed.data.signedUrl;
   });
@@ -101,7 +101,7 @@ export default async function EventPage({
   if (!res.ok) return <LoadProblem message={res.error} />;
   if (!res.data) notFound();
   const { event, names } = res.data;
-  const flyer: FlyerView = tab === "details" && event.flyer_path ? await loadFlyer(supabase, event.flyer_path) : { url: null, error: null };
+  const flyer: FlyerView = tab === "details" && event.flyer_path ? await loadFlyer(supabase, event.flyer_path, canEdit) : { url: null, error: null };
 
   return (
     <>

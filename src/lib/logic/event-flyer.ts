@@ -67,12 +67,34 @@ export function portalFlyerLink(base: string | null | undefined, eventId: string
   return `${b}/events/builder?event=${eventId}#flyer`;
 }
 
+/**
+ * What to do about a missing or broken flyer. Editors have the portal button on the card; viewers who
+ * cannot edit the event do not, so they are pointed at the people who can.
+ */
+function changeIt(canEdit: boolean): string {
+  return canEdit ? "make or change the flyer in the portal" : "ask the event lead or an event manager to make or change it in the portal";
+}
+
+function sentence(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 /** Shown when flyer_path holds something that is neither an https link nor a stored file. */
-export const FLYER_UNSUPPORTED =
-  "Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Connect). Make or change the flyer in the portal to replace it.";
+export function flyerUnsupported(canEdit: boolean): string {
+  return `Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Connect). ${sentence(changeIt(canEdit))} to replace it.`;
+}
+
+/** Shown when the image itself does not load in the browser (an expired link, or a file or host that is gone). */
+export function flyerImageError(canEdit: boolean): string {
+  return `Could not show the flyer image — the link may have expired or the file has moved. Try again, or ${changeIt(canEdit)}.`;
+}
+
+/** Shown to editors when there is a flyer: it keeps the words it was made with. */
+export const FLYER_STALE_HINT =
+  "The flyer shows the details from when it was made. After changing the name, date, time or venue, update it in the portal.";
 
 /** A failed attempt to sign the stored flyer, in plain English (the technical detail is logged separately). */
-export function flyerLoadError(error: unknown): string {
+export function flyerLoadError(error: unknown, canEdit: boolean): string {
   const e = (error && typeof error === "object" ? error : {}) as { message?: unknown; status?: unknown; statusCode?: unknown; name?: unknown };
   const msg = (typeof e.message === "string" ? e.message : error == null ? "" : String(error)).trim();
   const lower = msg.toLowerCase();
@@ -82,7 +104,7 @@ export function flyerLoadError(error: unknown): string {
   if (/jwt|unauthori[sz]ed|permission|row-level security|not allowed/.test(lower) || ["401", "403"].includes(status) || ["401", "403"].includes(code)) {
     reason = "you don't have access to it, or your session has ended. Sign in again, then try again";
   } else if (lower.includes("not found") || status === "404" || code === "404") {
-    reason = "the image file wasn't found, or you don't have access to it. Make or change the flyer in the portal";
+    reason = `the image file wasn't found, or you don't have access to it. ${sentence(changeIt(canEdit))}`;
   } else if (e.name === "StorageUnknownError" || /fetch failed|failed to fetch|network|econn|timed? ?out/.test(lower)) {
     reason = "the file server can't be reached. Check your connection and try again";
   } else {
