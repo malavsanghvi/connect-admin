@@ -44,7 +44,13 @@ function eventValues(fd: FormData, tz: string) {
   return {
     name: reqStr(fd, "name", "Event name"),
     description: str(fd, "description"),
-    flyer_path: str(fd, "flyer_path"),
+    // flyer_path / flyer_source / flyer_prompt / flyer_design are NOT written here (or anywhere in
+    // this app): they are owned by the portal's flyer maker in connect-crm
+    // (events/builder/flyer-actions.ts), which also stores and cleans up the files. Writing
+    // flyer_path from this form would put back the path read when the form was opened — a flyer
+    // changed in the portal since then would be overwritten, pointing at a file the portal may
+    // have removed — and clearing it here would leave flyer_source stale. Same rule as
+    // connect-crm's events/actions.ts saveEvent.
     venue: str(fd, "venue"),
     starts_at: startsAt,
     ends_at: endsAt,

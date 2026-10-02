@@ -46,3 +46,28 @@ export function requireEnv(): PublicEnv {
   if (!env) throw new MissingEnvError(missingEnv());
   return env;
 }
+
+/**
+ * An http(s) base URL — scheme, host and an optional path, no query or fragment — trimmed and
+ * without trailing slashes, or null when the value is anything else.
+ */
+export function httpBaseUrl(value: string | null | undefined): string | null {
+  const v = (value ?? "").trim().replace(/\/+$/, "");
+  if (!/^https?:\/\/[^\s/?#]+(\/[^\s?#]*)?$/i.test(v)) return null;
+  try {
+    const url = new URL(v);
+    return (url.protocol === "https:" || url.protocol === "http:") && url.hostname ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The Community Connect portal (connect-crm) this console links to — for example its flyer maker.
+ * Optional (not in REQUIRED_ENV): without it the console names the portal page in plain text.
+ * Set at build time from the repository variable PORTAL_PUBLIC_URL (.github/workflows/deploy.yml).
+ */
+export function portalUrl(): string | null {
+  // Referenced literally so Next.js inlines it at build time (see raw()).
+  return httpBaseUrl(process.env.NEXT_PUBLIC_PORTAL_URL);
+}

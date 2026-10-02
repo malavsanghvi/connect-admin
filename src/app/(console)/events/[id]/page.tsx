@@ -6,7 +6,9 @@ import { Badge, LoadProblem, NoAccess, PageHeader, Tabs } from "@/components/ui"
 import { areas, can, hasScopedRole } from "@/lib/access";
 import { resolvePeopleNames } from "@/lib/data/people";
 import { formatDateTime, humanize } from "@/lib/format";
-import { getSupabase, load, requireViewer, row } from "@/lib/session";
+import { FLYER_LINK_SECONDS, FLYER_UNSUPPORTED, flyerLoadError, flyerRef, type FlyerView } from "@/lib/logic/event-flyer";
+import { getSupabase, load, LoadError, requireViewer, row } from "@/lib/session";
+import type { ServerSupabase } from "@/lib/supabase/server";
 import { setEventStatus } from "../actions";
 import { ChecklistTab } from "./checklist-tab";
 import { DetailsTab } from "./details-tab";
@@ -41,6 +43,38 @@ const NEXT_STATUS: Record<string, { to: string; label: string; cls: string }[]> 
   cancelled: [{ to: "draft", label: "Restore as draft", cls: "btn btn-secondary" }],
 };
 
+/**
+ * The flyer image for the Details tab. A stored file is signed with the signed-in user's own
+ * session (admin users are members of the centre, so storage RLS lets them read it); an https
+ * flyer_path is used as is. A failure is logged here and returned in plain English for the card,
+ * so the rest of the page still loads.
+ */
+async function loadFlyer(supabase: ServerSupabase, path: string | null): Promise<FlyerView> {
+  const ref = flyerRef(path);
+  if (ref.kind === "url") return { url: ref.url, error: null };
+  if (ref.kind === "none") {
+    if (!path?.trim()) return { url: null, error: null };
+    console.error("[load the flyer] flyer_path is neither an https link nor a storage key:", path);
+    return { url: null, error: FLYER_UNSUPPORTED, retry: false };
+  }
+  const res = await load(async () => {
+    const signed = await supabase.storage
+      .from("content")
+      .createSignedUrl(ref.key, FLYER_LINK_SECONDS)
+      .catch((error: unknown) => {
+        // storage-js returns its own errors; anything else (a network failure) is thrown.
+        console.error(`[load the flyer] signing content/${ref.key} failed`, error);
+        throw new LoadError(flyerLoadError(error));
+      });
+    if (signed.error || !signed.data?.signedUrl) {
+      console.error(`[load the flyer] signing content/${ref.key} failed`, signed.error ?? "no signed URL returned");
+      throw new LoadError(flyerLoadError(signed.error));
+    }
+    return signed.data.signedUrl;
+  });
+  return res.ok ? { url: res.data, error: null, signed: true } : { url: null, error: res.error };
+}
+
 export default async function EventPage({
   params,
   searchParams,
@@ -67,6 +101,7 @@ export default async function EventPage({
   if (!res.ok) return <LoadProblem message={res.error} />;
   if (!res.data) notFound();
   const { event, names } = res.data;
+  const flyer: FlyerView = tab === "details" && event.flyer_path ? await loadFlyer(supabase, event.flyer_path) : { url: null, error: null };
 
   return (
     <>
@@ -124,7 +159,9 @@ export default async function EventPage({
         </div>
       )}
       <Tabs active={tab} tabs={TABS.map((t) => ({ key: t.key, label: t.label, href: `/events/${event.id}?tab=${t.key}` }))} />
-      {tab === "details" && <DetailsTab event={event} canEdit={canEdit} tz={tz} ownerName={event.owner_person_id ? (names.get(event.owner_person_id) ?? null) : null} />}
+      {tab === "details" && (
+        <DetailsTab event={event} canEdit={canEdit} tz={tz} ownerName={event.owner_person_id ? (names.get(event.owner_person_id) ?? null) : null} flyer={flyer} />
+      )}
       {tab === "checklist" && <ChecklistTab event={event} viewer={v} />}
       {tab === "rsvps" && <RsvpsTab event={event} viewer={v} status={typeof sp.rsvp === "string" ? sp.rsvp : null} />}
       {tab === "volunteers" && <VolunteersTab event={event} viewer={v} />}

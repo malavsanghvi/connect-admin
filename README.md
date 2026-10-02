@@ -47,6 +47,7 @@ If a required variable is missing, every page redirects to `/setup`, which lists
 | `NEXT_PUBLIC_SUPABASE_URL` | yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes | Anon (public) key. Never the service-role key. |
 | `NEXT_PUBLIC_CENTER_SLUG` | no | `app.centers.slug` this console serves (default `jsh`) |
+| `NEXT_PUBLIC_PORTAL_URL` | no | The Community Connect portal (connect-crm), e.g. `https://portal.example.org`. An event's Details tab links to the portal's flyer maker (`/events/builder?event=<id>#flyer`); without it the page names it in plain text. The deploy sets it from the repository variable `PORTAL_PUBLIC_URL`. |
 
 `NEXT_PUBLIC_*` values are inlined at build time — rebuild after changing them.
 
