@@ -46,9 +46,6 @@ export function EventForm({
             <Field label="Pathshala year" hint="Only for Pathshala events, e.g. 2026-2027">
               <input name="program_year" defaultValue={event?.program_year ?? ""} className="field-input" />
             </Field>
-            <Field label="Flyer" hint="Storage path or https:// link to the flyer image">
-              <input name="flyer_path" defaultValue={event?.flyer_path ?? ""} className="field-input" />
-            </Field>
             <PersonPicker name="owner_person_id" label="Owner (event lead)" initial={owner ? [owner] : []} />
             <Field label="Description" className="sm:col-span-2">
               <textarea name="description" rows={4} defaultValue={event?.description ?? ""} className="field-input" />
