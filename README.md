@@ -7,8 +7,11 @@
 > features go to connect-crm or connect-mobile, not here. The other areas described below still
 > exist in the code but are managed in connect-crm.
 
-The operations console of the **Connect** community platform — used by the people who run
-programs, not by members. Jain Society of Houston (JSH) is tenant #1.
+The operations console of **Weaver**, a multi-tenant platform for associations and communities of
+every kind (congregations and temples of any faith, chambers of commerce, clubs and other non-profits)
+— used by the people who run programs, not by members. The areas below that name a tradition (Pathshala,
+bolis and the like) exist only for the organizations that have those modules. The Jain Society of Houston
+(JSH) was the first organization and is the example used in the docs and tests.
 
 | Who | What they do here |
 |---|---|
