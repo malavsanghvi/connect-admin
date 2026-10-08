@@ -137,7 +137,7 @@ async function syncTeacherGrant(
 ): Promise<string | null> {
   const adminHint =
     mode === "grant"
-      ? "Their access to this class in Connect Admin must be granted by a center admin (role: Teacher, scoped to this class)."
+      ? "Their access to this class in Weaver Admin must be granted by a center admin (role: Teacher, scoped to this class)."
       : "Ask a center admin to end their Teacher role for this class.";
   if (!can(access, "roles.manage")) return adminHint;
   const { data: cu, error: cuError } = await supabase
@@ -177,7 +177,7 @@ async function syncTeacherGrant(
       console.error("[pathshala] granting teacher role failed", error);
       return "Their class access could not be granted automatically. " + adminHint;
     }
-    return "They can now open this class in Connect Admin.";
+    return "They can now open this class in Weaver Admin.";
   }
   const { error } = await supabase
     .from("role_grants")

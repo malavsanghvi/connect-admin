@@ -6,7 +6,7 @@ const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], dis
 const dmSans = DM_Sans({ variable: "--font-dm-sans", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Connect Admin", template: "%s · Connect Admin" },
+  title: { default: "Weaver Admin", template: "%s · Weaver Admin" },
   description: "Operations console for Pathshala, events and community programs.",
 };
 

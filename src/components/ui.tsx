@@ -130,7 +130,7 @@ export function NoAccess({ area, children }: { area?: string; children?: ReactNo
       <h1 className="mt-1 font-display text-2xl font-semibold">You don&apos;t have access to this area</h1>
       <p className="mt-2 text-sm text-muted">
         {children ??
-          `Your role doesn't include ${area ? area : "this part of Connect Admin"}. If you need it, ask your center admin or the office to grant the right role.`}
+          `Your role doesn't include ${area ? area : "this part of Weaver Admin"}. If you need it, ask your center admin or the office to grant the right role.`}
       </p>
       <Link href="/" className="btn btn-secondary mt-4">
         Go to my home
