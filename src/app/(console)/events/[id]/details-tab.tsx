@@ -59,7 +59,7 @@ function FlyerCard({ event, flyer, canEdit }: { event: Tables<"events">; flyer: 
           </a>
         ) : (
           <p className="mt-3 text-sm text-muted">
-            To make or change the flyer: Open the Community Connect portal › Events › this event › Event builder › Flyer maker
+            To make or change the flyer: Open the Weaver portal › Events › this event › Event builder › Flyer maker
           </p>
         ))}
     </Card>

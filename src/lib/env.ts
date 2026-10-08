@@ -63,7 +63,7 @@ export function httpBaseUrl(value: string | null | undefined): string | null {
 }
 
 /**
- * The Community Connect portal (connect-crm) this console links to — for example its flyer maker.
+ * The Weaver portal (connect-crm) this console links to — for example its flyer maker.
  * Optional (not in REQUIRED_ENV): without it the console names the portal page in plain text.
  * Set at build time from the repository variable PORTAL_PUBLIC_URL (.github/workflows/deploy.yml).
  */

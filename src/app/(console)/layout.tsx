@@ -18,7 +18,7 @@ export default async function ConsoleLayout({ children }: { children: React.Reac
     return (
       <div className="min-h-screen">
         <header className="bg-navy px-4 py-3 text-white">
-          <span className="font-display text-lg font-semibold">Connect Admin</span>
+          <span className="font-display text-lg font-semibold">Weaver Admin</span>
         </header>
         <main className="mx-auto max-w-3xl px-4 py-8">
           <LoadProblem message={res.error} />
@@ -29,7 +29,7 @@ export default async function ConsoleLayout({ children }: { children: React.Reac
 
   const v = res.viewer;
   const sections = buildNav(v.access, { opsEventId: v.opsEventId });
-  // The community's own logo, shown once someone is signed in (the browser tab keeps Community Connect's icon).
+  // The community's own logo, shown once someone is signed in (the browser tab keeps Weaver's icon).
   const brand = tenantBranding(v.center, requireEnv().supabaseUrl);
 
   return (
@@ -40,7 +40,7 @@ export default async function ConsoleLayout({ children }: { children: React.Reac
             <TenantMark branding={brand} name={v.center.name} size={44} />
             <span className="min-w-0">
               <span className="block truncate text-xs font-bold uppercase tracking-wider text-[#D7A15F]">{v.center.short_name ?? v.center.name}</span>
-              <span className="font-display text-xl font-semibold text-white">Connect Admin</span>
+              <span className="font-display text-xl font-semibold text-white">Weaver Admin</span>
             </span>
           </Link>
           <SideNav sections={sections} />

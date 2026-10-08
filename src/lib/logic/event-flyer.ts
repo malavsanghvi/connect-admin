@@ -1,4 +1,4 @@
-// The event flyer as this console shows it. Flyers are made in the Community Connect portal
+// The event flyer as this console shows it. Flyers are made in the Weaver portal
 // (connect-crm's flyer maker, which alone writes events.flyer_*); this app only shows the current
 // flyer and links there. Pure: no server imports, unit-tested in tests/event-flyer.test.ts.
 

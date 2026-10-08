@@ -16,7 +16,7 @@ export default async function SetupPage() {
   const missing = missingEnv();
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <p className="text-xs font-bold uppercase tracking-wider text-purple">Connect Admin</p>
+      <p className="text-xs font-bold uppercase tracking-wider text-purple">Weaver Admin</p>
       <h1 className="mt-1 font-display text-3xl font-semibold text-navy">Finish setting up</h1>
       {missing.length > 0 ? (
         <p className="mt-2 text-muted">

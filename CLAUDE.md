@@ -2,7 +2,7 @@
 
 ## Project context
 
-Connect Admin is the operations console of the Connect platform (tenant #1: Jain Society of
+Weaver Admin is the operations console of the Connect platform (tenant #1: Jain Society of
 Houston). Priorities, in order: **Pathshala** (classes, rosters, attendance, Gyan Path sign-offs,
 the committee / EAMS replacement) and **events** (RSVPs, checklists, phone-first check-in, lunch
 slots, kitchen display). Bolis, store, content, communications and volunteers follow.

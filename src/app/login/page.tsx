@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm">
-        <p className="text-xs font-bold uppercase tracking-wider text-purple">Connect Admin</p>
+        <p className="text-xs font-bold uppercase tracking-wider text-purple">Weaver Admin</p>
         <h1 className="mt-1 font-display text-3xl font-semibold text-navy">Sign in</h1>
         <p className="mt-2 text-sm text-muted">
           For Pathshala teachers and committee, event leads, volunteers and office staff. We&apos;ll email you a one-time
