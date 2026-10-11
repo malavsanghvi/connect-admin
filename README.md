@@ -20,7 +20,7 @@ bolis and the like) exist only for the organizations that have those modules. Th
 | Event leads | Event setup (RSVP window, flags, commitments, lunch slots), checklists, RSVPs, volunteer shifts, lunch "now serving", day-of report |
 | Check-in volunteers | `/ops/<event>/checkin` — station switcher (Entry / Food / Gifts), camera or keyboard-wedge scanner, member cards and legacy QR codes, walk-ins by phone, offline queue |
 | Kitchen lead | `/ops/<event>/kitchen` — large headcount-by-slot display and store orders due |
-| Religious coordinator, store lead, communications officer, content editors, volunteer coordinator | Bolis, Satvik Store, Content, Communications (two-approver sends), Volunteers |
+| Religious coordinator, store lead, communications officer, content editors, volunteer coordinator | Bolis, My Store, Content, Communications (two-approver sends), Volunteers |
 
 People only see the areas their role allows; Postgres RLS enforces every row regardless.
 A teacher lands on **My classes**; a check-in volunteer lands on their event's scanner.
