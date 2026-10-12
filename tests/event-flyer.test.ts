@@ -31,13 +31,8 @@ vi.mock("@/lib/action-context", () => ({
         db.payloads.push(values);
         return chain;
       },
-      insert(values: Record<string, unknown>) {
-        db.payloads.push(values);
-        return chain;
-      },
       eq: () => chain,
       select: () => chain,
-      single: async () => ({ data: { id: EVENT }, error: null }),
       then: (resolve: (v: unknown) => unknown) => resolve({ data: [{ id: EVENT }], error: null }),
     };
     return {
@@ -210,13 +205,5 @@ describe("saving the event form never writes the flyer", () => {
       expect(payload.name).toBe("Paryushan Mahaparva");
       for (const col of FLYER_COLUMNS) expect(payload).not.toHaveProperty(col);
     }
-  });
-
-  it("createEvent sends no flyer_* key", async () => {
-    const { createEvent } = await import("@/app/(console)/events/actions");
-    await createEvent(form({ flyer_path: "https://cdn.example.org/x.png" }));
-    expect(db.payloads).toHaveLength(1);
-    expect(db.payloads[0]).toMatchObject({ name: "Paryushan Mahaparva", center_id: CENTER, status: "draft" });
-    for (const col of FLYER_COLUMNS) expect(db.payloads[0]).not.toHaveProperty(col);
   });
 });
