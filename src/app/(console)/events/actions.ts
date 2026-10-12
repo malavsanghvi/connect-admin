@@ -1,7 +1,6 @@
 "use server";
 
 import { refresh } from "next/cache";
-import { redirect } from "next/navigation";
 import { can, hasScopedRole, type Access } from "@/lib/access";
 import { actionContext } from "@/lib/action-context";
 import type { TablesUpdate } from "@/lib/database.types";
@@ -83,21 +82,6 @@ function eventValues(fd: FormData, tz: string) {
     owner_person_id: str(fd, "owner_person_id"),
     confidential: bool(fd, "confidential"),
   };
-}
-
-export async function createEvent(fd: FormData): Promise<ActionResult<unknown>> {
-  return runAction("events.createEvent", "create the event", async () => {
-    const { supabase, centerId, viewer, tz } = await actionContext((a) => can(a, "events.manage"), "Only event managers can create events.");
-    const created = must(
-      await supabase
-        .from("events")
-        .insert({ ...eventValues(fd, tz), center_id: centerId, created_by: viewer.userId, status: "draft" })
-        .select("id")
-        .single(),
-      "create the event",
-    );
-    redirect(`/events/${created!.id}`);
-  });
 }
 
 export async function updateEvent(eventId: string, fd: FormData): Promise<ActionResult<unknown>> {

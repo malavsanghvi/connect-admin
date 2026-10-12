@@ -50,7 +50,7 @@ If a required variable is missing, every page redirects to `/setup`, which lists
 | `NEXT_PUBLIC_SUPABASE_URL` | yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes | Anon (public) key. Never the service-role key. |
 | `NEXT_PUBLIC_CENTER_SLUG` | no | `app.centers.slug` this console serves (default `jsh`) |
-| `NEXT_PUBLIC_PORTAL_URL` | no | The Weaver portal (connect-crm), e.g. `https://portal.example.org`. An event's Details tab links to the portal's flyer maker (`/events/builder?event=<id>#flyer`); without it the page names it in plain text. The deploy sets it from the repository variable `PORTAL_PUBLIC_URL`; after setting or changing that variable, re-run Actions › Deploy › Run workflow (or push to `main`), because the value is baked in at build time. |
+| `NEXT_PUBLIC_PORTAL_URL` | no | The Weaver portal (connect-crm), e.g. `https://portal.example.org`. An event's Details tab links to the portal's flyer maker (`/events/builder?event=<id>#flyer`), and New event links to the portal's guided event creator (`/events/new`); without it the pages name them in plain text. The deploy sets it from the repository variable `PORTAL_PUBLIC_URL`; after setting or changing that variable, re-run Actions › Deploy › Run workflow (or push to `main`), because the value is baked in at build time. |
 
 `NEXT_PUBLIC_*` values are inlined at build time — rebuild after changing them.
 
@@ -79,7 +79,7 @@ src/
     (console)/             signed-in shell with role-aware navigation
       pathshala/           overview, terms, classes (+ attendance), enrollments, my-classes,
                            signoffs, announcements, committee/{actions,templates,year,concerns,resolutions}
-      events/              list, new, [id]?tab=details|checklist|rsvps|volunteers|lunch|report
+      events/              list, new (links to the portal's event creator), [id]?tab=details|checklist|rsvps|volunteers|lunch|report
       bolis/ store/ content/ comms/ volunteers/
     ops/[eventId]/         phone-first volunteer mode: checkin/, kitchen/
     api/people, api/households   RLS-limited search for pickers
