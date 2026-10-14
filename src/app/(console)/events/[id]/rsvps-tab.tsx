@@ -46,20 +46,20 @@ export async function RsvpsTab({ event, viewer, status }: { event: Tables<"event
   return (
     <>
       <StatGrid>
-        <Stat label="RSVP'd people" value={report.rsvpdPeople} sub={`${report.householdsTotal - (report.households.cancelled ?? 0)} households`} tone="maroon" />
+        <Stat label="RSVP'd people" value={report.rsvpdPeople} sub={`${report.householdsTotal - (report.households.cancelled ?? 0)} households`} tone="brown" />
         <Stat label="Confirmed" value={report.confirmedPeople} sub={`of ${report.rsvpdPeople} RSVP'd`} tone="navy" />
         <Stat label="Checked in" value={report.checkedIn} sub={`${report.walkIns} walk-ins`} tone="success" />
         <Stat
           label="Flags"
           value={report.flags.childUnder12 + report.flags.senior + report.flags.assistance}
           sub={`${report.flags.childUnder12} under 12 · ${report.flags.senior} seniors · ${report.flags.assistance} assistance`}
-          tone="warning"
+          tone="brown"
         />
       </StatGrid>
       <div className="mb-4 flex flex-wrap gap-2">
         <Link
           href={`/events/${event.id}?tab=rsvps`}
-          className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold ${!status ? "border-maroon bg-maroon text-white" : "border-line bg-white text-maroon"}`}
+          className={`inline-flex min-h-tap-target items-center rounded-full border px-4 text-sm font-semibold ${!status ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
         >
           All ({rsvps.length})
         </Link>
@@ -67,7 +67,7 @@ export async function RsvpsTab({ event, viewer, status }: { event: Tables<"event
           <Link
             key={s}
             href={`/events/${event.id}?tab=rsvps&rsvp=${s}`}
-            className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold ${status === s ? "border-maroon bg-maroon text-white" : "border-line bg-white text-maroon"}`}
+            className={`inline-flex min-h-tap-target items-center rounded-full border px-4 text-sm font-semibold ${status === s ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
           >
             {statusLabel(s)} ({report.households[s]})
           </Link>
@@ -92,14 +92,14 @@ export async function RsvpsTab({ event, viewer, status }: { event: Tables<"event
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div className="min-w-0">
                           <p className="font-semibold">{label(r)}</p>
-                          <p className="text-xs text-muted">
+                          <p className="text-caption text-muted">
                             {people.length} {people.length === 1 ? "person" : "people"}
                             {r.source !== "app" ? ` · via ${humanize(r.source)}` : ""}
                             {r.guest_phone_e164 ? ` · ${r.guest_phone_e164}` : ""}
                             {r.commitment_mode && r.commitment_mode !== "none" ? ` · commitment ${humanize(r.commitment_mode)}` : ""}
                             {r.confirmed_at ? ` · confirmed ${formatDateTime(r.confirmed_at, tz)}` : ""}
                           </p>
-                          {flags.length > 0 && <p className="mt-1 text-xs font-semibold text-warning">Flags: {flags.join(", ")}</p>}
+                          {flags.length > 0 && <p className="mt-1 text-caption font-semibold text-warning-ink">Flags: {flags.join(", ")}</p>}
                         </div>
                         <Badge tone={r.status === "attended" ? "success" : r.status === "confirmed" ? "navy" : r.status === "cancelled" || r.status === "no_show" ? "danger" : "muted"}>
                           {statusLabel(r.status)}
@@ -162,7 +162,7 @@ export async function RsvpsTab({ event, viewer, status }: { event: Tables<"event
         {canEdit && (
           <div>
             <Card title="Add a guest RSVP" description="For people without the app — they are added as an admin RSVP.">
-              <ActionForm action={addGuestRsvp.bind(null, event.id)} submitLabel="Add RSVP" resetOnSuccess submitClassName="btn btn-maroon">
+              <ActionForm action={addGuestRsvp.bind(null, event.id)} submitLabel="Add RSVP" resetOnSuccess submitClassName="btn btn-primary">
                 <div className="space-y-3">
                   <Field label="Party name">
                     <input name="guest_name" className="field-input" placeholder="e.g. Shah family" />

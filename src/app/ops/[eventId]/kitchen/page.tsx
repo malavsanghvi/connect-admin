@@ -91,7 +91,7 @@ export default async function KitchenPage({ params }: { params: Promise<{ eventI
   return (
     <div className="space-y-4">
       <AutoRefresh seconds={20} timeZone={tz} />
-      <section className="rounded-2xl bg-success p-6 text-center text-white">
+      <section className="rounded-card bg-success p-6 text-center text-white">
         <p className="text-sm font-bold uppercase tracking-widest">Now serving</p>
         <p className="font-display text-6xl font-semibold">{serving ? formatTime(serving.starts_at, tz) : "—"}</p>
         {serving && (
@@ -102,27 +102,27 @@ export default async function KitchenPage({ params }: { params: Promise<{ eventI
         {next && <p className="mt-2 text-base opacity-90">Next: {formatTime(next.starts_at, tz)} · {next.assignedCount} people</p>}
       </section>
       <div className="grid grid-cols-3 gap-2 text-center">
-        <div className="rounded-xl bg-white p-3">
+        <div className="rounded-tile border border-line bg-white p-3">
           <p className="font-display text-3xl font-semibold">{checkedIn}</p>
-          <p className="text-xs text-muted">checked in</p>
+          <p className="text-caption text-muted">checked in</p>
         </div>
-        <div className="rounded-xl bg-white p-3">
+        <div className="rounded-tile border border-line bg-white p-3">
           <p className="font-display text-3xl font-semibold">{served}</p>
-          <p className="text-xs text-muted">served</p>
+          <p className="text-caption text-muted">served</p>
         </div>
-        <div className="rounded-xl bg-white p-3">
+        <div className="rounded-tile border border-line bg-white p-3">
           <p className="font-display text-3xl font-semibold">{noSlot}</p>
-          <p className="text-xs text-muted">no slot yet</p>
+          <p className="text-caption text-muted">no slot yet</p>
         </div>
       </div>
-      <section className="rounded-xl bg-white p-4">
+      <section className="rounded-card border border-line bg-white p-4">
         <h2 className="mb-2 font-display text-xl font-semibold">Headcount by slot</h2>
         {counts.length === 0 ? (
           <p className="text-sm text-muted">No lunch slots yet — they appear with the first check-in.</p>
         ) : (
           <ul className="divide-y divide-line">
             {counts.map((s) => (
-              <li key={s.id} className={`flex flex-wrap items-center justify-between gap-2 py-3 ${s.status === "now_serving" ? "bg-success-soft px-2" : ""}`}>
+              <li key={s.id} className={`flex flex-wrap items-center justify-between gap-2 py-3 ${s.status === "now_serving" ? "bg-success-50 px-2" : ""}`}>
                 <span className="text-2xl font-semibold">{formatTime(s.starts_at, tz)}</span>
                 <span className="text-lg">
                   <strong>{s.assignedCount}</strong>
@@ -130,19 +130,19 @@ export default async function KitchenPage({ params }: { params: Promise<{ eventI
                   <span className="ml-2 text-sm text-muted">{s.status === "done" ? "done" : s.status === "now_serving" ? "serving" : ""}</span>
                 </span>
                 {canRun && s.status !== "now_serving" && s.status !== "done" && (
-                  <ActionButton action={setSlotStatus.bind(null, eventId, s.id)} fields={{ status: "now_serving" }} label="Start serving" className="btn btn-success min-h-12" />
+                  <ActionButton action={setSlotStatus.bind(null, eventId, s.id)} fields={{ status: "now_serving" }} label="Start serving" className="btn btn-success min-h-14" />
                 )}
                 {canRun && s.status === "now_serving" && (
-                  <ActionButton action={setSlotStatus.bind(null, eventId, s.id)} fields={{ status: "done" }} label="Done" className="btn btn-secondary min-h-12" />
+                  <ActionButton action={setSlotStatus.bind(null, eventId, s.id)} fields={{ status: "done" }} label="Done" className="btn btn-secondary" />
                 )}
               </li>
             ))}
           </ul>
         )}
       </section>
-      <section className="rounded-xl bg-white p-4">
+      <section className="rounded-card border border-line bg-white p-4">
         <h2 className="mb-2 font-display text-xl font-semibold">Store orders due</h2>
-        {storeNote && <p className="mb-2 rounded-lg bg-warning-soft p-2 text-sm text-warning">{storeNote}</p>}
+        {storeNote && <p className="mb-2 rounded-tile bg-warning-50 p-2 text-sm text-warning-ink">{storeNote}</p>}
         {windows.length === 0 ? (
           <p className="text-sm text-muted">No pickup windows for this event or today.</p>
         ) : (
@@ -152,7 +152,7 @@ export default async function KitchenPage({ params }: { params: Promise<{ eventI
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">To prepare</h3>
                 <ul className="mb-3 grid grid-cols-2 gap-2">
                   {[...prep.entries()].map(([itemId, qty]) => (
-                    <li key={itemId} className="rounded-lg bg-sand p-2 text-lg">
+                    <li key={itemId} className="rounded-tile bg-track p-2 text-lg">
                       <strong>{qty}×</strong> {items.find((i) => i.id === itemId)?.name ?? "Item"}
                     </li>
                   ))}

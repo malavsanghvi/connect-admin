@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "brand:sync": "node scripts/sync-brand-tokens.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

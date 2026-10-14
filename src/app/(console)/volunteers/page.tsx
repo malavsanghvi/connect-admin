@@ -84,7 +84,7 @@ export default async function VolunteersPage({ searchParams }: { searchParams: P
                       <Link href={`/volunteers?tab=interests&group=${g.id}`} className="font-display text-lg font-semibold text-navy hover:underline">
                         {g.name}
                       </Link>
-                      <p className="text-xs text-muted">
+                      <p className="text-caption text-muted">
                         Coordinator: {g.coordinator_person_id ? (d.names.get(g.coordinator_person_id) ?? "assigned") : "not set"} · {mine.filter((i) => i.status === "active").length} active ·{" "}
                         {mine.filter((i) => i.status === "interested").length} interested
                       </p>
@@ -145,7 +145,7 @@ export default async function VolunteersPage({ searchParams }: { searchParams: P
                   <li key={i.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
                     <span>
                       <span className="font-semibold">{d.names.get(i.person_id) ?? "Volunteer"}</span>
-                      <span className="text-xs text-muted"> · {d.groups.find((g) => g.id === i.group_id)?.name}</span>
+                      <span className="text-caption text-muted"> · {d.groups.find((g) => g.id === i.group_id)?.name}</span>
                     </span>
                     <span className="flex flex-wrap items-center gap-2">
                       <Badge tone={i.status === "active" ? "success" : i.status === "interested" ? "warning" : "muted"}>{humanize(i.status)}</Badge>

@@ -7,7 +7,7 @@ import { centsToDollarsInput, formatCents, formatDateTime, formatTime, humanize,
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { moveOrder, recordMovement, saveCategory, saveItem, saveWindow } from "./actions";
 
-export const metadata: Metadata = { title: "My Store" };
+export const metadata: Metadata = { title: "My store" };
 
 const TABS = ["orders", "menu", "windows", "inventory"] as const;
 const NEXT_LABEL: Record<string, { to: string; label: string; cls: string }[]> = {
@@ -63,7 +63,7 @@ function ItemFields({ item, categories }: { item: Tables<"store_items"> | null; 
 
 export default async function StorePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const v = await requireViewer();
-  if (!areas.store(v.access)) return <NoAccess area="My Store" />;
+  if (!areas.store(v.access)) return <NoAccess area="My store" />;
   const sp = await searchParams;
   const tab = (TABS as readonly string[]).includes(String(sp.tab)) ? String(sp.tab) : "orders";
   const windowFilter = typeof sp.window === "string" ? sp.window : null;
@@ -101,7 +101,7 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
 
   return (
     <>
-      <PageHeader title="My Store" description="Sales, not giving: menu, pickup windows, orders and stock." />
+      <PageHeader title="My store" description="Sales, not giving: menu, pickup windows, orders and stock." />
       <Tabs active={tab} tabs={TABS.map((t) => ({ key: t, label: humanize(t), href: `/store?tab=${t}` }))} />
 
       {tab === "orders" && (
@@ -141,7 +141,7 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
                               <p className="font-semibold">#{o.order_number}</p>
                               <span className="font-semibold">{formatCents(o.total_cents)}</span>
                             </div>
-                            <p className="text-xs text-muted">
+                            <p className="text-caption text-muted">
                               {o.guest_name ?? "Member order"}
                               {o.placed_at ? ` · placed ${formatTime(o.placed_at, tz)}` : ""}
                             </p>
@@ -155,7 +155,7 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
                                   </li>
                                 ))}
                             </ul>
-                            {o.gift_message && <p className="mt-1 text-xs italic">“{o.gift_message}”</p>}
+                            {o.gift_message && <p className="mt-1 text-caption italic">“{o.gift_message}”</p>}
                             <div className="mt-3 flex flex-wrap gap-2">
                               {(NEXT_LABEL[o.status] ?? []).map((n) => (
                                 <ActionButton key={n.to} action={moveOrder.bind(null, o.id)} fields={{ to: n.to }} label={n.label} className={n.cls} />
@@ -231,7 +231,7 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
                           {formatDateTime(w.starts_at, tz)} – {formatTime(w.ends_at, tz)}
                           {w.location ? ` · ${w.location}` : ""}
                         </p>
-                        <p className="text-xs text-muted">
+                        <p className="text-caption text-muted">
                           Order by {formatDateTime(w.order_cutoff_at, tz)} · {w.orders_count}
                           {w.capacity ? ` of ${w.capacity}` : ""} orders
                           {w.event_id ? ` · ${events.find((e) => e.id === w.event_id)?.name ?? "event"}` : ""}

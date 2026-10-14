@@ -7,6 +7,7 @@ import { formatDate, todayIso } from "@/lib/format";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { placeEnrollment, saveEnrollmentNote, setEnrollmentStatus, waitlistEnrollment } from "../actions";
 import { TermSwitcher } from "../term-switcher";
+import { moduleLabels } from "@/lib/labels";
 
 export const metadata: Metadata = { title: "Enrollments" };
 
@@ -14,7 +15,7 @@ const STATUSES = ["requested", "waitlisted", "placed", "active", "withdrawn", "c
 
 export default async function EnrollmentsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const v = await requireViewer();
-  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area="Pathshala enrollments" />;
+  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area={`${moduleLabels(v.kind).school} enrollments`} />;
   const sp = await searchParams;
   const status = (STATUSES as readonly string[]).includes(String(sp.status)) ? String(sp.status) : "requested";
   const supabase = await getSupabase();
@@ -55,10 +56,10 @@ export default async function EnrollmentsPage({ searchParams }: { searchParams: 
 
   return (
     <>
-      <PageHeader kicker="Pathshala" accent="pathshala" title="Enrollments" description={term ? `Term ${term.name} · place each request into a class, waitlist or withdraw.` : undefined} />
+      <PageHeader kicker={moduleLabels(v.kind).school} accent="pathshala" title="Enrollments" description={term ? `Term ${term.name} · place each request into a class, waitlist or withdraw.` : undefined} />
       <TermSwitcher terms={terms} activeId={term?.id ?? null} basePath="/pathshala/enrollments" />
       {!term ? (
-        <EmptyState title="No Pathshala term yet" />
+        <EmptyState title="No term yet" />
       ) : (
         <>
           <Tabs
@@ -89,14 +90,14 @@ export default async function EnrollmentsPage({ searchParams }: { searchParams: 
                           </p>
                           {current && (
                             <p className="mt-1 text-sm">
-                              <Badge tone="purple">{e.status}</Badge> <span className="ml-1">{current.name}</span>
+                              <Badge tone="navy">{e.status}</Badge> <span className="ml-1">{current.name}</span>
                             </p>
                           )}
                           {e.notes && <p className="mt-1 text-sm">Note: {e.notes}</p>}
                         </div>
                         {canManage && (e.status === "requested" || e.status === "waitlisted" || e.status === "placed") && (
                           <div className="w-full max-w-md space-y-2">
-                            <ActionForm action={placeEnrollment.bind(null, e.id)} submitLabel={e.status === "placed" ? "Move" : "Place"} submitClassName="btn btn-purple" layout="stack">
+                            <ActionForm action={placeEnrollment.bind(null, e.id)} submitLabel={e.status === "placed" ? "Move" : "Place"} submitClassName="btn btn-primary" layout="stack">
                               <label className="block">
                                 <span className="mb-1 block text-sm font-semibold">Class</span>
                                 <select name="class_id" required defaultValue={e.class_id ?? suggested[0]?.id ?? ""} className="field-input">
@@ -119,7 +120,7 @@ export default async function EnrollmentsPage({ searchParams }: { searchParams: 
                                   </optgroup>
                                 </select>
                               </label>
-                              <label className="mt-1 flex min-h-11 items-center gap-2 text-sm">
+                              <label className="mt-1 flex min-h-tap-target items-center gap-2 text-sm">
                                 <input type="checkbox" name="over_capacity" className="h-5 w-5 accent-navy" /> Place even if full
                               </label>
                             </ActionForm>

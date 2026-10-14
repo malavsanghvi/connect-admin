@@ -101,7 +101,7 @@ export default async function CommsPage({ searchParams }: { searchParams: Promis
                       <Link href={`/comms/campaigns/${c.id}`} className="mt-2 block font-display text-lg font-semibold text-navy hover:underline">
                         {c.title}
                       </Link>
-                      <p className="text-xs text-muted">
+                      <p className="text-caption text-muted">
                         {describeAudience(c.audience, names)} · {c.channels.map(humanize).join(", ")}
                         {c.scheduled_at ? ` · ${c.status === "sent" ? "sent" : "sends"} ${formatDateTime(c.sent_at ?? c.scheduled_at, tz)}` : ""}
                       </p>
@@ -191,7 +191,7 @@ export default async function CommsPage({ searchParams }: { searchParams: Promis
                       <Link href={`/comms/surveys/${s.id}`} className="mt-2 block font-semibold text-navy hover:underline">
                         {s.title}
                       </Link>
-                      <p className="text-xs text-muted">
+                      <p className="text-caption text-muted">
                         {d.responses.filter((r) => r.survey_id === s.id).length} responses{s.anonymous ? " · anonymous" : ""}
                       </p>
                     </Card>
@@ -220,7 +220,7 @@ export default async function CommsPage({ searchParams }: { searchParams: Promis
                         <input type="datetime-local" name="closes_at" className="field-input" />
                       </Field>
                     </FormGrid>
-                    <label className="flex min-h-11 items-center gap-2 text-sm">
+                    <label className="flex min-h-tap-target items-center gap-2 text-sm">
                       <input type="checkbox" name="anonymous" className="h-5 w-5 accent-navy" /> Anonymous answers (no names stored)
                     </label>
                     <AudienceFields zones={d.options.zones} classes={d.options.classes} events={d.options.events} initial={{ all_members: true }} />
@@ -250,7 +250,7 @@ export default async function CommsPage({ searchParams }: { searchParams: Promis
                         </div>
                         <p className="mt-2 font-semibold">{a.title}</p>
                         <p className="text-sm">{a.body}</p>
-                        <p className="mt-1 text-xs text-muted">
+                        <p className="mt-1 text-caption text-muted">
                           {describeAudience(a.audience, names)} · {formatDateTime(a.starts_at, tz)}
                           {a.ends_at ? ` → ${formatDateTime(a.ends_at, tz)}` : ""}
                         </p>
@@ -340,7 +340,7 @@ function InboxTab({
       <Card title="Inboxes">
         <ul className="space-y-1">
           <li>
-            <Link href="/comms?tab=inbox" className={`flex min-h-11 items-center justify-between rounded-lg px-2 ${!current ? "bg-navy-soft font-semibold" : ""}`}>
+            <Link href="/comms?tab=inbox" className={`flex min-h-tap-target items-center justify-between rounded-tile px-2 ${!current ? "bg-navy-50 font-semibold" : ""}`}>
               All inboxes <span className="text-xs">{threads.filter((t) => t.status !== "closed").length}</span>
             </Link>
           </li>
@@ -348,7 +348,7 @@ function InboxTab({
             const n = threads.filter((t) => t.inbox_id === i.id && t.status !== "closed").length;
             return (
               <li key={i.id}>
-                <Link href={`/comms?tab=inbox&inbox=${i.id}`} className={`flex min-h-11 items-center justify-between rounded-lg px-2 ${current?.id === i.id ? "bg-navy-soft font-semibold" : ""}`}>
+                <Link href={`/comms?tab=inbox&inbox=${i.id}`} className={`flex min-h-tap-target items-center justify-between rounded-tile px-2 ${current?.id === i.id ? "bg-navy-50 font-semibold" : ""}`}>
                   {i.name} <span className="text-xs">{n}</span>
                 </Link>
               </li>
@@ -367,7 +367,7 @@ function InboxTab({
                   <Link href={`/comms/threads/${t.id}`} className="font-semibold text-navy hover:underline">
                     {t.subject ?? "(no subject)"}
                   </Link>
-                  <p className="text-xs text-muted">
+                  <p className="text-caption text-muted">
                     {t.from_person_id ? (names.get(t.from_person_id) ?? "Member") : (t.from_guest_contact ?? "Guest")} · {formatDateTime(t.created_at, tz)}
                     {!current ? ` · ${inboxes.find((i) => i.id === t.inbox_id)?.name ?? ""}` : ""}
                   </p>

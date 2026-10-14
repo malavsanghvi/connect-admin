@@ -20,7 +20,7 @@ export function AutoRefresh({ seconds = 20, timeZone }: { seconds?: number; time
     };
   }, [router, seconds, timeZone]);
   return (
-    <p className="text-xs text-muted" aria-live="off">
+    <p className="text-caption text-muted" aria-live="off">
       Updates every {seconds}s{stamp ? ` · last ${stamp}` : ""}
     </p>
   );

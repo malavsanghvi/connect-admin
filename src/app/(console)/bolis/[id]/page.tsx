@@ -9,8 +9,9 @@ import { formatCents, formatDateTime, humanize } from "@/lib/format";
 import { getSupabase, load, requireViewer, row, rows } from "@/lib/session";
 import { closeBoli, recordInPersonPledge, setBoliStatus } from "../actions";
 import { BoliForm } from "../boli-form";
+import { moduleLabels } from "@/lib/labels";
 
-export const metadata: Metadata = { title: "Boli" };
+export const metadata: Metadata = { title: "Event pledge" };
 
 export default async function BoliPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -60,7 +61,7 @@ export default async function BoliPage({ params }: { params: Promise<{ id: strin
         kicker={`Boli · ${boli.kind === "digital" ? "Digital" : "In person"}`}
         accent="events"
         title={boli.name}
-        back={{ href: "/bolis", label: "Bolis" }}
+        back={{ href: "/bolis", label: moduleLabels(v.kind).pledges }}
         description={
           <span className="flex flex-wrap items-center gap-2">
             <Badge tone={boli.status === "open" ? "success" : boli.status === "paused" ? "warning" : "muted"}>{humanize(boli.status)}</Badge>
@@ -70,10 +71,10 @@ export default async function BoliPage({ params }: { params: Promise<{ id: strin
       />
       {boli.status === "open" && <AutoRefresh seconds={15} timeZone={tz} />}
       <StatGrid>
-        <Stat label="Top pledge" value={top ? formatCents(top) : "None yet"} tone="maroon" />
+        <Stat label="Top pledge" value={top ? formatCents(top) : "None yet"} tone="brown" />
         <Stat label="Pledges" value={count} tone="navy" />
-        <Stat label="Next pledge at least" value={formatCents(minimum)} sub={`step ${formatCents(boli.step_cents)}`} tone="warning" />
-        <Stat label="Closes" value={closes ? formatDateTime(closes, tz) : "—"} sub={boli.extended_until ? "extended by a late pledge" : undefined} tone="purple" />
+        <Stat label="Next pledge at least" value={formatCents(minimum)} sub={`step ${formatCents(boli.step_cents)}`} tone="brown" />
+        <Stat label="Closes" value={closes ? formatDateTime(closes, tz) : "—"} sub={boli.extended_until ? "extended by a late pledge" : undefined} tone="navy" />
       </StatGrid>
       {winner && (
         <div className="mb-6">
@@ -85,10 +86,10 @@ export default async function BoliPage({ params }: { params: Promise<{ id: strin
       {manage && (
         <div className="mb-6 flex flex-wrap gap-2">
           {boli.status === "draft" && (
-            <ActionButton action={setBoliStatus.bind(null, boli.id)} fields={{ status: "open" }} label="Publish" className="btn btn-maroon" confirm="Publish this boli? Members can pledge once it opens." />
+            <ActionButton action={setBoliStatus.bind(null, boli.id)} fields={{ status: "open" }} label="Publish" className="btn btn-primary" confirm="Publish this boli? Members can pledge once it opens." />
           )}
           {boli.status === "open" && <ActionButton action={setBoliStatus.bind(null, boli.id)} fields={{ status: "paused" }} label="Pause" />}
-          {boli.status === "paused" && <ActionButton action={setBoliStatus.bind(null, boli.id)} fields={{ status: "open" }} label="Resume" className="btn btn-maroon" />}
+          {boli.status === "paused" && <ActionButton action={setBoliStatus.bind(null, boli.id)} fields={{ status: "open" }} label="Resume" className="btn btn-primary" />}
           {(boli.status === "open" || boli.status === "paused") && (
             <ActionButton
               action={closeBoli.bind(null, boli.id)}
@@ -118,7 +119,7 @@ export default async function BoliPage({ params }: { params: Promise<{ id: strin
                 </thead>
                 <tbody>
                   {entries.map((e) => (
-                    <tr key={e.id} className={e.id === boli.winner_entry_id ? "bg-success-soft" : undefined}>
+                    <tr key={e.id} className={e.id === boli.winner_entry_id ? "bg-success-50" : undefined}>
                       <td className={td}>{name(e)}</td>
                       <td className={`${td} font-semibold`}>{formatCents(e.amount_cents)}</td>
                       <td className={td}>{formatDateTime(e.entered_at, tz)}</td>
@@ -133,7 +134,7 @@ export default async function BoliPage({ params }: { params: Promise<{ id: strin
         <div className="space-y-6">
           {canRecord && boli.status !== "closed" && boli.status !== "settled" && (
             <Card title="Record in-person pledge">
-              <ActionForm action={recordInPersonPledge.bind(null, boli.id)} submitLabel="Record pledge" resetOnSuccess submitClassName="btn btn-maroon">
+              <ActionForm action={recordInPersonPledge.bind(null, boli.id)} submitLabel="Record pledge" resetOnSuccess submitClassName="btn btn-primary">
                 <div className="space-y-3">
                   <PersonPicker
                     name="household_id"

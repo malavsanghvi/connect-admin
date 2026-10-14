@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
+import { WeaverLogo } from "@/components/weaver-logo";
 import { missingEnv } from "@/lib/env";
 
 export const metadata: Metadata = { title: "Setup" };
@@ -16,13 +17,14 @@ export default async function SetupPage() {
   const missing = missingEnv();
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <p className="text-xs font-bold uppercase tracking-wider text-purple">Weaver Admin</p>
+      <WeaverLogo />
+      <p className="mt-8 text-eyebrow uppercase text-brown">Weaver Admin</p>
       <h1 className="mt-1 font-display text-3xl font-semibold text-navy">Finish setting up</h1>
       {missing.length > 0 ? (
         <p className="mt-2 text-muted">
           This console can&apos;t reach the database yet because {missing.length === 1 ? "one setting is" : "some settings are"} missing.
-          Add {missing.length === 1 ? "it" : "them"} to <code className="rounded bg-sand px-1">.env.local</code> (copy{" "}
-          <code className="rounded bg-sand px-1">.env.example</code>) or your hosting provider&apos;s environment, then rebuild.
+          Add {missing.length === 1 ? "it" : "them"} to <code className="rounded-chip bg-track px-1">.env.local</code> (copy{" "}
+          <code className="rounded-chip bg-track px-1">.env.example</code>) or your hosting provider&apos;s environment, then rebuild.
         </p>
       ) : (
         <p className="mt-2 text-muted">
@@ -33,14 +35,14 @@ export default async function SetupPage() {
         {VARS.map((v) => {
           const isMissing = missing.includes(v.name);
           return (
-            <li key={v.name} className="rounded-xl border border-line bg-card p-4">
+            <li key={v.name} className="rounded-card border border-line bg-white p-4">
               <div className="flex flex-wrap items-center gap-2">
                 <code className="break-all font-semibold">{v.name}</code>
                 <span
                   className={
                     isMissing
-                      ? "rounded-full bg-danger-soft px-2 text-xs font-semibold text-danger"
-                      : "rounded-full bg-success-soft px-2 text-xs font-semibold text-success"
+                      ? "rounded-full bg-danger-50 px-2 text-xs font-semibold text-danger"
+                      : "rounded-full bg-success-50 px-2 text-xs font-semibold text-success"
                   }
                 >
                   {isMissing ? "Missing" : v.required ? "Set" : "Optional"}

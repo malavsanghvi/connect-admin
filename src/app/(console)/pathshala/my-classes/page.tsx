@@ -6,13 +6,14 @@ import { loadTerms, pickTerm } from "@/lib/data/pathshala";
 import { formatDate, humanize, todayIso } from "@/lib/format";
 import { formatRate, latestClassDay, nextClassDay, summarizeAttendance } from "@/lib/logic/attendance";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
+import { moduleLabels } from "@/lib/labels";
 
 export const metadata: Metadata = { title: "My classes" };
 
 export default async function MyClassesPage() {
   const v = await requireViewer();
   if (!areas.teaches(v.access)) {
-    return <NoAccess>My classes is for Pathshala teachers. Your login doesn&apos;t have a teacher role for any class yet — ask the Pathshala principal.</NoAccess>;
+    return <NoAccess>My classes is for teachers. Your login doesn&apos;t have a teacher role for any class yet — ask the principal.</NoAccess>;
   }
   const supabase = await getSupabase();
   const today = todayIso(v.center.time_zone);
@@ -62,7 +63,7 @@ export default async function MyClassesPage() {
 
   return (
     <>
-      <PageHeader kicker="Pathshala" accent="pathshala" title="My classes" description={`Welcome, ${v.displayName}. Tap a class to take attendance.`} />
+      <PageHeader kicker={moduleLabels(v.kind).school} accent="pathshala" title="My classes" description={`Welcome, ${v.displayName}. Tap a class to take attendance.`} />
       {d.classes.length === 0 ? (
         <EmptyState title="No classes yet">You&apos;ll see your classes here once the principal assigns you.</EmptyState>
       ) : (
@@ -78,7 +79,7 @@ export default async function MyClassesPage() {
             const noClass = term?.no_class_dates.includes(day);
             return (
               <Card key={c.id}>
-                <p className="text-xs font-bold uppercase tracking-wider text-purple">{d.levels.find((l) => l.id === c.level_id)?.name ?? "Class"}</p>
+                <p className="text-eyebrow uppercase text-navy">{d.levels.find((l) => l.id === c.level_id)?.name ?? "Class"}</p>
                 <h2 className="font-display text-xl font-semibold">{c.name}</h2>
                 <p className="text-sm text-muted">
                   {humanize(c.meets_on)}
@@ -99,7 +100,7 @@ export default async function MyClassesPage() {
                   {pending > 0 && <Badge tone="navy">{pending} sign-off{pending === 1 ? "" : "s"} waiting</Badge>}
                 </div>
                 <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  <Link href={`/pathshala/classes/${c.id}/attendance?date=${day}`} className="btn btn-purple min-h-14 text-base">
+                  <Link href={`/pathshala/classes/${c.id}/attendance?date=${day}`} className="btn btn-primary min-h-14 text-base">
                     Take attendance
                   </Link>
                   <Link href={`/pathshala/classes/${c.id}`} className="btn btn-secondary min-h-14">
@@ -112,7 +113,7 @@ export default async function MyClassesPage() {
                     Announce to parents
                   </Link>
                 </div>
-                {next !== day && <p className="mt-2 text-xs text-muted">Next class: {formatDate(next)}</p>}
+                {next !== day && <p className="mt-2 text-caption text-muted">Next class: {formatDate(next)}</p>}
               </Card>
             );
           })}

@@ -30,7 +30,7 @@ export function FlyerImage({
 
   if (failedSrc === src) {
     return (
-      <div role="alert" className="rounded-lg border border-danger/30 bg-danger-soft p-3 text-sm text-danger">
+      <div role="alert" className="rounded-tile border border-danger/30 bg-danger-50 p-3 text-sm text-danger">
         <p>{failedMessage}</p>
         <div className="mt-2">
           <button
@@ -67,10 +67,10 @@ export function FlyerImage({
         ref={(img) => {
           if (img?.complete && img.naturalWidth === 0) setFailedSrc(src);
         }}
-        className="w-full rounded-lg border border-line"
+        className="w-full rounded-tile border border-line"
       />
       {signedMinutes !== null && (
-        <p className="mt-2 text-xs text-muted">This preview link works for {signedMinutes} minutes. If the image stops showing, reload the page.</p>
+        <p className="mt-2 text-caption text-muted">This preview link works for {signedMinutes} minutes. If the image stops showing, reload the page.</p>
       )}
     </>
   );

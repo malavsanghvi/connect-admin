@@ -150,7 +150,7 @@ async function syncTeacherGrant(
     console.error("[pathshala] teacher login lookup failed", cuError);
     return "We couldn't look up their login, so their class access was not changed. " + adminHint;
   }
-  if (!cu) return "They haven't signed in to Connect yet, so their class access will need to be granted after they do.";
+  if (!cu) return "They haven't signed in to Weaver yet, so their class access will need to be granted after they do.";
   if (mode === "grant") {
     const { data: existing, error: exError } = await supabase
       .from("role_grants")

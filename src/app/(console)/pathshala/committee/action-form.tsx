@@ -28,7 +28,7 @@ export function ActionEditor({
       action={action ? updateAction.bind(null, action.id) : createAction}
       submitLabel={action ? "Save action" : "Add action"}
       resetOnSuccess={!action}
-      submitClassName="btn btn-purple"
+      submitClassName="btn btn-primary"
     >
       {!action && openAfterCreate && <input type="hidden" name="then" value="open" />}
       <FormGrid>

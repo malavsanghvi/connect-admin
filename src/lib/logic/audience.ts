@@ -22,7 +22,7 @@ export function buildAudience(
       if (!input.zoneIds?.length) return { ok: false, error: "Choose at least one zone." };
       return { ok: true, audience: { zone_ids: input.zoneIds } };
     case "pathshala_class":
-      if (!input.classIds?.length) return { ok: false, error: "Choose at least one Pathshala class." };
+      if (!input.classIds?.length) return { ok: false, error: "Choose at least one class." };
       return { ok: true, audience: { pathshala_class_ids: input.classIds, include: "parents" } };
     case "event_rsvps":
       if (!input.eventId) return { ok: false, error: "Choose the event whose RSVPs should receive this." };
@@ -59,7 +59,7 @@ export function describeAudience(
   const list = (ids: unknown, m?: Map<string, string>) =>
     Array.isArray(ids) ? ids.map((id) => m?.get(String(id)) ?? "Unknown").join(", ") : "";
   if (Array.isArray(a.zone_ids)) return `Zone: ${list(a.zone_ids, names.zones)}`;
-  if (Array.isArray(a.pathshala_class_ids)) return `Pathshala parents: ${list(a.pathshala_class_ids, names.classes)}`;
+  if (Array.isArray(a.pathshala_class_ids)) return `Parents of students: ${list(a.pathshala_class_ids, names.classes)}`;
   if (typeof a.event_id === "string") return `RSVPs for ${names.events?.get(a.event_id) ?? "an event"}`;
   return "Custom segment";
 }

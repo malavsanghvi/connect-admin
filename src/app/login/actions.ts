@@ -21,7 +21,7 @@ export async function sendCode(formData: FormData): Promise<ActionResult<{ email
     const msg = error.message.toLowerCase();
     if (msg.includes("signups not allowed") || msg.includes("not found")) {
       return fail(
-        "We couldn't find a Connect login for that email. Use the email the office has on file, or ask the office to set you up.",
+        "We couldn't find a Weaver login for that email. Use the email the office has on file, or ask the office to set you up.",
       );
     }
     if (error.status === 429 || msg.includes("rate limit") || msg.includes("security purposes")) {

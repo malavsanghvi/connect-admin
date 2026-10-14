@@ -7,12 +7,13 @@ import { resolvePeopleNames } from "@/lib/data/people";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { TermSwitcher } from "../term-switcher";
 import { ClassForm } from "./class-form";
+import { moduleLabels } from "@/lib/labels";
 
-export const metadata: Metadata = { title: "Pathshala classes" };
+export const metadata: Metadata = { title: "Classes" };
 
 export default async function ClassesPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const v = await requireViewer();
-  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area="Pathshala classes" />;
+  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area={`${moduleLabels(v.kind).school} classes`} />;
   const sp = await searchParams;
   const supabase = await getSupabase();
   const res = await load(async () => {
@@ -40,7 +41,7 @@ export default async function ClassesPage({ searchParams }: { searchParams: Prom
 
   return (
     <>
-      <PageHeader kicker="Pathshala" accent="pathshala" title="Classes" description={term ? `Term ${term.name}` : "No term yet"} />
+      <PageHeader kicker={moduleLabels(v.kind).school} accent="pathshala" title="Classes" description={term ? `Term ${term.name}` : "No term yet"} />
       <TermSwitcher terms={terms} activeId={term?.id ?? null} basePath="/pathshala/classes" />
       {!term ? (
         <EmptyState title="Create a term first">
@@ -74,7 +75,7 @@ export default async function ClassesPage({ searchParams }: { searchParams: Prom
                             <Link href={`/pathshala/classes/${c.id}`} className="font-semibold text-navy hover:underline">
                               {c.name}
                             </Link>
-                            <div className="text-xs text-muted">{levels.find((l) => l.id === c.level_id)?.name}{c.room ? ` · ${c.room}` : ""}</div>
+                            <div className="text-caption text-muted">{levels.find((l) => l.id === c.level_id)?.name}{c.room ? ` · ${c.room}` : ""}</div>
                           </td>
                           <td className={td}>
                             {t.length ? t.map((x) => names.get(x.person_id) ?? "Teacher").join(", ") : <Badge tone="warning">Needs a teacher</Badge>}

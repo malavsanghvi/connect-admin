@@ -17,7 +17,7 @@ function PeriodControls({ id, kind, status, allowStart }: { id: string; kind: "c
   if (status === "not_started") {
     if (!allowStart) return <p className="text-sm text-muted">Voting can open once the comment period is closed.</p>;
     return (
-      <ActionForm action={act} submitLabel={kind === "comment" ? "Open comments" : "Open voting"} submitClassName="btn btn-purple">
+      <ActionForm action={act} submitLabel={kind === "comment" ? "Open comments" : "Open voting"} submitClassName="btn btn-primary">
         <input type="hidden" name="to" value="started" />
         <FormGrid>
           <Field label="Opens on">
@@ -138,9 +138,9 @@ export default async function ResolutionPage({ params }: { params: Promise<{ id:
             ) : (
               <ul className="space-y-3">
                 {comments.map((c) => (
-                  <li key={c.id} className="rounded-lg bg-sand p-3 text-sm">
+                  <li key={c.id} className="rounded-tile bg-track p-3 text-sm">
                     <p className="whitespace-pre-line">{c.body}</p>
-                    <p className="mt-1 text-xs text-muted">
+                    <p className="mt-1 text-caption text-muted">
                       {who(c.author_user)} · {formatDateTime(c.created_at, tz)}
                       {c.edited_at ? " · edited" : ""}
                     </p>
@@ -211,12 +211,12 @@ export default async function ResolutionPage({ params }: { params: Promise<{ id:
             )}
             {votingOpen && can(v.access, "governance.vote") && (
               <div className="mt-4">
-                <ActionForm action={castVote.bind(null, r.id)} submitLabel={myVote ? "Change my vote" : "Cast my vote"} submitClassName="btn btn-maroon">
+                <ActionForm action={castVote.bind(null, r.id)} submitLabel={myVote ? "Change my vote" : "Cast my vote"} submitClassName="btn btn-primary">
                   <fieldset>
                     <legend className="mb-2 text-sm font-semibold">{myVote ? `Your vote: ${myVote.vote}` : "Your vote"}</legend>
                     <div className="grid grid-cols-3 gap-2">
                       {(["yes", "no", "abstain"] as const).map((opt) => (
-                        <label key={opt} className="flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-line bg-white font-semibold has-[:checked]:border-navy has-[:checked]:bg-navy-soft">
+                        <label key={opt} className="flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-tile border-2 border-line-control bg-white font-semibold has-[:checked]:border-navy has-[:checked]:bg-navy-50">
                           <input type="radio" name="vote" value={opt} required defaultChecked={myVote?.vote === opt} className="h-5 w-5 accent-navy" />
                           {opt[0].toUpperCase() + opt.slice(1)}
                         </label>
@@ -246,7 +246,7 @@ export default async function ResolutionPage({ params }: { params: Promise<{ id:
                           <strong>{who(x.voter_user)}</strong>: {x.vote} · {formatDateTime(x.voted_at, tz)}
                           {x.reason ? ` — ${x.reason}` : ""}
                           {history.length > 0 && (
-                            <ul className="ml-4 text-xs text-muted">
+                            <ul className="ml-4 text-caption text-muted">
                               {history.map((h, i) => (
                                 <li key={i}>
                                   earlier: {h.vote} · {formatDateTime(h.voted_at, tz)}

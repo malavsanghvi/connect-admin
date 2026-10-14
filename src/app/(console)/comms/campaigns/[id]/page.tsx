@@ -107,7 +107,7 @@ export default async function CampaignPage({ params }: { params: Promise<{ id: s
       ) : (
         <Card title="Message">
           <p className="whitespace-pre-line text-sm">{c.body_md}</p>
-          <p className="mt-2 text-xs text-muted">Channels: {c.channels.map(humanize).join(", ")}</p>
+          <p className="mt-2 text-caption text-muted">Channels: {c.channels.map(humanize).join(", ")}</p>
         </Card>
       )}
     </>

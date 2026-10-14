@@ -6,14 +6,15 @@ import { loadTerms } from "@/lib/data/pathshala";
 import { formatCents, formatDate, formatDateTime } from "@/lib/format";
 import { getSupabase, load, requireViewer } from "@/lib/session";
 import { TermForm } from "./term-form";
+import { moduleLabels } from "@/lib/labels";
 
-export const metadata: Metadata = { title: "Pathshala terms" };
+export const metadata: Metadata = { title: "Terms" };
 
 const statusTone = { draft: "muted", registration: "navy", active: "success", closed: "neutral" } as const;
 
 export default async function TermsPage() {
   const v = await requireViewer();
-  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area="Pathshala terms" />;
+  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area={`${moduleLabels(v.kind).school} terms`} />;
   const supabase = await getSupabase();
   const res = await load(() => loadTerms(supabase, v.center.id));
   if (!res.ok) return <LoadProblem message={res.error} />;
@@ -22,7 +23,7 @@ export default async function TermsPage() {
 
   return (
     <>
-      <PageHeader kicker="Pathshala" accent="pathshala" title="Terms" description="Dates, registration window, fees and no-class days for each Pathshala year." />
+      <PageHeader kicker={moduleLabels(v.kind).school} accent="pathshala" title="Terms" description="Dates, registration window, fees and no-class days for each school year." />
       <Card title="All terms" className="mb-6">
         {res.data.length === 0 ? (
           <EmptyState title="No terms yet">{canEdit ? "Create one below." : "The principal hasn't set one up yet."}</EmptyState>
@@ -57,8 +58,8 @@ export default async function TermsPage() {
                     </td>
                     <td className={td}>
                       {formatCents(t.fee_per_child_cents)} per child
-                      {t.sibling_discount_pct > 0 && <div className="text-xs text-muted">{t.sibling_discount_pct}% sibling discount</div>}
-                      {t.fee_per_family_cap_cents !== null && <div className="text-xs text-muted">cap {formatCents(t.fee_per_family_cap_cents)}</div>}
+                      {t.sibling_discount_pct > 0 && <div className="text-caption text-muted">{t.sibling_discount_pct}% sibling discount</div>}
+                      {t.fee_per_family_cap_cents !== null && <div className="text-caption text-muted">cap {formatCents(t.fee_per_family_cap_cents)}</div>}
                     </td>
                     <td className={td}>{t.no_class_dates.length}</td>
                     <td className={td}>

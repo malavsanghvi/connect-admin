@@ -6,6 +6,7 @@ import { computeAccess, type Access } from "@/lib/access";
 import { pickOpsEvent, scopedEventIdsForOps } from "@/lib/nav";
 import { friendlyError } from "@/lib/result";
 import { requireEnv } from "@/lib/env";
+import { kindFromProfileResult, type KindProfile } from "@/lib/kind";
 import type { Json } from "@/lib/database.types";
 import { createClient, type ServerSupabase } from "@/lib/supabase/server";
 
@@ -26,6 +27,8 @@ export type Viewer = {
   personId: string | null;
   center: Center;
   access: Access;
+  /** The community's kind (app.category_profile): the source of its module names. The neutral kind when it cannot be read. */
+  kind: KindProfile;
   /** Event used for the ops links in the nav (event-scoped volunteers/leads). */
   opsEventId: string | null;
 };
@@ -72,7 +75,7 @@ export const getViewer = cache(async (): Promise<ViewerResult> => {
     };
   }
 
-  const [accountRes, cuRes, grantsRes, rolesRes] = await Promise.all([
+  const [accountRes, cuRes, grantsRes, rolesRes, kindRes] = await Promise.all([
     supabase.from("accounts").select("is_platform_admin").eq("user_id", user.id).maybeSingle(),
     supabase.from("center_users").select("person_id").eq("center_id", center.id).eq("user_id", user.id).maybeSingle(),
     supabase
@@ -81,6 +84,7 @@ export const getViewer = cache(async (): Promise<ViewerResult> => {
       .eq("center_id", center.id)
       .eq("user_id", user.id),
     supabase.from("roles").select("key, permissions"),
+    supabase.rpc("category_profile", { p_center: center.id }),
   ]);
   for (const [label, res] of [
     ["your account", accountRes],
@@ -93,6 +97,11 @@ export const getViewer = cache(async (): Promise<ViewerResult> => {
       return { status: "error", error: friendlyError(res.error, `load ${label}`) };
     }
   }
+
+  // The kind only decides wording (the module names in the nav): when it cannot be read the neutral kind is used and the
+  // problem is logged, so a failed lookup never makes the community look like one tradition. The database enforces access.
+  const loadedKind = kindFromProfileResult(kindRes);
+  if (loadedKind.status === "error") console.error("[viewer] could not read the community's kind (showing neutral module names)", kindRes.error);
 
   const access = computeAccess({
     grants: grantsRes.data ?? [],
@@ -125,7 +134,7 @@ export const getViewer = cache(async (): Promise<ViewerResult> => {
 
   return {
     status: "ok",
-    viewer: { userId: user.id, email: user.email ?? null, displayName, personId, center, access, opsEventId },
+    viewer: { userId: user.id, email: user.email ?? null, displayName, personId, center, access, kind: loadedKind.kind, opsEventId },
   };
 });
 

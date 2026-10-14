@@ -32,7 +32,7 @@ function GuideFields({ s }: { s: Tables<"guide_sections"> | null }) {
         </Field>
       </FormGrid>
       <Field label="Text (Markdown)" className="mt-3">
-        <textarea name="body_md" required rows={8} defaultValue={s?.body_md ?? ""} className="field-input font-mono text-sm" />
+        <textarea name="body_md" required rows={8} defaultValue={s?.body_md ?? ""} className="field-input text-sm" />
       </Field>
       <div className="flex flex-wrap gap-x-6">
         <Checkbox name="public" label="Visible to guests" defaultChecked={s?.public ?? true} />
@@ -165,7 +165,7 @@ export default async function ContentPage({ searchParams }: { searchParams: Prom
                 <li key={p.id} className="py-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p>
-                      <span className="font-semibold">{p.name}</span> <span className="text-xs text-muted">· {humanize(p.category)} · {p.points} pts{p.default_minutes ? ` · ${p.default_minutes} min` : ""}</span>
+                      <span className="font-semibold">{p.name}</span> <span className="text-caption text-muted">· {humanize(p.category)} · {p.points} pts{p.default_minutes ? ` · ${p.default_minutes} min` : ""}</span>
                     </p>
                     <span className="flex gap-1">
                       {p.center_id === null && <Badge tone="muted">Shared</Badge>}
@@ -281,7 +281,7 @@ export default async function ContentPage({ searchParams }: { searchParams: Prom
                 ))}
               </ul>
             )}
-            <p className="mt-3 text-xs text-muted">Layers: {d.layers.map((l) => `${l.name}${l.center_id ? "" : " (shared)"}`).join(", ")}</p>
+            <p className="mt-3 text-caption text-muted">Layers: {d.layers.map((l) => `${l.name}${l.center_id ? "" : " (shared)"}`).join(", ")}</p>
           </Card>
           {manage && (
             <Card title="Add an entry">
@@ -315,10 +315,10 @@ export default async function ContentPage({ searchParams }: { searchParams: Prom
           ) : (
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {d.photos.map((p) => (
-                <li key={p.id} className="rounded-xl border border-line p-3">
-                  <p className="break-all text-xs text-muted">{p.storage_path}</p>
+                <li key={p.id} className="rounded-tile border border-line p-3">
+                  <p className="break-all text-caption text-muted">{p.storage_path}</p>
                   {p.caption && <p className="mt-1 text-sm">{p.caption}</p>}
-                  <p className="mt-1 text-xs text-muted">Uploaded {formatDateTime(p.created_at, tz)}</p>
+                  <p className="mt-1 text-caption text-muted">Uploaded {formatDateTime(p.created_at, tz)}</p>
                   {p.contains_children && (
                     <p className="mt-1">
                       <Badge tone="warning">Contains children</Badge>

@@ -9,12 +9,13 @@ import { formatDateTime } from "@/lib/format";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { deleteAnnouncement, saveAnnouncement, setAnnouncementPublished } from "../actions";
 import { TermSwitcher } from "../term-switcher";
+import { moduleLabels } from "@/lib/labels";
 
 export const metadata: Metadata = { title: "Class announcements" };
 
 export default async function AnnouncementsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const v = await requireViewer();
-  if (!areas.announcements(v.access)) return <NoAccess area="Pathshala announcements" />;
+  if (!areas.announcements(v.access)) return <NoAccess area={`${moduleLabels(v.kind).school} announcements`} />;
   const sp = await searchParams;
   const supabase = await getSupabase();
   const manage = can(v.access, "pathshala.manage");
@@ -40,21 +41,21 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
   if (!res.ok) return <LoadProblem message={res.error} />;
   const { terms, term, classes, items, authors } = res.data;
   const preselect = typeof sp.class === "string" && classes.some((c) => c.id === sp.class) ? sp.class : manage ? "term" : (classes[0]?.id ?? "");
-  const audienceOptions = [...(manage ? [{ value: "term", label: "Whole Pathshala (all families this term)" }] : []), ...classes.map((c) => ({ value: c.id, label: c.name }))];
+  const audienceOptions = [...(manage ? [{ value: "term", label: "All families this term" }] : []), ...classes.map((c) => ({ value: c.id, label: c.name }))];
   const canEditItem = (a: Tables<"class_announcements">) =>
     manage || (a.class_id !== null && hasScopedRole(v.access, a.class_id, "teacher") && a.author_user === v.userId);
 
   return (
     <>
       <PageHeader
-        kicker="Pathshala"
+        kicker={moduleLabels(v.kind).school}
         accent="pathshala"
         title="Announcements"
-        description="Messages to Pathshala families, by class or for the whole term. Families see them in the Connect app once published."
+        description="Messages to families, by class or for the whole term. Families see them in the member app once published."
       />
       <TermSwitcher terms={terms} activeId={term?.id ?? null} basePath="/pathshala/announcements" />
       {!term ? (
-        <EmptyState title="No Pathshala term yet" />
+        <EmptyState title="No term yet" />
       ) : (
         <div className="grid gap-6 lg:grid-cols-5">
           <div className="lg:col-span-3">
@@ -63,17 +64,17 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
             ) : (
               <ul className="space-y-3">
                 {items.map((a) => {
-                  const audience = a.class_id ? (classes.find((c) => c.id === a.class_id)?.name ?? "A class") : "Whole Pathshala";
+                  const audience = a.class_id ? (classes.find((c) => c.id === a.class_id)?.name ?? "A class") : "All families";
                   return (
                     <li key={a.id}>
                       <Card>
                         <div className="flex flex-wrap items-center gap-2">
                           <Badge tone={a.published_at ? "success" : "muted"}>{a.published_at ? "Published" : "Draft"}</Badge>
-                          <Badge tone="purple">{audience}</Badge>
+                          <Badge tone="navy">{audience}</Badge>
                         </div>
                         <h3 className="mt-2 font-display text-lg font-semibold">{a.title}</h3>
                         <p className="mt-1 whitespace-pre-line text-sm">{a.body_md}</p>
-                        <p className="mt-2 text-xs text-muted">
+                        <p className="mt-2 text-caption text-muted">
                           {a.published_at ? `Published ${formatDateTime(a.published_at, v.center.time_zone)}` : `Created ${formatDateTime(a.created_at, v.center.time_zone)}`}
                           {a.author_user ? ` · by ${a.author_user === v.userId ? "you" : (authors.get(a.author_user) ?? "staff")}` : ""}
                         </p>
@@ -83,7 +84,7 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
                               action={setAnnouncementPublished.bind(null, a.id)}
                               fields={{ publish: a.published_at ? "0" : "1" }}
                               label={a.published_at ? "Unpublish" : "Publish"}
-                              className={a.published_at ? "btn btn-secondary" : "btn btn-purple"}
+                              className={a.published_at ? "btn btn-secondary" : "btn btn-primary"}
                               confirm={a.published_at ? undefined : `Publish "${a.title}" to ${audience} families?`}
                             />
                             <ActionButton action={deleteAnnouncement.bind(null, a.id)} label="Delete" className="btn btn-danger" confirm="Delete this announcement?" />
@@ -124,7 +125,7 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
                   resetOnSuccess
                   successMessage={null}
                   extraButtons={
-                    <button type="submit" name="intent" value="publish" className="btn btn-purple">
+                    <button type="submit" name="intent" value="publish" className="btn btn-primary">
                       Publish now
                     </button>
                   }

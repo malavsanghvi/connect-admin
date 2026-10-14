@@ -262,7 +262,7 @@ export async function grantEventRole(eventId: string, personId: string, fd: Form
     );
     const role = oneOf(fd, "role", ["checkin_volunteer", "kitchen_lead", "boli_recorder", "event_lead"] as const, "Role");
     const cu = must(await supabase.from("center_users").select("user_id").eq("center_id", centerId).eq("person_id", personId).maybeSingle(), "find their login");
-    if (!cu) throw new FormError("This person hasn't signed in to Connect yet, so there's no login to give access to.");
+    if (!cu) throw new FormError("This person hasn't signed in to Weaver yet, so there's no login to give access to.");
     const existing = must(
       await supabase.from("role_grants").select("id").eq("center_id", centerId).eq("user_id", cu.user_id).eq("role_key", role).eq("scope_id", eventId).is("ends_at", null),
       "check existing access",

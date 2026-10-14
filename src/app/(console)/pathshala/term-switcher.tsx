@@ -20,12 +20,12 @@ export function TermSwitcher({
               href={`${basePath}?term=${t.id}`}
               aria-current={t.id === activeId ? "page" : undefined}
               className={cx(
-                "inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold",
-                t.id === activeId ? "border-purple bg-purple text-white" : "border-line bg-white text-purple hover:bg-purple-soft",
+                "inline-flex min-h-tap-target items-center rounded-full border px-4 text-sm font-semibold",
+                t.id === activeId ? "border-navy bg-navy text-white" : "border-line bg-white text-navy hover:bg-navy-50",
               )}
             >
               {t.name}
-              <span className="ml-2 text-xs font-normal opacity-80">{t.status}</span>
+              <span className="ml-2 text-caption font-normal opacity-80">{t.status}</span>
             </Link>
           </li>
         ))}

@@ -7,12 +7,13 @@ import { addDays, formatDate, todayIso } from "@/lib/format";
 import { committeeDashboard, daysUntil, HORIZON_DAYS } from "@/lib/logic/eams";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { ActionRow } from "./action-row";
+import { moduleLabels } from "@/lib/labels";
 
 export const metadata: Metadata = { title: "Committee dashboard" };
 
 export default async function CommitteeDashboard() {
   const v = await requireViewer();
-  if (!areas.committee(v.access)) return <NoAccess area="the Pathshala committee" />;
+  if (!areas.committee(v.access)) return <NoAccess area={`the ${moduleLabels(v.kind).school} committee`} />;
   if (!can(v.access, "events.view", "events.manage")) {
     return (
       <Notice>
@@ -68,7 +69,7 @@ export default async function CommitteeDashboard() {
         description="Overdue, due within 3 days and unassigned actions, plus events in the next 14 days."
         actions={
           can(v.access, "events.manage") && (
-            <Link href="/pathshala/committee/actions#new" className="btn btn-purple">
+            <Link href="/pathshala/committee/actions#new" className="btn btn-primary">
               New action
             </Link>
           )
@@ -76,9 +77,9 @@ export default async function CommitteeDashboard() {
       />
       <StatGrid>
         <Stat label="Overdue" value={dash.overdue.length} tone="danger" />
-        <Stat label="Due ≤ 3 days" value={dash.dueSoon.length} tone="warning" />
-        <Stat label="Unassigned" value={dash.unassigned.length} sub="in the next 2 weeks" tone="maroon" />
-        <Stat label="Events ≤ 2 weeks" value={dash.eventsSoon.length} tone="purple" />
+        <Stat label="Due ≤ 3 days" value={dash.dueSoon.length} tone="brown" />
+        <Stat label="Unassigned" value={dash.unassigned.length} sub="in the next 2 weeks" tone="brown" />
+        <Stat label="Events ≤ 2 weeks" value={dash.eventsSoon.length} tone="navy" />
       </StatGrid>
       {dash.allClear ? (
         <EmptyState title="All clear">Nothing at risk in the next two weeks.</EmptyState>
@@ -115,7 +116,7 @@ export default async function CommitteeDashboard() {
                           <Link href={`/events/${e.id}?tab=checklist`} className="font-semibold text-navy hover:underline">
                             {e.name}
                           </Link>
-                          <p className="text-xs text-muted">
+                          <p className="text-caption text-muted">
                             {formatDate(e.starts_on)}
                             {e.program_year ? ` · ${e.program_year}` : ""} · owner {e.owner_person_id ? (names.get(e.owner_person_id) ?? "someone") : "not set"}
                           </p>

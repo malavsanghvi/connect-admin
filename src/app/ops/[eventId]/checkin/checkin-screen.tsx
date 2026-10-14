@@ -16,6 +16,7 @@ import { extractTicketToken, randomToken } from "@/lib/logic/tokens";
 import { friendlyError } from "@/lib/result";
 import { CameraScanner } from "./camera-scanner";
 import { WalkInPanel } from "./walk-in-panel";
+import { Icon } from "@/components/icon";
 
 type Station = "entry" | "food" | "gifts";
 const STATIONS: { key: Station; label: string; verb: string; done: string }[] = [
@@ -397,21 +398,25 @@ export function CheckInScreen({
   return (
     <div className="space-y-4">
       {/* Status strip */}
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-navy px-4 py-3 text-white">
+      <div className="on-navy flex flex-wrap items-center justify-between gap-2 rounded-card bg-navy px-4 py-3 text-white">
         <p className="text-lg" aria-live="polite">
           <strong className="font-display text-2xl">{checkedIn}</strong> of {expected} checked in
         </p>
-        <p className="text-sm">
-          {online ? <span className="text-[#9FE0BC]">● Online</span> : <span className="text-[#F7B4AE]">● Offline</span>}
-          {queued > 0 && <span className="ml-2 rounded-full bg-[#D7A15F] px-2 py-0.5 font-semibold text-navy">{queued} waiting to sync</span>}
+        <p className="flex flex-wrap items-center gap-2 text-sm">
+          {online ? (
+            <span className="whitespace-nowrap rounded-pill bg-success-50 px-2.5 py-0.5 font-semibold text-success">● Online</span>
+          ) : (
+            <span className="whitespace-nowrap rounded-pill bg-danger-50 px-2.5 py-0.5 font-semibold text-danger">● Offline</span>
+          )}
+          {queued > 0 && <span className="whitespace-nowrap rounded-pill bg-gold px-2.5 py-0.5 font-semibold text-navy-hover">{queued} waiting to sync</span>}
         </p>
       </div>
       {eventStatus !== "live" && (
-        <p className="rounded-lg bg-warning-soft px-3 py-2 text-sm text-warning">This event isn&apos;t marked live yet — check-ins still work.</p>
+        <p className="rounded-tile bg-warning-50 px-3 py-2 text-sm text-warning-ink">This event isn&apos;t marked live yet — check-ins still work.</p>
       )}
 
       {/* Station switcher */}
-      <div role="tablist" aria-label="Station" className="grid grid-cols-3 gap-1 rounded-xl bg-navy-deep p-1">
+      <div role="tablist" aria-label="Station" className="on-navy grid grid-cols-3 gap-1 rounded-pill bg-navy-hover p-1">
         {STATIONS.map((s) => (
           <button
             key={s.key}
@@ -424,7 +429,7 @@ export function CheckInScreen({
               setMode("scan");
               setNotice(null);
             }}
-            className={`min-h-12 rounded-lg text-base font-semibold ${station === s.key ? "bg-[#D7A15F] text-[#1E1508]" : "text-[#F4EFE6]"}`}
+            className={`min-h-12 rounded-pill text-base font-semibold ${station === s.key ? "bg-gold text-navy-hover" : "text-white"}`}
           >
             {s.label}
           </button>
@@ -434,14 +439,14 @@ export function CheckInScreen({
       {notice && (
         <div
           role="status"
-          className={`rounded-xl border p-4 text-base font-semibold ${
+          className={`rounded-tile border p-4 text-base font-semibold ${
             notice.tone === "success"
-              ? "border-success/30 bg-success-soft text-success"
+              ? "border-success/30 bg-success-50 text-success"
               : notice.tone === "warning"
-                ? "border-warning/30 bg-warning-soft text-warning"
+                ? "border-warning-200 bg-warning-50 text-warning-ink"
                 : notice.tone === "danger"
-                  ? "border-danger/30 bg-danger-soft text-danger"
-                  : "border-navy/20 bg-navy-soft text-navy"
+                  ? "border-danger/30 bg-danger-50 text-danger"
+                  : "border-navy/20 bg-navy-50 text-navy"
           }`}
         >
           {notice.text}
@@ -453,7 +458,7 @@ export function CheckInScreen({
         </div>
       )}
       {problem && (
-        <div role="alert" className="rounded-xl border border-danger/30 bg-danger-soft p-4 text-danger">
+        <div role="alert" className="rounded-tile border border-danger/30 bg-danger-50 p-4 text-danger">
           <p className="font-semibold">{problem.text}</p>
           {problem.retry && (
             <button type="button" className="btn btn-danger mt-3 w-full" onClick={problem.retry}>
@@ -464,7 +469,7 @@ export function CheckInScreen({
       )}
 
       {mode === "scan" && (
-        <div className="space-y-3 rounded-xl bg-white p-4">
+        <div className="space-y-3 rounded-card border border-line bg-white p-4">
           {camera ? (
             <CameraScanner
               active={camera && mode === "scan"}
@@ -496,19 +501,19 @@ export function CheckInScreen({
               enterKeyHint="go"
               placeholder="Scan or type ticket / member number"
               aria-label="Ticket or member code"
-              className="field-input text-lg"
+              className="field-input font-mono text-lg placeholder:font-sans"
             />
             <button type="submit" className="btn btn-primary min-w-20" disabled={!manual.trim()}>
               {busy ? "…" : "Go"}
             </button>
           </form>
           <div className="grid grid-cols-2 gap-2">
-            <button type="button" className="btn btn-secondary min-h-12" onClick={() => setCamera((c) => !c)}>
+            <button type="button" className="btn btn-secondary" onClick={() => setCamera((c) => !c)}>
               {camera ? "Stop camera" : "Use camera"}
             </button>
             <button
               type="button"
-              className="btn btn-secondary min-h-12"
+              className="btn btn-secondary"
               onClick={() => {
                 setWalkInName("");
                 setMode("walkin");
@@ -518,7 +523,7 @@ export function CheckInScreen({
               Walk-in by phone
             </button>
           </div>
-          <label className="flex min-h-11 items-center gap-3 text-sm">
+          <label className="flex min-h-tap-target items-center gap-3 text-sm">
             <input type="checkbox" checked={kiosk} onChange={(e) => setKiosk(e.target.checked)} className="h-5 w-5 accent-navy" />
             <span>
               <strong>Kiosk mode</strong> — {stationInfo.verb.toLowerCase()} the whole party on scan, no confirm step
@@ -533,8 +538,8 @@ export function CheckInScreen({
       )}
 
       {mode === "party" && party && (
-        <div className="rounded-xl bg-white p-4">
-          <p className="text-xs font-bold uppercase tracking-wider text-success">Valid · {stationInfo.label} station</p>
+        <div className="rounded-card border border-line bg-white p-4">
+          <p className="text-eyebrow uppercase text-success">Valid · {stationInfo.label} station</p>
           <h2 className="mt-1 font-display text-2xl font-semibold">Welcome, {party.name}</h2>
           <p className="text-sm text-muted">Tick who is here.</p>
           <ul className="mt-3 space-y-2">
@@ -547,14 +552,14 @@ export function CheckInScreen({
                     type="button"
                     aria-pressed={on}
                     onClick={() => setSelected((cur) => (cur.includes(p.id) ? cur.filter((x) => x !== p.id) : [...cur, p.id]))}
-                    className={`flex min-h-14 w-full items-center gap-3 rounded-xl border-2 px-3 py-2 text-left ${on ? "border-[#B8C2DD] bg-navy-soft" : "border-line bg-white"}`}
+                    className={`flex min-h-14 w-full items-center gap-3 rounded-tile border-2 px-3 py-2 text-left ${on ? "border-navy bg-navy-100" : "border-line-control bg-white"}`}
                   >
-                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border-2 text-lg font-bold ${on ? "border-navy bg-navy text-white" : "border-line bg-white"}`}>
-                      {on ? "✓" : ""}
+                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-chip border-2 text-lg font-bold ${on ? "border-navy bg-navy text-white" : "border-line-control bg-white"}`}>
+                      {on && <Icon name="check" className="h-6 w-6" strokeWidth={3} />}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-base font-semibold">{p.name}</span>
-                      <span className="block text-xs text-muted">
+                      <span className="block text-caption text-muted">
                         {[
                           already ? (station === "entry" ? "already checked in" : station === "food" ? "already served" : "gift already given") : null,
                           p.child ? "child under 12" : null,
@@ -610,7 +615,7 @@ export function CheckInScreen({
       )}
 
       {rejected.length > 0 && (
-        <div role="alert" className="rounded-xl border border-danger/30 bg-danger-soft p-4 text-sm text-danger">
+        <div role="alert" className="rounded-tile border border-danger/30 bg-danger-50 p-4 text-sm text-danger">
           <p className="font-semibold">Some offline scans could not be checked in:</p>
           <ul className="mt-1 list-disc pl-5">
             {rejected.map((r, i) => (

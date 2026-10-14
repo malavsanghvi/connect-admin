@@ -2,7 +2,7 @@ import "server-only";
 
 import type { ServerSupabase } from "@/lib/supabase/server";
 
-export type PersonOption = { id: string; name: string; detail: string | null };
+export type PersonOption = { id: string; name: string; detail: string | null; identifier?: string | null };
 
 function fullName(p: { first_name: string; last_name: string; preferred_name: string | null }) {
   return `${p.preferred_name || p.first_name} ${p.last_name}`.trim();
@@ -81,7 +81,8 @@ export async function searchPeople(supabase: ServerSupabase, centerId: string, q
   const found: PersonOption[] = (data ?? []).map((p) => ({
     id: p.id,
     name: fullName(p),
-    detail: [p.member_number, p.email].filter(Boolean).join(" · ") || null,
+    identifier: p.member_number ?? null,
+    detail: p.email ?? null,
   }));
   if (found.length < 20 && digits.length < 7) {
     const { data: dir, error: dirError } = await supabase

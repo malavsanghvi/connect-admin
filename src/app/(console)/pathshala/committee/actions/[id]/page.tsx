@@ -11,6 +11,7 @@ import { getSupabase, load, requireViewer, row, rows } from "@/lib/session";
 import { ActionEditor } from "../../action-form";
 import { PHASE_LABEL } from "../../action-row";
 import { addStatusUpdate, deleteAction, pushActionToTemplate, setActionState } from "../../actions";
+import { Icon } from "@/components/icon";
 
 export const metadata: Metadata = { title: "Action" };
 
@@ -74,7 +75,7 @@ export default async function ActionPage({ params }: { params: Promise<{ id: str
           <ActionButton action={setActionState.bind(null, action.id)} fields={{ state: "in_progress" }} label="Start" />
         )}
         {action.state !== "completed" && (
-          <ActionButton action={setActionState.bind(null, action.id)} fields={{ state: "completed" }} label="✓ Mark complete" className="btn btn-success" />
+          <ActionButton action={setActionState.bind(null, action.id)} fields={{ state: "completed" }} label={<><Icon name="check" className="h-5 w-5" strokeWidth={3} />Mark complete</>} className="btn btn-success" />
         )}
         {action.state === "completed" && <ActionButton action={setActionState.bind(null, action.id)} fields={{ state: "in_progress" }} label="Reopen" />}
         {manage && event?.template_id && action.phase && (
@@ -106,9 +107,9 @@ export default async function ActionPage({ params }: { params: Promise<{ id: str
             ) : (
               <ol className="space-y-3">
                 {[...updates].reverse().map((u, i) => (
-                  <li key={i} className="rounded-lg bg-sand p-3 text-sm">
+                  <li key={i} className="rounded-tile bg-track p-3 text-sm">
                     <p className="whitespace-pre-line">{u.text}</p>
-                    <p className="mt-1 text-xs text-muted">
+                    <p className="mt-1 text-caption text-muted">
                       {u.author} · {formatDateTime(u.date, tz)}
                     </p>
                   </li>

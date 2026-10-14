@@ -31,10 +31,10 @@ export async function ReportTab({ event, viewer }: { event: Tables<"events">; vi
   return (
     <div className="space-y-6">
       <StatGrid>
-        <Stat label="RSVP'd" value={r.rsvpdPeople} sub={`${r.householdsTotal} households`} tone="maroon" />
+        <Stat label="RSVP'd" value={r.rsvpdPeople} sub={`${r.householdsTotal} households`} tone="brown" />
         <Stat label="Confirmed" value={r.confirmedPeople} tone="navy" />
         <Stat label="Checked in" value={r.checkedIn} sub={`${r.walkIns} walk-ins (${r.walkInHouseholds} parties)`} tone="success" />
-        <Stat label="Served lunch" value={r.served} sub={`${r.giftsGiven} gifts given`} tone="warning" />
+        <Stat label="Served lunch" value={r.served} sub={`${r.giftsGiven} gifts given`} tone="brown" />
       </StatGrid>
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Funnel">

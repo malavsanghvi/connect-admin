@@ -38,7 +38,7 @@ export function ActionRow({
         <Link href={`/pathshala/committee/actions/${a.id}`} className="font-semibold text-navy hover:underline">
           {a.name}
         </Link>
-        <p className="text-xs text-muted">
+        <p className="text-caption text-muted">
           {eventName ? `${eventName}${a.phase ? ` · ${PHASE_LABEL[a.phase] ?? a.phase}` : ""} · ` : "Standalone · "}
           {ownerName ? `Owner: ${ownerName}` : "No owner"}
           {a.due_on ? ` · due ${formatDate(a.due_on)}` : ""}
@@ -48,7 +48,7 @@ export function ActionRow({
       </div>
       <div className="flex shrink-0 flex-wrap gap-1">
         {!a.owner_person_id && <Badge tone="danger">Unassigned</Badge>}
-        {(a.priority === "high" || a.priority === "critical") && <Badge tone="maroon">{humanize(a.priority)}</Badge>}
+        {(a.priority === "high" || a.priority === "critical") && <Badge tone="warning">{humanize(a.priority)}</Badge>}
         <Badge tone={badge.tone}>{badge.label}</Badge>
         <Badge tone={a.state === "in_progress" ? "navy" : "muted"}>{humanize(a.state)}</Badge>
       </div>

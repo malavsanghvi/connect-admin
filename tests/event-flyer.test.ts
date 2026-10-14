@@ -159,10 +159,10 @@ describe("flyerLoadError", () => {
 describe("flyer card wording", () => {
   it("explains a saved value the console can't show, by role", () => {
     expect(flyerUnsupported(true)).toBe(
-      "Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Connect). Make or change the flyer in the portal to replace it.",
+      "Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Weaver). Make or change the flyer in the portal to replace it.",
     );
     expect(flyerUnsupported(false)).toBe(
-      "Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Connect). Ask the event lead or an event manager to make or change it in the portal to replace it.",
+      "Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Weaver). Ask the event lead or an event manager to make or change it in the portal to replace it.",
     );
   });
   it("explains an image that does not load in the browser, by role", () => {

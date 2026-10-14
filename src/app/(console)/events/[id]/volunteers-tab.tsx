@@ -67,7 +67,7 @@ export async function VolunteersTab({ event, viewer }: { event: Tables<"events">
                           {assignments
                             .filter((a) => a.shift_id === s.id)
                             .map((a) => (
-                              <li key={a.id} className="flex flex-col gap-2 rounded-lg bg-sand p-2 sm:flex-row sm:items-center sm:justify-between">
+                              <li key={a.id} className="flex flex-col gap-2 rounded-tile bg-track p-2 sm:flex-row sm:items-center sm:justify-between">
                                 <span>
                                   <span className="font-semibold">{names.get(a.person_id) ?? "Volunteer"}</span>{" "}
                                   <Badge tone={a.status === "confirmed" || a.status === "completed" ? "success" : a.status === "declined" || a.status === "no_show" ? "danger" : "muted"}>
@@ -96,7 +96,7 @@ export async function VolunteersTab({ event, viewer }: { event: Tables<"events">
                         {canEdit && (
                           <div className="mt-2">
                             <Details summary="Assign volunteers">
-                              <ActionForm action={assignVolunteer.bind(null, event.id, s.id)} submitLabel="Assign" resetOnSuccess submitClassName="btn btn-maroon">
+                              <ActionForm action={assignVolunteer.bind(null, event.id, s.id)} submitLabel="Assign" resetOnSuccess submitClassName="btn btn-primary">
                                 <PersonPicker name="person_id" label="Volunteers" multiple />
                               </ActionForm>
                             </Details>
@@ -112,7 +112,7 @@ export async function VolunteersTab({ event, viewer }: { event: Tables<"events">
       </div>
       {canEdit && (
         <Card title="Add a shift">
-          <ActionForm action={createShift.bind(null, event.id)} submitLabel="Add shift" resetOnSuccess submitClassName="btn btn-maroon">
+          <ActionForm action={createShift.bind(null, event.id)} submitLabel="Add shift" resetOnSuccess submitClassName="btn btn-primary">
             <div className="space-y-3">
               <Field label="Station">
                 <Select
