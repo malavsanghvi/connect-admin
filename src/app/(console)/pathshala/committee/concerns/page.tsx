@@ -101,7 +101,7 @@ export default async function ConcernsPage({ searchParams }: { searchParams: Pro
                           <Badge tone="muted">{humanize(action.state)}</Badge>
                         </p>
                       )}
-                      {c.resolution && <p className="mt-2 rounded-lg bg-success-soft p-2 text-sm text-success">Resolution: {c.resolution}</p>}
+                      {c.resolution && <p className="mt-2 rounded-tile bg-success-50 p-2 text-sm text-success">Resolution: {c.resolution}</p>}
                       {updates.length > 0 && (
                         <ol className="mt-2 space-y-1 border-l-2 border-line pl-3 text-xs text-muted">
                           {updates.map((u, i) => (
@@ -148,7 +148,7 @@ export default async function ConcernsPage({ searchParams }: { searchParams: Pro
                             </ActionForm>
                           </Details>
                           {canAct && !c.linked_action_id && (
-                            <Details summary="⚡ Create action">
+                            <Details summary="Create action">
                               <ActionForm action={createActionFromConcern.bind(null, c.id)} submitLabel="Create action" submitClassName="btn btn-purple">
                                 <FormGrid>
                                   <Field label="Action" className="sm:col-span-2">

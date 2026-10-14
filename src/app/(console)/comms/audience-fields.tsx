@@ -34,7 +34,7 @@ export function AudienceFields({
         {presets.map((p) => (
           <label
             key={p.key}
-            className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-lg border-2 p-3 ${preset === p.key ? "border-navy bg-navy-soft" : "border-line bg-white"}`}
+            className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-tile border-2 p-3 ${preset === p.key ? "border-navy bg-navy-50" : "border-line bg-white"}`}
           >
             <input type="radio" name="audience_preset" value={p.key} checked={preset === p.key} onChange={() => setPreset(p.key)} className="mt-1 h-5 w-5 accent-navy" />
             <span>

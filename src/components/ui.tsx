@@ -37,8 +37,8 @@ export function PageHeader({
             ← {back.label}
           </Link>
         )}
-        {kicker && <p className={cx("text-xs font-bold uppercase tracking-wider", accentText[accent])}>{kicker}</p>}
-        <h1 className="font-display text-2xl font-semibold text-ink sm:text-3xl">{title}</h1>
+        {kicker && <p className={cx("text-eyebrow uppercase", accentText[accent])}>{kicker}</p>}
+        <h1 className="font-display text-2xl font-semibold text-navy sm:text-3xl">{title}</h1>
         {description && <div className="mt-1 max-w-3xl text-sm text-muted">{description}</div>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
@@ -62,11 +62,11 @@ export function Card({
   id?: string;
 }) {
   return (
-    <section id={id} className={cx("rounded-xl border border-line bg-card p-4 sm:p-5", className)}>
+    <section id={id} className={cx("rounded-card border border-line bg-white p-card-pad sm:p-card-pad-lg", className)}>
       {(title || actions) && (
         <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
           <div className="min-w-0">
-            {title && <h2 className="font-display text-lg font-semibold text-ink">{title}</h2>}
+            {title && <h2 className="font-display text-lg font-semibold text-navy">{title}</h2>}
             {description && <p className="text-sm text-muted">{description}</p>}
           </div>
           {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
@@ -79,13 +79,13 @@ export function Card({
 
 export type Tone = "neutral" | "navy" | "success" | "danger" | "warning" | "purple" | "maroon" | "muted" | "caution" | "ok";
 const toneClass: Record<Tone, string> = {
-  neutral: "bg-sand text-ink border-line",
-  navy: "bg-navy-soft text-navy border-navy/20",
-  success: "bg-success-soft text-success border-success/20",
-  ok: "bg-success-soft text-success border-success/20",
-  danger: "bg-danger-soft text-danger border-danger/20",
-  warning: "bg-warning-soft text-warning border-warning/20",
-  caution: "bg-[#FBF6DC] text-[#6B5A00] border-[#6B5A00]/20",
+  neutral: "bg-track text-ink border-line",
+  navy: "bg-navy-50 text-navy border-navy/20",
+  success: "bg-success-50 text-success border-success/20",
+  ok: "bg-success-50 text-success border-success/20",
+  danger: "bg-danger-50 text-danger border-danger/20",
+  warning: "bg-saffron-50 text-brown border-brown/20",
+  caution: "bg-gold/30 text-brown-900 border-brown-900/20",
   purple: "bg-purple-soft text-purple border-purple/20",
   maroon: "bg-maroon-soft text-maroon border-maroon/20",
   muted: "bg-white text-muted border-line",
@@ -100,9 +100,9 @@ export function Badge({ tone = "neutral", children }: { tone?: Tone; children: R
 }
 
 export function Stat({ label, value, sub, tone = "navy" }: { label: string; value: ReactNode; sub?: ReactNode; tone?: "navy" | "purple" | "maroon" | "success" | "danger" | "warning" }) {
-  const color = { navy: "text-navy", purple: "text-purple", maroon: "text-maroon", success: "text-success", danger: "text-danger", warning: "text-warning" }[tone];
+  const color = { navy: "text-navy", purple: "text-purple", maroon: "text-maroon", success: "text-success", danger: "text-danger", warning: "text-brown" }[tone];
   return (
-    <div className="rounded-xl border border-line bg-card p-4">
+    <div className="rounded-card border border-line bg-white p-4">
       <p className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</p>
       <p className={cx("mt-1 font-display text-3xl font-semibold", color)}>{value}</p>
       {sub && <p className="mt-1 text-xs text-muted">{sub}</p>}
@@ -116,7 +116,7 @@ export function StatGrid({ children }: { children: ReactNode }) {
 
 export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
   return (
-    <div className="rounded-lg border border-dashed border-line bg-ground/60 p-6 text-center">
+    <div className="rounded-tile border border-dashed border-line bg-ground p-6 text-center">
       <p className="font-semibold text-ink">{title}</p>
       {children && <div className="mt-1 text-sm text-muted">{children}</div>}
     </div>
@@ -125,8 +125,8 @@ export function EmptyState({ title, children }: { title: string; children?: Reac
 
 export function NoAccess({ area, children }: { area?: string; children?: ReactNode }) {
   return (
-    <div role="alert" className="mx-auto max-w-xl rounded-xl border border-line bg-card p-6 text-center">
-      <p className="text-xs font-bold uppercase tracking-wider text-muted">No access</p>
+    <div role="alert" className="mx-auto max-w-xl rounded-card border border-line bg-white p-6 text-center">
+      <p className="text-eyebrow uppercase text-muted">No access</p>
       <h1 className="mt-1 font-display text-2xl font-semibold">You don&apos;t have access to this area</h1>
       <p className="mt-2 text-sm text-muted">
         {children ??
@@ -141,7 +141,7 @@ export function NoAccess({ area, children }: { area?: string; children?: ReactNo
 
 export function LoadProblem({ message }: { message: string }) {
   return (
-    <div role="alert" className="rounded-xl border border-danger/30 bg-danger-soft p-4 text-danger">
+    <div role="alert" className="rounded-tile border border-danger/30 bg-danger-50 p-4 text-danger">
       <p className="font-semibold">This page couldn&apos;t load.</p>
       <p className="mt-1 text-sm">{message}</p>
       <div className="mt-3">
@@ -173,7 +173,7 @@ export function Field({
 
 export function Checkbox({ name, label, defaultChecked, value = "on", hint }: { name: string; label: string; defaultChecked?: boolean; value?: string; hint?: string }) {
   return (
-    <label className="flex min-h-11 cursor-pointer items-start gap-3 rounded-lg py-2">
+    <label className="flex min-h-11 cursor-pointer items-start gap-3 rounded-tile py-2">
       <input type="checkbox" name={name} value={value} defaultChecked={defaultChecked} className="mt-0.5 h-5 w-5 shrink-0 accent-navy" />
       <span>
         <span className="text-sm font-semibold">{label}</span>
@@ -205,7 +205,7 @@ export function Tabs({ tabs, active }: { tabs: { key: string; label: string; hre
                 )}
               >
                 {t.label}
-                {t.count !== undefined && <span className="rounded-full bg-sand px-2 text-xs text-ink">{t.count}</span>}
+                {t.count !== undefined && <span className="rounded-full bg-track px-2 text-xs text-ink">{t.count}</span>}
               </Link>
             </li>
           );
@@ -225,17 +225,17 @@ export const td = "border-b border-line px-3 py-2 align-top text-sm";
 
 export function Notice({ tone = "navy", children }: { tone?: "navy" | "warning" | "danger" | "success"; children: ReactNode }) {
   const c = {
-    navy: "border-navy/20 bg-navy-soft text-navy",
-    warning: "border-warning/20 bg-warning-soft text-warning",
-    danger: "border-danger/30 bg-danger-soft text-danger",
-    success: "border-success/20 bg-success-soft text-success",
+    navy: "border-navy/20 bg-navy-50 text-navy",
+    warning: "border-brown/20 bg-saffron-50 text-brown",
+    danger: "border-danger/30 bg-danger-50 text-danger",
+    success: "border-success/20 bg-success-50 text-success",
   }[tone];
-  return <div className={cx("rounded-lg border p-3 text-sm", c)}>{children}</div>;
+  return <div className={cx("rounded-tile border p-3 text-sm", c)}>{children}</div>;
 }
 
 export function Details({ summary, children, open }: { summary: ReactNode; children: ReactNode; open?: boolean }) {
   return (
-    <details open={open} className="group rounded-xl border border-line bg-card">
+    <details open={open} className="group rounded-card border border-line bg-white">
       <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 px-4 py-2 font-semibold text-navy">
         <span>{summary}</span>
         <span aria-hidden className="text-muted transition-transform group-open:rotate-90">›</span>

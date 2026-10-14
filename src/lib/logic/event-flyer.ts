@@ -81,7 +81,7 @@ function sentence(s: string): string {
 
 /** Shown when flyer_path holds something that is neither an https link nor a stored file. */
 export function flyerUnsupported(canEdit: boolean): string {
-  return `Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Connect). ${sentence(changeIt(canEdit))} to replace it.`;
+  return `Could not show the flyer — it is saved as a link the console can't open (only https:// links and files stored in Weaver). ${sentence(changeIt(canEdit))} to replace it.`;
 }
 
 /** Shown when the image itself does not load in the browser (an expired link, or a file or host that is gone). */

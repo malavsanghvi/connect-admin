@@ -409,7 +409,7 @@ export async function updateConcern(concernId: string, fd: FormData): Promise<Ac
   });
 }
 
-/** EAMS "⚡ Create action" from a concern: creates the action and links it. */
+/** EAMS "Create action" from a concern: creates the action and links it. */
 export async function createActionFromConcern(concernId: string, fd: FormData): Promise<ActionResult<unknown>> {
   return runAction("committee.createActionFromConcern", "create an action from the concern", async () => {
     const { supabase, centerId, viewer } = await actionContext(

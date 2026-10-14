@@ -50,7 +50,7 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
         kicker="Pathshala"
         accent="pathshala"
         title="Announcements"
-        description="Messages to Pathshala families, by class or for the whole term. Families see them in the Connect app once published."
+        description="Messages to Pathshala families, by class or for the whole term. Families see them in the member app once published."
       />
       <TermSwitcher terms={terms} activeId={term?.id ?? null} basePath="/pathshala/announcements" />
       {!term ? (

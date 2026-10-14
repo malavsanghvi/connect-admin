@@ -100,9 +100,9 @@ export function ActionForm({
         )}
       </div>
       {!pending && state && !state.ok && (
-        <div role="alert" className="mt-2 flex flex-wrap items-center gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm text-danger">
+        <div role="alert" className="mt-2 flex flex-wrap items-center gap-2 rounded-tile border border-danger/30 bg-danger-50 px-3 py-2 text-sm text-danger">
           <span className="min-w-0 flex-1">{state.error}</span>
-          <button type="button" onClick={retry} className="btn btn-danger min-h-9 px-3 py-1">
+          <button type="button" onClick={retry} className="btn btn-danger px-3 py-1">
             Try again
           </button>
         </div>

@@ -315,7 +315,7 @@ export default async function ContentPage({ searchParams }: { searchParams: Prom
           ) : (
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {d.photos.map((p) => (
-                <li key={p.id} className="rounded-xl border border-line p-3">
+                <li key={p.id} className="rounded-tile border border-line p-3">
                   <p className="break-all text-xs text-muted">{p.storage_path}</p>
                   {p.caption && <p className="mt-1 text-sm">{p.caption}</p>}
                   <p className="mt-1 text-xs text-muted">Uploaded {formatDateTime(p.created_at, tz)}</p>

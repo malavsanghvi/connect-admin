@@ -1,0 +1,14 @@
+/*
+ * App-specific module accents. The Weaver Brand Kit has no module colours, so these are not generated and not
+ * in brand/tokens.json: they colour-code Pathshala (purple), events (maroon) and the store in this app's
+ * navigation dots, kickers, badges and tone buttons. Decision pending with the owner (docs/BRAND_CONFORMANCE.md,
+ * "Owner decisions", item 1): either add them to the kit or fold them into navy, brown and success.
+ * This file and src/app/brand-tokens.css are the only places a colour value may be written (tests/brand-kit.test.ts).
+ */
+@theme static {
+  --color-purple: #5b4b8a;
+  --color-purple-soft: #efecf6;
+  --color-maroon: #7a2e1f;
+  --color-maroon-soft: #f6ebe7;
+  --color-store: #2f5d50;
+}

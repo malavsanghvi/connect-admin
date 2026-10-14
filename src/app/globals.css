@@ -1,127 +1,146 @@
 @import "tailwindcss";
 
-/* Design tokens from connect-crm/docs/ARCHITECTURE.md (prototype palette). */
-@theme {
-  --color-navy: #1b2c5c;
-  --color-navy-deep: #13204a;
-  --color-navy-soft: #eef1f8;
-  --color-saffron: #c9731c;
-  --color-brown: #8a4608;
-  --color-success: #1f7a4d;
-  --color-success-soft: #e4f2ea;
-  --color-maroon: #7a2e1f;
-  --color-maroon-soft: #f6ebe7;
-  --color-purple: #5b4b8a;
-  --color-purple-soft: #efecf6;
-  --color-store: #2f5d50;
-  --color-ground: #fbf7f0;
-  --color-sand: #f4efe6;
-  --color-card: #ffffff;
-  --color-line: #e8e0d2;
-  --color-ink: #1e1c18;
-  --color-muted: #5e5a52;
-  --color-danger: #b3261e;
-  --color-danger-soft: #fbeae8;
-  --color-warning: #8a4608;
-  --color-warning-soft: #fbf1e4;
-
-  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
-}
+/*
+ * The theme is the Weaver Brand Kit: brand-tokens.css is generated from brand/tokens.json (run `pnpm brand:sync`),
+ * and module-colors.css holds the few app-only accents the kit does not define. Write no colour values here or in
+ * components: use the token classes (bg-navy, text-muted, border-line, rounded-card, ...).
+ */
+@import "./brand-tokens.css";
+@import "./module-colors.css";
 
 html {
   -webkit-text-size-adjust: 100%;
+  color-scheme: light;
 }
 
 body {
-  background: var(--color-ground);
+  background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
 
-/* Visible focus for keyboard users everywhere. */
-:where(a, button, input, select, textarea, summary):focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--color-navy) 55%, transparent);
+/* The display face is tracked tight, as the kit's text styles say. */
+@layer base {
+  .font-display {
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Focus: a 2px solid navy outline, 2px offset (4px on buttons), visible on every control. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-navy);
   outline-offset: 2px;
 }
 
-/* 44px minimum touch targets for controls. */
+/* On an indigo ground a navy ring disappears, so everything focusable inside it gets a white one. */
+@utility on-navy {
+  &:focus-visible,
+  & :focus-visible {
+    outline-color: var(--color-white);
+  }
+}
+
+/* Form fields: at least the kit's tap target tall, 16px text so phones do not zoom in, the kit's input border. */
 @utility field-input {
   display: block;
   width: 100%;
-  min-height: 2.75rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--color-line);
-  background: #fff;
+  min-height: var(--spacing-tap-target);
+  border-radius: var(--radius-tile);
+  border: 1px solid var(--color-line-input);
+  background: var(--color-white);
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
   color: var(--color-ink);
   &:disabled {
-    background: var(--color-sand);
+    background: var(--color-track);
     color: var(--color-muted);
   }
 }
 
+/* Buttons: pills, at least the kit's tap target tall, 16px bold. Styles follow brand/components/Button. */
 @utility btn {
   display: inline-flex;
-  min-height: 2.75rem;
+  min-height: var(--spacing-tap-target);
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
+  border-radius: var(--radius-pill);
+  padding: 0.5rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
   line-height: 1.25;
   text-align: center;
   cursor: pointer;
-  transition: background-color 120ms, filter 120ms;
+  transition: background-color 150ms, border-color 150ms, filter 120ms;
+  &:focus-visible {
+    outline-offset: 4px;
+  }
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
   }
 }
 
+/* primary: on canvas and white. */
 @utility btn-primary {
   background: var(--color-navy);
-  color: #fff;
+  color: var(--color-white);
   &:hover:not(:disabled) {
-    background: var(--color-navy-deep);
+    background: var(--color-navy-hover);
   }
 }
+/* ghost: white, a 2px border of navy at 20%. */
 @utility btn-secondary {
-  border: 1px solid var(--color-line);
-  background: #fff;
+  border: 2px solid color-mix(in srgb, var(--color-navy) 20%, transparent);
+  background: var(--color-white);
   color: var(--color-navy);
   &:hover:not(:disabled) {
-    background: var(--color-navy-soft);
+    border-color: var(--color-navy);
   }
 }
+/* gold: only on a navy ground. */
+@utility btn-gold {
+  background: var(--color-gold);
+  color: var(--color-navy-hover);
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+}
+/* ghostOnNavy: only on a navy ground. */
+@utility btn-ghost-on-navy {
+  border: 2px solid color-mix(in srgb, var(--color-white) 30%, transparent);
+  background: transparent;
+  color: var(--color-white);
+  &:hover:not(:disabled) {
+    border-color: var(--color-white);
+  }
+}
+/* Status and module buttons: the kit has no style for these, so they borrow the kit's colours. */
 @utility btn-danger {
-  border: 1px solid color-mix(in srgb, var(--color-danger) 35%, transparent);
-  background: #fff;
+  border: 2px solid color-mix(in srgb, var(--color-danger) 35%, transparent);
+  background: var(--color-white);
   color: var(--color-danger);
   &:hover:not(:disabled) {
-    background: var(--color-danger-soft);
+    background: var(--color-danger-50);
   }
 }
 @utility btn-success {
   background: var(--color-success);
-  color: #fff;
+  color: var(--color-white);
   &:hover:not(:disabled) {
     filter: brightness(0.95);
   }
 }
 @utility btn-purple {
   background: var(--color-purple);
-  color: #fff;
+  color: var(--color-white);
   &:hover:not(:disabled) {
     filter: brightness(0.95);
   }
 }
 @utility btn-maroon {
   background: var(--color-maroon);
-  color: #fff;
+  color: var(--color-white);
   &:hover:not(:disabled) {
     filter: brightness(0.95);
   }

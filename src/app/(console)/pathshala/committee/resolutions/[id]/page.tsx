@@ -138,7 +138,7 @@ export default async function ResolutionPage({ params }: { params: Promise<{ id:
             ) : (
               <ul className="space-y-3">
                 {comments.map((c) => (
-                  <li key={c.id} className="rounded-lg bg-sand p-3 text-sm">
+                  <li key={c.id} className="rounded-tile bg-track p-3 text-sm">
                     <p className="whitespace-pre-line">{c.body}</p>
                     <p className="mt-1 text-xs text-muted">
                       {who(c.author_user)} · {formatDateTime(c.created_at, tz)}
@@ -216,7 +216,7 @@ export default async function ResolutionPage({ params }: { params: Promise<{ id:
                     <legend className="mb-2 text-sm font-semibold">{myVote ? `Your vote: ${myVote.vote}` : "Your vote"}</legend>
                     <div className="grid grid-cols-3 gap-2">
                       {(["yes", "no", "abstain"] as const).map((opt) => (
-                        <label key={opt} className="flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-line bg-white font-semibold has-[:checked]:border-navy has-[:checked]:bg-navy-soft">
+                        <label key={opt} className="flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-tile border-2 border-line bg-white font-semibold has-[:checked]:border-navy has-[:checked]:bg-navy-50">
                           <input type="radio" name="vote" value={opt} required defaultChecked={myVote?.vote === opt} className="h-5 w-5 accent-navy" />
                           {opt[0].toUpperCase() + opt.slice(1)}
                         </label>

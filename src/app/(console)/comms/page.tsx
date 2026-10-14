@@ -340,7 +340,7 @@ function InboxTab({
       <Card title="Inboxes">
         <ul className="space-y-1">
           <li>
-            <Link href="/comms?tab=inbox" className={`flex min-h-11 items-center justify-between rounded-lg px-2 ${!current ? "bg-navy-soft font-semibold" : ""}`}>
+            <Link href="/comms?tab=inbox" className={`flex min-h-11 items-center justify-between rounded-tile px-2 ${!current ? "bg-navy-50 font-semibold" : ""}`}>
               All inboxes <span className="text-xs">{threads.filter((t) => t.status !== "closed").length}</span>
             </Link>
           </li>
@@ -348,7 +348,7 @@ function InboxTab({
             const n = threads.filter((t) => t.inbox_id === i.id && t.status !== "closed").length;
             return (
               <li key={i.id}>
-                <Link href={`/comms?tab=inbox&inbox=${i.id}`} className={`flex min-h-11 items-center justify-between rounded-lg px-2 ${current?.id === i.id ? "bg-navy-soft font-semibold" : ""}`}>
+                <Link href={`/comms?tab=inbox&inbox=${i.id}`} className={`flex min-h-11 items-center justify-between rounded-tile px-2 ${current?.id === i.id ? "bg-navy-50 font-semibold" : ""}`}>
                   {i.name} <span className="text-xs">{n}</span>
                 </Link>
               </li>

@@ -22,6 +22,9 @@ slots, kitchen display). Bolis, store, content, communications and volunteers fo
   `refresh()` from `next/cache` after mutations, error boundaries get `retry`.
 - Money is integer cents; format only at the edge (`src/lib/format.ts`).
 - Bolis take **pledges** — never write "bid" anywhere in the UI.
+- **Brand**: the theme is the Weaver Brand Kit. `brand/tokens.json` (verbatim from connect-crm `brand/`) generates `src/app/brand-tokens.css`
+  (`pnpm brand:sync`; never edit the CSS). No colour values in components or CSS: use token classes. Product name is always "Weaver".
+  `tests/brand-kit.test.ts` enforces it; audit and open owner decisions in `docs/BRAND_CONFORMANCE.md`.
 
 ## Error-surfacing rule (non-negotiable)
 

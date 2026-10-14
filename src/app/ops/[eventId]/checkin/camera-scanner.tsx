@@ -63,7 +63,7 @@ export function CameraScanner({
   }, [active]);
 
   return (
-    <div className="overflow-hidden rounded-xl bg-black">
+    <div className="overflow-hidden rounded-tile bg-ink">
       <video ref={videoRef} className="aspect-square w-full object-cover" muted playsInline aria-label="Camera preview for scanning" />
     </div>
   );

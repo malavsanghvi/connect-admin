@@ -72,13 +72,13 @@ export async function LunchTab({ event, viewer }: { event: Tables<"events">; vie
               </thead>
               <tbody>
                 {counts.map((s) => (
-                  <tr key={s.id} className={s.status === "now_serving" ? "bg-success-soft" : undefined}>
+                  <tr key={s.id} className={s.status === "now_serving" ? "bg-success-50" : undefined}>
                     <td className={td}>
                       <span className="font-semibold">{formatTime(s.starts_at, tz)}</span>
                     </td>
                     <td className={td}>
                       {canRun ? (
-                        <ActionForm action={updateSlotSeats.bind(null, event.id, s.id)} submitLabel="Set" submitClassName="btn btn-secondary min-h-11 px-3" layout="inline" successMessage={null}>
+                        <ActionForm action={updateSlotSeats.bind(null, event.id, s.id)} submitLabel="Set" submitClassName="btn btn-secondary px-3" layout="inline" successMessage={null}>
                           <input
                             name="seats"
                             type="number"

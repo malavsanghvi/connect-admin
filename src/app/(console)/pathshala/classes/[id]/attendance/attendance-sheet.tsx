@@ -14,11 +14,11 @@ type RowState = { saving: boolean; error: string | null; savedAt: number | null 
 const LABELS: Record<AttendanceStatus, string> = { present: "Present", late: "Late", absent: "Absent", excused: "Excused" };
 const ON_STYLE: Record<AttendanceStatus, string> = {
   present: "bg-success text-white border-success",
-  late: "bg-warning text-white border-warning",
+  late: "bg-brown text-white border-brown",
   absent: "bg-danger text-white border-danger",
   excused: "bg-navy text-white border-navy",
 };
-const OFF_STYLE = "bg-white text-ink border-line hover:bg-sand";
+const OFF_STYLE = "bg-white text-ink border-line hover:bg-navy-50";
 
 export function AttendanceSheet({
   classId,
@@ -88,7 +88,7 @@ export function AttendanceSheet({
 
   return (
     <div>
-      <div className="sticky top-0 z-10 -mx-4 mb-4 border-b border-line bg-ground/95 px-4 py-3 backdrop-blur sm:mx-0 sm:rounded-xl sm:border">
+      <div className="sticky top-0 z-10 -mx-4 mb-4 border-b border-line bg-canvas/95 px-4 py-3 backdrop-blur sm:mx-0 sm:rounded-tile sm:border">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-sm" aria-live="polite">
             <strong className="text-lg">{summary.attended}</strong> of {summary.total} here
@@ -113,9 +113,9 @@ export function AttendanceSheet({
           </p>
         )}
         {bulk.error && (
-          <p role="alert" className="mt-2 flex flex-wrap items-center gap-2 rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">
+          <p role="alert" className="mt-2 flex flex-wrap items-center gap-2 rounded-tile bg-danger-50 px-3 py-2 text-sm text-danger">
             {bulk.error}
-            <button type="button" className="btn btn-danger min-h-9 px-3 py-1" onClick={markRestPresent}>
+            <button type="button" className="btn btn-danger px-3 py-1" onClick={markRestPresent}>
               Try again
             </button>
           </p>
@@ -123,14 +123,14 @@ export function AttendanceSheet({
       </div>
 
       {students.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-line p-6 text-center text-muted">No students are placed in this class yet.</p>
+        <p className="rounded-tile border border-dashed border-line p-6 text-center text-muted">No students are placed in this class yet.</p>
       ) : (
         <ul className="space-y-3">
           {students.map((s) => {
             const m = marks[s.enrollmentId];
             const st = rowState[s.enrollmentId];
             return (
-              <li key={s.enrollmentId} className="rounded-xl border border-line bg-card p-3">
+              <li key={s.enrollmentId} className="rounded-card border border-line bg-white p-3">
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <p className="text-lg font-semibold">{s.name}</p>
                   <span className="text-sm" aria-live="polite">
@@ -155,7 +155,7 @@ export function AttendanceSheet({
                         disabled={readOnly || st?.saving}
                         aria-pressed={on}
                         onClick={() => save(s.enrollmentId, status, m?.note ?? null)}
-                        className={`min-h-14 rounded-lg border-2 px-2 text-base font-semibold transition-colors disabled:opacity-60 ${on ? ON_STYLE[status] : OFF_STYLE}`}
+                        className={`min-h-14 rounded-pill border-2 px-2 text-base font-semibold transition-colors disabled:opacity-60 ${on ? ON_STYLE[status] : OFF_STYLE}`}
                       >
                         {on ? "✓ " : ""}
                         {LABELS[status]}
@@ -164,10 +164,10 @@ export function AttendanceSheet({
                   })}
                 </div>
                 {st?.error && (
-                  <div role="alert" className="mt-2 flex flex-wrap items-center gap-2 rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">
+                  <div role="alert" className="mt-2 flex flex-wrap items-center gap-2 rounded-tile bg-danger-50 px-3 py-2 text-sm text-danger">
                     <span className="flex-1">{st.error}</span>
                     {m && (
-                      <button type="button" className="btn btn-danger min-h-9 px-3 py-1" onClick={() => save(s.enrollmentId, m.status, m.note)}>
+                      <button type="button" className="btn btn-danger px-3 py-1" onClick={() => save(s.enrollmentId, m.status, m.note)}>
                         Try again
                       </button>
                     )}
@@ -313,11 +313,11 @@ function QrButton({
         Show QR for this class
       </button>
       {open && (
-        <div role="dialog" aria-modal="true" aria-label="Class attendance QR code" className="fixed inset-0 z-50 flex items-center justify-center bg-navy-deep/90 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-5 text-center">
-            <p className="text-xs font-bold uppercase tracking-wider text-purple">Scan to mark attendance</p>
-            <p className="mt-1 text-sm text-muted">Students or parents scan this with the Connect app. It changes every 10 minutes.</p>
-            <div className="mx-auto mt-4 flex aspect-square w-full max-w-xs items-center justify-center rounded-xl border border-line bg-white">
+        <div role="dialog" aria-modal="true" aria-label="Class attendance QR code" className="fixed inset-0 z-50 flex items-center justify-center bg-navy-hover/90 p-4">
+          <div className="w-full max-w-md rounded-card bg-white p-5 text-center">
+            <p className="text-eyebrow uppercase text-purple">Scan to mark attendance</p>
+            <p className="mt-1 text-sm text-muted">Students or parents scan this with the member app. It changes every 10 minutes.</p>
+            <div className="mx-auto mt-4 flex aspect-square w-full max-w-xs items-center justify-center rounded-tile border border-line bg-white">
               {dataUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={dataUrl} alt="Attendance QR code for this class" className="h-full w-full" />
@@ -331,7 +331,7 @@ function QrButton({
               </p>
             )}
             {error && (
-              <div role="alert" className="mt-3 rounded-lg bg-danger-soft p-3 text-sm text-danger">
+              <div role="alert" className="mt-3 rounded-tile bg-danger-50 p-3 text-sm text-danger">
                 {error}
                 <button type="button" className="btn btn-danger mt-2 w-full" onClick={() => void rotate()}>
                   Try again

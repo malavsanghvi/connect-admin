@@ -1,25 +1,28 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Fraunces } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
+import { kitColor } from "@/lib/brand-kit";
 import "./globals.css";
 
-const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], display: "swap" });
-const dmSans = DM_Sans({ variable: "--font-dm-sans", subsets: ["latin"], display: "swap" });
+// The kit's two faces: Bricolage Grotesque for display (with its optical-size axis), Hanken Grotesk for everything else.
+// The variable names must match FONT_VARIABLES in scripts/sync-brand-tokens.mjs.
+const bricolage = Bricolage_Grotesque({ variable: "--font-bricolage", subsets: ["latin"], axes: ["opsz"], display: "swap" });
+const hanken = Hanken_Grotesk({ variable: "--font-hanken", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "Weaver Admin", template: "%s · Weaver Admin" },
-  description: "Operations console for Pathshala, events and community programs.",
+  description: "Event check-in, the kitchen display and day-of tools for your organization, on Weaver.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#1B2C5C",
+  themeColor: kitColor("navy"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${dmSans.variable} h-full antialiased`}>
-      <body className="min-h-full bg-ground font-sans text-ink">{children}</body>
+    <html lang="en" className={`${bricolage.variable} ${hanken.variable} h-full antialiased`}>
+      <body className="min-h-full bg-canvas font-sans text-ink">{children}</body>
     </html>
   );
 }

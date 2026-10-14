@@ -30,7 +30,7 @@ function FlyerCard({ event, flyer, canEdit }: { event: Tables<"events">; flyer: 
   return (
     <Card id="flyer" title="Flyer" className="self-start">
       {flyer.error && (
-        <div role="alert" className="mb-3 rounded-lg border border-danger/30 bg-danger-soft p-3 text-sm text-danger">
+        <div role="alert" className="mb-3 rounded-tile border border-danger/30 bg-danger-50 p-3 text-sm text-danger">
           <p>{flyer.error}</p>
           {flyer.retry !== false && (
             <div className="mt-2">

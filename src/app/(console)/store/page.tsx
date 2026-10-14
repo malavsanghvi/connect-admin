@@ -7,7 +7,7 @@ import { centsToDollarsInput, formatCents, formatDateTime, formatTime, humanize,
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { moveOrder, recordMovement, saveCategory, saveItem, saveWindow } from "./actions";
 
-export const metadata: Metadata = { title: "My Store" };
+export const metadata: Metadata = { title: "My store" };
 
 const TABS = ["orders", "menu", "windows", "inventory"] as const;
 const NEXT_LABEL: Record<string, { to: string; label: string; cls: string }[]> = {
@@ -63,7 +63,7 @@ function ItemFields({ item, categories }: { item: Tables<"store_items"> | null; 
 
 export default async function StorePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const v = await requireViewer();
-  if (!areas.store(v.access)) return <NoAccess area="My Store" />;
+  if (!areas.store(v.access)) return <NoAccess area="My store" />;
   const sp = await searchParams;
   const tab = (TABS as readonly string[]).includes(String(sp.tab)) ? String(sp.tab) : "orders";
   const windowFilter = typeof sp.window === "string" ? sp.window : null;
@@ -101,7 +101,7 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
 
   return (
     <>
-      <PageHeader title="My Store" description="Sales, not giving: menu, pickup windows, orders and stock." />
+      <PageHeader title="My store" description="Sales, not giving: menu, pickup windows, orders and stock." />
       <Tabs active={tab} tabs={TABS.map((t) => ({ key: t, label: humanize(t), href: `/store?tab=${t}` }))} />
 
       {tab === "orders" && (

@@ -99,7 +99,7 @@ export async function RsvpsTab({ event, viewer, status }: { event: Tables<"event
                             {r.commitment_mode && r.commitment_mode !== "none" ? ` · commitment ${humanize(r.commitment_mode)}` : ""}
                             {r.confirmed_at ? ` · confirmed ${formatDateTime(r.confirmed_at, tz)}` : ""}
                           </p>
-                          {flags.length > 0 && <p className="mt-1 text-xs font-semibold text-warning">Flags: {flags.join(", ")}</p>}
+                          {flags.length > 0 && <p className="mt-1 text-xs font-semibold text-brown">Flags: {flags.join(", ")}</p>}
                         </div>
                         <Badge tone={r.status === "attended" ? "success" : r.status === "confirmed" ? "navy" : r.status === "cancelled" || r.status === "no_show" ? "danger" : "muted"}>
                           {statusLabel(r.status)}

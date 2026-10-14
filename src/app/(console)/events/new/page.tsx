@@ -50,7 +50,7 @@ export default async function NewEventPage() {
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
           ) : (
-            <p className="rounded-lg border border-line bg-white p-3">
+            <p className="rounded-tile border border-line bg-white p-3">
               To create an event: open the Weaver portal › Events › New event. This console does not have the portal&apos;s address yet, so it cannot link there. Ask the person who
               looks after Weaver to set it up.
             </p>

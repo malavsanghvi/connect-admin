@@ -67,7 +67,7 @@ export async function VolunteersTab({ event, viewer }: { event: Tables<"events">
                           {assignments
                             .filter((a) => a.shift_id === s.id)
                             .map((a) => (
-                              <li key={a.id} className="flex flex-col gap-2 rounded-lg bg-sand p-2 sm:flex-row sm:items-center sm:justify-between">
+                              <li key={a.id} className="flex flex-col gap-2 rounded-tile bg-track p-2 sm:flex-row sm:items-center sm:justify-between">
                                 <span>
                                   <span className="font-semibold">{names.get(a.person_id) ?? "Volunteer"}</span>{" "}
                                   <Badge tone={a.status === "confirmed" || a.status === "completed" ? "success" : a.status === "declined" || a.status === "no_show" ? "danger" : "muted"}>

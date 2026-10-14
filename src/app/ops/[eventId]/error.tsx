@@ -8,7 +8,7 @@ export default function ConsoleError({ error, retry }: { error: Error & { digest
   }, [error]);
 
   return (
-    <div role="alert" className="rounded-xl border border-danger/30 bg-danger-soft p-5 text-danger">
+    <div role="alert" className="rounded-tile border border-danger/30 bg-danger-50 p-5 text-danger">
       <p className="font-semibold">Something went wrong while loading this page.</p>
       <p className="mt-1 text-sm">
         The problem has been logged{error.digest ? ` (reference ${error.digest})` : ""}. Try again; if it keeps happening,

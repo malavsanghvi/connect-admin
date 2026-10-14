@@ -93,7 +93,7 @@ export function PersonPicker({
       {picked.length > 0 && (
         <ul className="mb-2 flex flex-wrap gap-2">
           {picked.map((p) => (
-            <li key={p.id} className="inline-flex items-center gap-1 rounded-full border border-line bg-navy-soft py-1 pl-3 pr-1 text-sm">
+            <li key={p.id} className="inline-flex items-center gap-1 rounded-full border border-line bg-navy-50 py-1 pl-3 pr-1 text-sm">
               <span className="font-semibold text-navy">{p.name}</span>
               <button
                 type="button"
@@ -123,17 +123,17 @@ export function PersonPicker({
       {showResults && state === "error" && (
         <p role="alert" className="mt-1 flex flex-wrap items-center gap-2 text-sm text-danger">
           {error}
-          <button type="button" className="btn btn-danger min-h-9 px-3 py-1" onClick={() => setAttempt((a) => a + 1)}>
+          <button type="button" className="btn btn-danger px-3 py-1" onClick={() => setAttempt((a) => a + 1)}>
             Try again
           </button>
         </p>
       )}
       {showResults && state === "idle" && (
-        <ul className="mt-1 max-h-64 overflow-y-auto rounded-lg border border-line bg-white">
+        <ul className="mt-1 max-h-64 overflow-y-auto rounded-tile border border-line bg-white">
           {results.length === 0 && <li className="px-3 py-2 text-sm text-muted">No one found that you&apos;re allowed to see.</li>}
           {results.map((r) => (
             <li key={r.id}>
-              <button type="button" onClick={() => choose(r)} className="flex min-h-11 w-full flex-col items-start px-3 py-2 text-left hover:bg-navy-soft">
+              <button type="button" onClick={() => choose(r)} className="flex min-h-11 w-full flex-col items-start px-3 py-2 text-left hover:bg-navy-50">
                 <span className="text-sm font-semibold">{r.name}</span>
                 {r.detail && <span className="text-xs text-muted">{r.detail}</span>}
               </button>

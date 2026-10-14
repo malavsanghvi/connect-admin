@@ -32,7 +32,7 @@ export function buildNav(access: Access, opts: { opsEventId?: string | null } = 
   if (events.length) sections.push({ key: "events", label: "Events", accent: "events", items: events });
 
   const more: NavItem[] = [];
-  if (areas.store(access)) more.push({ href: "/store", label: "My Store" });
+  if (areas.store(access)) more.push({ href: "/store", label: "My store" });
   if (areas.content(access)) more.push({ href: "/content", label: "Content" });
   if (areas.comms(access)) more.push({ href: "/comms", label: "Communications" });
   if (areas.volunteers(access)) more.push({ href: "/volunteers", label: "Volunteers" });

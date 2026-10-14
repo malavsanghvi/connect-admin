@@ -20,7 +20,7 @@ bolis and the like) exist only for the organizations that have those modules. Th
 | Event leads | Event setup (RSVP window, flags, commitments, lunch slots), checklists, RSVPs, volunteer shifts, lunch "now serving", day-of report |
 | Check-in volunteers | `/ops/<event>/checkin` — station switcher (Entry / Food / Gifts), camera or keyboard-wedge scanner, member cards and legacy QR codes, walk-ins by phone, offline queue |
 | Kitchen lead | `/ops/<event>/kitchen` — large headcount-by-slot display and store orders due |
-| Religious coordinator, store lead, communications officer, content editors, volunteer coordinator | Bolis, My Store, Content, Communications (two-approver sends), Volunteers |
+| Religious coordinator, store lead, communications officer, content editors, volunteer coordinator | Bolis, My store, Content, Communications (two-approver sends), Volunteers |
 
 People only see the areas their role allows; Postgres RLS enforces every row regardless.
 A teacher lands on **My classes**; a check-in volunteer lands on their event's scanner.
@@ -67,7 +67,8 @@ After a migration there, copy the regenerated file here. Do not edit it by hand.
 | `pnpm build` / `pnpm start` | Production build / serve |
 | `pnpm lint` | ESLint (Next.js core-web-vitals + TypeScript rules) |
 | `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm test` | Vitest unit tests for the pure rules in `src/lib` (attendance summary, offline scan queue, committee due-date classification, resolution outcome, access mirror, formatting) |
+| `pnpm test` | Vitest unit tests for the pure rules in `src/lib` (attendance summary, offline scan queue, committee due-date classification, resolution outcome, access mirror, formatting) and the brand guards (`tests/brand-kit.test.ts`) |
+| `pnpm brand:sync` | Regenerates `src/app/brand-tokens.css` from `brand/tokens.json` (the Weaver Brand Kit's tokens); `-- --from ../connect-crm/brand` first copies the kit's tokens and mark |
 
 ## Layout
 
@@ -100,6 +101,7 @@ tests/                     vitest
   goes to the server log.
 - Money is integer cents; dates are shown in the center's time zone.
 - Bolis take **pledges** (never "bids").
+- The look is the Weaver Brand Kit (connect-crm `brand/`): colours, faces, radii and shadows come from `brand/tokens.json` through the generated `src/app/brand-tokens.css`. Write no colour values in components; use the token classes (`bg-navy`, `text-muted`, `rounded-card`, `btn btn-primary`). The product is "Weaver", in sentence case, with no emoji and no exclamation marks. A community's own name and logo stay the community's. Audit and open decisions: `docs/BRAND_CONFORMANCE.md`.
 - Sends to all members need two different approvers (DB-enforced; the UI shows "Waiting for a
   second approver").
 

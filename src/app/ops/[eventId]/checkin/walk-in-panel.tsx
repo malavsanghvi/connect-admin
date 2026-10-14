@@ -86,14 +86,14 @@ export function WalkInPanel({
   }
 
   return (
-    <div className="space-y-4 rounded-xl bg-white p-4">
+    <div className="space-y-4 rounded-card border border-line bg-white p-4">
       <div className="flex items-center justify-between gap-2">
         <h2 className="font-display text-xl font-semibold">Walk-in</h2>
         <button type="button" className="btn btn-secondary" onClick={onClose}>
           Back to scanner
         </button>
       </div>
-      {!online && <p className="rounded-lg bg-warning-soft p-3 text-sm text-warning">Walk-in registration needs a connection. Scans still work offline.</p>}
+      {!online && <p className="rounded-tile bg-saffron-50 p-3 text-sm text-brown">Walk-in registration needs a connection. Scans still work offline.</p>}
       {prefillName && <p className="text-sm">Registering <strong>{prefillName}</strong>, who had no RSVP.</p>}
       <form
         onSubmit={(e) => {
@@ -112,7 +112,7 @@ export function WalkInPanel({
       </form>
 
       {error && (
-        <div role="alert" className="rounded-lg border border-danger/30 bg-danger-soft p-3 text-sm text-danger">
+        <div role="alert" className="rounded-tile border border-danger/30 bg-danger-50 p-3 text-sm text-danger">
           {error.text}
           <button type="button" className="btn btn-danger mt-2 w-full" onClick={error.retry}>
             Try again
@@ -123,7 +123,7 @@ export function WalkInPanel({
       {lookup && (
         <div className="space-y-3">
           {lookup.existing.map((r) => (
-            <div key={r.rsvpId} className="rounded-lg border border-line p-3">
+            <div key={r.rsvpId} className="rounded-tile border border-line p-3">
               <p className="font-semibold">{r.label} already has an RSVP</p>
               <p className="text-sm text-muted">{r.people.join(", ") || "No names"}</p>
               {r.token ? (
@@ -131,16 +131,16 @@ export function WalkInPanel({
                   Check in this party
                 </button>
               ) : (
-                <p className="mt-1 text-sm text-warning">This RSVP has no valid ticket — send them to the help desk.</p>
+                <p className="mt-1 text-sm text-brown">This RSVP has no valid ticket — send them to the help desk.</p>
               )}
             </div>
           ))}
           {lookup.households
             .filter((h) => !h.hasRsvp)
             .map((h) => (
-              <div key={h.householdId} className="rounded-lg border border-line p-3">
+              <div key={h.householdId} className="rounded-tile border border-line p-3">
                 <p className="font-semibold">{h.name}</p>
-                <p className="text-xs text-muted">Member family · no RSVP for this event. Tick who is here:</p>
+                <p className="text-caption text-muted">Member family · no RSVP for this event. Tick who is here:</p>
                 <ul className="mt-2 space-y-1">
                   {h.members.map((m) => {
                     const on = (picked[h.householdId] ?? []).includes(m.personId!);
@@ -179,7 +179,7 @@ export function WalkInPanel({
               </div>
             ))}
           {lookup.existing.length === 0 && lookup.households.length === 0 && (
-            <p className="rounded-lg bg-sand p-3 text-sm">
+            <p className="rounded-tile bg-track p-3 text-sm">
               No RSVP or family found for that number.
               {!lookup.canSearchMembers && " (Volunteers can't search the member directory; register them as a guest and the office will link them.)"}
             </p>
@@ -187,7 +187,7 @@ export function WalkInPanel({
         </div>
       )}
 
-      <details className="rounded-lg border border-line" open={Boolean(prefillName) || (lookup !== null && lookup.households.length === 0 && lookup.existing.length === 0)}>
+      <details className="rounded-tile border border-line" open={Boolean(prefillName) || (lookup !== null && lookup.households.length === 0 && lookup.existing.length === 0)}>
         <summary className="flex min-h-11 cursor-pointer items-center px-3 font-semibold text-navy">Register as a guest</summary>
         <div className="space-y-3 border-t border-line p-3">
           <label className="block">
@@ -203,7 +203,7 @@ export function WalkInPanel({
               className="field-input"
               placeholder={"Priya Shah\nAnya Shah, child\nKanta Shah, senior"}
             />
-            <span className="mt-1 block text-xs text-muted">Add “, child”, “, senior” or “, assistance” after a name.</span>
+            <span className="mt-1 block text-caption text-muted">Add “, child”, “, senior” or “, assistance” after a name.</span>
           </label>
           <button type="button" className="btn btn-primary w-full min-h-12" disabled={busy || !online || !partyText.trim()} onClick={() => void registerGuest()}>
             {busy ? "Saving…" : "Register and check in"}

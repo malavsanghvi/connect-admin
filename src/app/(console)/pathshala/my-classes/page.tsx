@@ -78,7 +78,7 @@ export default async function MyClassesPage() {
             const noClass = term?.no_class_dates.includes(day);
             return (
               <Card key={c.id}>
-                <p className="text-xs font-bold uppercase tracking-wider text-purple">{d.levels.find((l) => l.id === c.level_id)?.name ?? "Class"}</p>
+                <p className="text-eyebrow uppercase text-purple">{d.levels.find((l) => l.id === c.level_id)?.name ?? "Class"}</p>
                 <h2 className="font-display text-xl font-semibold">{c.name}</h2>
                 <p className="text-sm text-muted">
                   {humanize(c.meets_on)}

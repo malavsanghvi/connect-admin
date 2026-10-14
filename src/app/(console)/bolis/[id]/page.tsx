@@ -118,7 +118,7 @@ export default async function BoliPage({ params }: { params: Promise<{ id: strin
                 </thead>
                 <tbody>
                   {entries.map((e) => (
-                    <tr key={e.id} className={e.id === boli.winner_entry_id ? "bg-success-soft" : undefined}>
+                    <tr key={e.id} className={e.id === boli.winner_entry_id ? "bg-success-50" : undefined}>
                       <td className={td}>{name(e)}</td>
                       <td className={`${td} font-semibold`}>{formatCents(e.amount_cents)}</td>
                       <td className={td}>{formatDateTime(e.entered_at, tz)}</td>

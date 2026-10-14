@@ -142,13 +142,13 @@ export default async function TemplatePage({ params }: { params: Promise<{ id: s
             ) : (
               <ul className="space-y-2">
                 {lessons.map((l) => (
-                  <li key={l.id} className="rounded-lg bg-sand p-3 text-sm">
+                  <li key={l.id} className="rounded-tile bg-track p-3 text-sm">
                     <p className="whitespace-pre-line">{l.text}</p>
                     <p className="mt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
                       <span>
                         {l.author} · {formatDateTime(l.created_at, tz)}
                       </span>
-                      {manage && <ActionButton action={removeLesson.bind(null, target, l.id)} label="Remove" className="btn btn-danger min-h-9 px-2 py-1" confirm="Remove this lesson?" />}
+                      {manage && <ActionButton action={removeLesson.bind(null, target, l.id)} label="Remove" className="btn btn-danger px-2 py-1" confirm="Remove this lesson?" />}
                     </p>
                   </li>
                 ))}
