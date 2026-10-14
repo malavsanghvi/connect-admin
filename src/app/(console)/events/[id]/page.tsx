@@ -29,7 +29,7 @@ const TABS = [
 ] as const;
 
 const NEXT_STATUS: Record<string, { to: string; label: string; cls: string }[]> = {
-  draft: [{ to: "published", label: "Publish (open RSVPs)", cls: "btn btn-maroon" }],
+  draft: [{ to: "published", label: "Publish (open RSVPs)", cls: "btn btn-primary" }],
   published: [
     { to: "rsvp_closed", label: "Close RSVPs", cls: "btn btn-secondary" },
     { to: "live", label: "Go live (event day)", cls: "btn btn-success" },
@@ -106,7 +106,7 @@ export default async function EventPage({
   return (
     <>
       <PageHeader
-        kicker={`Event${event.program_year ? ` · Pathshala ${event.program_year}` : ""}`}
+        kicker={`Event${event.program_year ? ` · School year ${event.program_year}` : ""}`}
         accent="events"
         title={event.name}
         back={{ href: "/events", label: "Events" }}

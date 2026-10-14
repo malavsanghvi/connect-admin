@@ -6,12 +6,13 @@ import { resolvePeopleNames, resolveUserNames } from "@/lib/data/people";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { decideSignoff } from "../actions";
+import { moduleLabels } from "@/lib/labels";
 
-export const metadata: Metadata = { title: "Gyan Path sign-offs" };
+export const metadata: Metadata = { title: "Sign-offs" };
 
 export default async function SignoffsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const v = await requireViewer();
-  if (!areas.signoffs(v.access)) return <NoAccess area="Gyan Path sign-offs" />;
+  if (!areas.signoffs(v.access)) return <NoAccess area={moduleLabels(v.kind).signoffs} />;
   const sp = await searchParams;
   const view = sp.view === "decided" ? "decided" : "waiting";
   const supabase = await getSupabase();
@@ -30,7 +31,7 @@ export default async function SignoffsPage({ searchParams }: { searchParams: Pro
       resolvePeopleNames(supabase, personIds),
       resolveUserNames(supabase, v.center.id, signoffs.map((s) => s.teacher_user)),
     ]);
-    const lv = rows(levels, "Gyan Path levels");
+    const lv = rows(levels, "learning levels");
     const goalIds = [...new Set(lv.map((l) => l.goal_id))];
     const en = rows(enrollments, "class placements");
     const classIds = [...new Set(en.map((e) => e.class_id).filter((x): x is string => Boolean(x)))];
@@ -38,7 +39,7 @@ export default async function SignoffsPage({ searchParams }: { searchParams: Pro
       goalIds.length ? supabase.from("gyan_goals").select("id, name").in("id", goalIds) : Promise.resolve({ data: [], error: null }),
       classIds.length ? supabase.from("pathshala_classes").select("id, name").in("id", classIds) : Promise.resolve({ data: [], error: null }),
     ]);
-    return { signoffs, levels: lv, goals: rows(goals, "Gyan Path goals"), enrollments: en, classes: rows(classes, "classes"), names, deciders };
+    return { signoffs, levels: lv, goals: rows(goals, "learning goals"), enrollments: en, classes: rows(classes, "classes"), names, deciders };
   });
   if (!res.ok) return <LoadProblem message={res.error} />;
   const d = res.data;
@@ -46,10 +47,10 @@ export default async function SignoffsPage({ searchParams }: { searchParams: Pro
   return (
     <>
       <PageHeader
-        kicker="Pathshala"
+        kicker={moduleLabels(v.kind).school}
         accent="pathshala"
-        title="Gyan Path sign-offs"
-        description="Final Gyan Path levels need a teacher's sign-off before they count. You see students in the classes you teach."
+        title={moduleLabels(v.kind).signoffs}
+        description="Final levels need a teacher's sign-off before they count. You see students in the classes you teach."
       />
       <Tabs
         active={view}
@@ -79,9 +80,9 @@ export default async function SignoffsPage({ searchParams }: { searchParams: Pro
                     <div>
                       <p className="font-display text-lg font-semibold">{student}</p>
                       <p className="text-sm">
-                        {goal?.name ?? "Gyan Path"} · <strong>Level {level?.key}: {level?.name ?? "—"}</strong>
+                        {goal?.name ?? "Learning path"} · <strong>Level {level?.key}: {level?.name ?? "—"}</strong>
                       </p>
-                      <p className="text-xs text-muted">
+                      <p className="text-caption text-muted">
                         {classNames.length ? `${classNames.join(", ")} · ` : ""}asked {formatDate(s.requested_at)}
                         {level?.treasure ? ` · reward: ${level.treasure}` : ""}
                       </p>

@@ -25,7 +25,7 @@ export default async function TemplatesPage() {
 
   return (
     <>
-      <PageHeader title="Event templates" accent="pathshala" description="Reusable checklists with before, during and after items. Creating a Pathshala year makes one event from each template." />
+      <PageHeader title="Event templates" accent="pathshala" description="Reusable checklists with before, during and after items. Creating a school year makes one event from each template." />
       {templates.length === 0 ? (
         <EmptyState title="No templates yet" />
       ) : (
@@ -54,9 +54,9 @@ export default async function TemplatesPage() {
       )}
       {can(v.access, "events.manage") && (
         <Card title="New template" className="mt-6">
-          <ActionForm action={saveTemplate.bind(null, null)} submitLabel="Create template" submitClassName="btn btn-purple">
+          <ActionForm action={saveTemplate.bind(null, null)} submitLabel="Create template" submitClassName="btn btn-primary">
             <div className="space-y-3">
-              <Field label="Name" hint="e.g. Pathshala annual day">
+              <Field label="Name" hint="e.g. Annual day">
                 <input name="name" required className="field-input" />
               </Field>
               <Field label="Description">

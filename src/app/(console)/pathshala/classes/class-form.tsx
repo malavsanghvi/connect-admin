@@ -18,7 +18,7 @@ export function ClassForm({
   const grouped = new Map<string, Level[]>();
   for (const l of levels) grouped.set(l.track_name, [...(grouped.get(l.track_name) ?? []), l]);
   return (
-    <ActionForm action={saveClass.bind(null, cls?.id ?? null)} submitLabel={cls ? "Save class" : "Create class"} resetOnSuccess={!cls} submitClassName="btn btn-purple">
+    <ActionForm action={saveClass.bind(null, cls?.id ?? null)} submitLabel={cls ? "Save class" : "Create class"} resetOnSuccess={!cls} submitClassName="btn btn-primary">
       <FormGrid>
         <Field label="Term">
           <Select name="term_id" required defaultValue={cls?.term_id ?? defaultTermId} options={terms.map((t) => ({ value: t.id, label: t.name }))} placeholder="Choose a term" />

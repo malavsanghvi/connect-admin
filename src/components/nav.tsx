@@ -13,8 +13,6 @@ function isActive(pathname: string, href: string, allHrefs: string[]) {
   return !allHrefs.some((h) => h !== href && h.startsWith(href + "/") && (pathname === h || pathname.startsWith(h + "/")));
 }
 
-const accentBar = { pathshala: "bg-purple", events: "bg-maroon", navy: "bg-navy-200" } as const;
-
 function Links({ sections, onNavigate }: { sections: NavSection[]; onNavigate?: () => void }) {
   const pathname = usePathname();
   const all = sections.flatMap((s) => s.items.map((i) => i.href));
@@ -22,10 +20,7 @@ function Links({ sections, onNavigate }: { sections: NavSection[]; onNavigate?: 
     <div className="space-y-5">
       {sections.map((s) => (
         <div key={s.key}>
-          <p className="mb-1 flex items-center gap-2 px-3 text-eyebrow uppercase text-navy-200">
-            <span className={`h-2 w-2 rounded-full ${accentBar[s.accent]}`} aria-hidden />
-            {s.label}
-          </p>
+          <p className="mb-1 px-3 text-eyebrow uppercase text-navy-200">{s.label}</p>
           <ul>
             {s.items.map((item) => {
               const on = isActive(pathname, item.href, all);

@@ -6,13 +6,14 @@ import { formatCents, formatDate, formatDateTime } from "@/lib/format";
 import { classDaysInTerm } from "@/lib/logic/attendance";
 import { getSupabase, load, requireViewer, row } from "@/lib/session";
 import { TermForm } from "../term-form";
+import { moduleLabels } from "@/lib/labels";
 
 export const metadata: Metadata = { title: "Edit term" };
 
 export default async function TermPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const v = await requireViewer();
-  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area="Pathshala terms" />;
+  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area={`${moduleLabels(v.kind).school} terms`} />;
   const supabase = await getSupabase();
   const res = await load(async () => row(await supabase.from("pathshala_terms").select("*").eq("id", id).maybeSingle(), "the term"));
   if (!res.ok) return <LoadProblem message={res.error} />;
@@ -23,7 +24,7 @@ export default async function TermPage({ params }: { params: Promise<{ id: strin
 
   return (
     <>
-      <PageHeader kicker="Pathshala · Term" accent="pathshala" title={term.name} back={{ href: "/pathshala/terms", label: "All terms" }} />
+      <PageHeader kicker={`${moduleLabels(v.kind).school} · Term`} accent="pathshala" title={term.name} back={{ href: "/pathshala/terms", label: "All terms" }} />
       <Card title="Summary" className="mb-6">
         <DefinitionList
           items={[
@@ -43,7 +44,7 @@ export default async function TermPage({ params }: { params: Promise<{ id: strin
           <TermForm term={term} tz={tz} />
         </Card>
       ) : (
-        <p className="text-sm text-muted">Only the Pathshala principal can edit terms.</p>
+        <p className="text-sm text-muted">Only the principal can edit terms.</p>
       )}
     </>
   );

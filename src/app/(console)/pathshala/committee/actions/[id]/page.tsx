@@ -108,7 +108,7 @@ export default async function ActionPage({ params }: { params: Promise<{ id: str
                 {[...updates].reverse().map((u, i) => (
                   <li key={i} className="rounded-tile bg-track p-3 text-sm">
                     <p className="whitespace-pre-line">{u.text}</p>
-                    <p className="mt-1 text-xs text-muted">
+                    <p className="mt-1 text-caption text-muted">
                       {u.author} · {formatDateTime(u.date, tz)}
                     </p>
                   </li>

@@ -70,7 +70,7 @@ export function FlyerImage({
         className="w-full rounded-tile border border-line"
       />
       {signedMinutes !== null && (
-        <p className="mt-2 text-xs text-muted">This preview link works for {signedMinutes} minutes. If the image stops showing, reload the page.</p>
+        <p className="mt-2 text-caption text-muted">This preview link works for {signedMinutes} minutes. If the image stops showing, reload the page.</p>
       )}
     </>
   );

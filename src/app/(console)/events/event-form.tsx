@@ -26,7 +26,7 @@ export function EventForm({
   const prio = (event.lunch_priority_rules ?? { family_with_child_under_12_at_start: true, senior_at_start: true }) as Record<string, boolean>;
 
   return (
-    <ActionForm action={updateEvent.bind(null, event.id)} submitLabel="Save event" submitClassName="btn btn-maroon">
+    <ActionForm action={updateEvent.bind(null, event.id)} submitLabel="Save event" submitClassName="btn btn-primary">
       <div className="space-y-6">
         <fieldset>
           <legend className="mb-3 font-display text-lg font-semibold">Event</legend>
@@ -43,7 +43,7 @@ export function EventForm({
             <Field label="Venue">
               <input name="venue" defaultValue={event.venue ?? ""} className="field-input" />
             </Field>
-            <Field label="Pathshala year" hint="Only for Pathshala events, e.g. 2026-2027">
+            <Field label="School year" hint="Only for school events, e.g. 2026-2027">
               <input name="program_year" defaultValue={event.program_year ?? ""} className="field-input" />
             </Field>
             <PersonPicker name="owner_person_id" label="Owner (event lead)" initial={owner ? [owner] : []} />
@@ -65,7 +65,7 @@ export function EventForm({
                   { value: "members_and_guests", label: "Members and guests" },
                   { value: "members_only", label: "Members only" },
                   { value: "life_members_only", label: "Life members only" },
-                  { value: "pathshala_families", label: "Pathshala families" },
+                  { value: "pathshala_families", label: "School families" },
                   { value: "public", label: "Everyone (public)" },
                 ]}
               />

@@ -15,7 +15,7 @@ export async function loadAudienceOptions(supabase: ServerSupabase, centerId: st
     supabase.from("pathshala_classes").select("id, name").eq("center_id", centerId).order("name"),
     supabase.from("events").select("id, name").eq("center_id", centerId).order("starts_at", { ascending: false, nullsFirst: true }).limit(50),
   ]);
-  // Classes and events are optional pickers: a comms officer without Pathshala access still composes.
+  // Classes and events are optional pickers: a comms officer without school access still composes.
   if (classes.error) console.error("[comms] class list unavailable", classes.error);
   if (events.error) console.error("[comms] event list unavailable", events.error);
   return { zones: rows(zones, "zones"), classes: classes.data ?? [], events: events.data ?? [] };
@@ -43,7 +43,7 @@ export function CampaignForm({ campaign, options, tz }: { campaign: Tables<"comm
                 { value: "announcement", label: "Announcement" },
                 { value: "newsletter", label: "Newsletter" },
                 { value: "event", label: "Event" },
-                { value: "pathshala_update", label: "Pathshala update" },
+                { value: "pathshala_update", label: "School update" },
                 { value: "appeal", label: "Appeal" },
               ]}
             />

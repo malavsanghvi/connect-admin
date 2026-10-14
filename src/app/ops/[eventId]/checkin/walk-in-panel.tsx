@@ -93,7 +93,7 @@ export function WalkInPanel({
           Back to scanner
         </button>
       </div>
-      {!online && <p className="rounded-tile bg-saffron-50 p-3 text-sm text-brown">Walk-in registration needs a connection. Scans still work offline.</p>}
+      {!online && <p className="rounded-tile bg-warning-tint-pending p-3 text-sm text-warning-ink-pending">Walk-in registration needs a connection. Scans still work offline.</p>}
       {prefillName && <p className="text-sm">Registering <strong>{prefillName}</strong>, who had no RSVP.</p>}
       <form
         onSubmit={(e) => {
@@ -106,7 +106,7 @@ export function WalkInPanel({
           <span className="mb-1 block text-sm font-semibold">Mobile number</span>
           <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="off" className="field-input text-lg" placeholder="(713) 555-0198" />
         </label>
-        <button type="submit" className="btn btn-primary w-full min-h-12" disabled={busy || !online || phone.replace(/\D/g, "").length < 7}>
+        <button type="submit" className="btn btn-primary w-full min-h-14" disabled={busy || !online || phone.replace(/\D/g, "").length < 7}>
           {busy && !lookup ? "Searching…" : "Find family"}
         </button>
       </form>
@@ -131,7 +131,7 @@ export function WalkInPanel({
                   Check in this party
                 </button>
               ) : (
-                <p className="mt-1 text-sm text-brown">This RSVP has no valid ticket — send them to the help desk.</p>
+                <p className="mt-1 text-sm text-warning-ink-pending">This RSVP has no valid ticket — send them to the help desk.</p>
               )}
             </div>
           ))}
@@ -170,7 +170,7 @@ export function WalkInPanel({
                 </ul>
                 <button
                   type="button"
-                  className="btn btn-primary mt-2 w-full min-h-12"
+                  className="btn btn-primary mt-2 w-full min-h-14"
                   disabled={busy || !(picked[h.householdId] ?? []).length}
                   onClick={() => void registerHousehold(h)}
                 >
@@ -205,7 +205,7 @@ export function WalkInPanel({
             />
             <span className="mt-1 block text-caption text-muted">Add “, child”, “, senior” or “, assistance” after a name.</span>
           </label>
-          <button type="button" className="btn btn-primary w-full min-h-12" disabled={busy || !online || !partyText.trim()} onClick={() => void registerGuest()}>
+          <button type="button" className="btn btn-primary w-full min-h-14" disabled={busy || !online || !partyText.trim()} onClick={() => void registerGuest()}>
             {busy ? "Saving…" : "Register and check in"}
           </button>
         </div>

@@ -66,7 +66,7 @@ export default async function ResolutionsPage({ searchParams }: { searchParams: 
                       <Link href={`/pathshala/committee/resolutions/${r.id}`} className="mt-2 block font-display text-lg font-semibold text-navy hover:underline">
                         {r.title}
                       </Link>
-                      <p className="text-xs text-muted">Proposed {formatDate(r.created_at)}</p>
+                      <p className="text-caption text-muted">Proposed {formatDate(r.created_at)}</p>
                     </Card>
                   </li>
                 );
@@ -77,7 +77,7 @@ export default async function ResolutionsPage({ searchParams }: { searchParams: 
         <div className="lg:col-span-2">
           {can(v.access, "governance.manage") ? (
             <Card title="Propose a resolution">
-              <ActionForm action={saveResolution.bind(null, null)} submitLabel="Create" submitClassName="btn btn-purple">
+              <ActionForm action={saveResolution.bind(null, null)} submitLabel="Create" submitClassName="btn btn-primary">
                 <div className="space-y-3">
                   <Field label="Title">
                     <input name="title" required className="field-input" />

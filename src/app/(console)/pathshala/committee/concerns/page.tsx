@@ -9,12 +9,13 @@ import { formatDateTime, humanize } from "@/lib/format";
 import type { StatusUpdate } from "@/lib/logic/eams";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { createActionFromConcern, createConcern, updateConcern } from "../actions";
+import { moduleLabels } from "@/lib/labels";
 
 export const metadata: Metadata = { title: "Concerns" };
 
 export default async function ConcernsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const v = await requireViewer();
-  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area="Pathshala concerns" />;
+  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area={`${moduleLabels(v.kind).school} concerns`} />;
   const sp = await searchParams;
   const view = sp.view === "closed" ? "closed" : sp.view === "all" ? "all" : "open";
   const source = sp.source === "teacher" || sp.source === "parent" ? sp.source : null;
@@ -80,13 +81,13 @@ export default async function ConcernsPage({ searchParams }: { searchParams: Pro
                     <Card>
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge tone={c.status === "closed" ? "success" : c.status === "in_progress" ? "navy" : "warning"}>{humanize(c.status)}</Badge>
-                        <Badge tone="purple">{humanize(c.source)}</Badge>
+                        <Badge tone="navy">{humanize(c.source)}</Badge>
                         {c.class_id && <Badge tone="muted">{classes.find((x) => x.id === c.class_id)?.name ?? "Class"}</Badge>}
                       </div>
                       <h3 className="mt-2 font-display text-lg font-semibold">{c.title}</h3>
                       <p className="mt-1 whitespace-pre-line text-sm">{c.description}</p>
                       {c.suggestions && <p className="mt-1 text-sm text-muted">Suggestion: {c.suggestions}</p>}
-                      <p className="mt-2 text-xs text-muted">
+                      <p className="mt-2 text-caption text-muted">
                         {c.submitter_name ?? "Anonymous"}
                         {c.submitter_email ? ` · ${c.submitter_email}` : ""}
                         {c.submitter_phone ? ` · ${c.submitter_phone}` : ""} · {formatDateTime(c.created_at, tz)} · owner:{" "}
@@ -103,7 +104,7 @@ export default async function ConcernsPage({ searchParams }: { searchParams: Pro
                       )}
                       {c.resolution && <p className="mt-2 rounded-tile bg-success-50 p-2 text-sm text-success">Resolution: {c.resolution}</p>}
                       {updates.length > 0 && (
-                        <ol className="mt-2 space-y-1 border-l-2 border-line pl-3 text-xs text-muted">
+                        <ol className="mt-2 space-y-1 border-l-2 border-line pl-3 text-caption text-muted">
                           {updates.map((u, i) => (
                             <li key={i}>
                               {formatDateTime(u.date, tz)} · {u.author}: {u.text}
@@ -149,7 +150,7 @@ export default async function ConcernsPage({ searchParams }: { searchParams: Pro
                           </Details>
                           {canAct && !c.linked_action_id && (
                             <Details summary="Create action">
-                              <ActionForm action={createActionFromConcern.bind(null, c.id)} submitLabel="Create action" submitClassName="btn btn-purple">
+                              <ActionForm action={createActionFromConcern.bind(null, c.id)} submitLabel="Create action" submitClassName="btn btn-primary">
                                 <FormGrid>
                                   <Field label="Action" className="sm:col-span-2">
                                     <input name="name" defaultValue={`Concern: ${c.title}`} className="field-input" />
@@ -181,7 +182,7 @@ export default async function ConcernsPage({ searchParams }: { searchParams: Pro
         <div className="lg:col-span-2">
           {manage ? (
             <Card title="Log a concern" description="For concerns received by phone, email or in person.">
-              <ActionForm action={createConcern} submitLabel="Log concern" resetOnSuccess submitClassName="btn btn-purple">
+              <ActionForm action={createConcern} submitLabel="Log concern" resetOnSuccess submitClassName="btn btn-primary">
                 <div className="space-y-3">
                   <Field label="From">
                     <Select
@@ -223,7 +224,7 @@ export default async function ConcernsPage({ searchParams }: { searchParams: Pro
               </ActionForm>
             </Card>
           ) : (
-            <p className="text-sm text-muted">Only the Pathshala principal can log or update concerns.</p>
+            <p className="text-sm text-muted">Only the principal can log or update concerns.</p>
           )}
         </div>
       </div>

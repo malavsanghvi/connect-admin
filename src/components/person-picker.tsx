@@ -118,7 +118,7 @@ export function PersonPicker({
           required={required && picked.length === 0}
         />
       )}
-      {hint && <span className="mt-1 block text-xs text-muted">{hint}</span>}
+      {hint && <span className="mt-1 block text-caption text-muted">{hint}</span>}
       {showResults && state === "loading" && <p className="mt-1 text-sm text-muted">Searching…</p>}
       {showResults && state === "error" && (
         <p role="alert" className="mt-1 flex flex-wrap items-center gap-2 text-sm text-danger">
@@ -135,7 +135,7 @@ export function PersonPicker({
             <li key={r.id}>
               <button type="button" onClick={() => choose(r)} className="flex min-h-11 w-full flex-col items-start px-3 py-2 text-left hover:bg-navy-50">
                 <span className="text-sm font-semibold">{r.name}</span>
-                {r.detail && <span className="text-xs text-muted">{r.detail}</span>}
+                {r.detail && <span className="text-caption text-muted">{r.detail}</span>}
               </button>
             </li>
           ))}

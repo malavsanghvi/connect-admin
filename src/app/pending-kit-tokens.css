@@ -1,0 +1,20 @@
+/*
+ * TEMPORARY. Tokens the Weaver Brand Kit is adding in connect-crm brand/tokens.json (owner decision 2026-10-14): a
+ * control border at 3:1, the warning tint and ink, radius-field and radius-tag, JetBrains Mono for identifiers. They are
+ * used under these "-pending" names so the swap is a rename. When the kit's final token table arrives: re-vendor
+ * brand/tokens.json, run `pnpm brand:sync`, rename each "-pending" class to the kit's name, and delete this file and its
+ * entry in the allowlist of tests/brand-kit.test.ts.
+ * TODO(kit): remove this file.
+ */
+@theme static {
+  /* A control's edge at 3:1 on white and canvas (3.3:1 and 3.2:1). The only colour value in this file. */
+  --color-control-border-pending: #878ba8;
+  /* Aliases of kit colours until the kit names its own warning pair. */
+  --color-warning-tint-pending: var(--color-saffron-50);
+  --color-warning-ink-pending: var(--color-brown);
+  /* Aliases of kit radii until the kit names its own. */
+  --radius-field-pending: var(--radius-tile);
+  --radius-tag-pending: var(--radius-pill);
+  /* The face for identifiers (ticket and member numbers, raw-text fields); next/font loads it in layout.tsx. */
+  --font-mono-pending: var(--font-jetbrains-mono, "JetBrains Mono"), ui-monospace, SFMono-Regular, Menlo, monospace;
+}

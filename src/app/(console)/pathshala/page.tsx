@@ -9,14 +9,15 @@ import { formatRate, latestClassDay, summarizeAttendance } from "@/lib/logic/att
 import { load, requireViewer, rows } from "@/lib/session";
 import { getSupabase } from "@/lib/session";
 import { TermSwitcher } from "./term-switcher";
+import { moduleLabels } from "@/lib/labels";
 
-export const metadata: Metadata = { title: "Pathshala" };
+export const metadata: Metadata = { title: "Learning" };
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function PathshalaOverview({ searchParams }: { searchParams: SP }) {
   const v = await requireViewer();
-  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area="the Pathshala overview" />;
+  if (!areas.pathshalaAdmin(v.access)) return <NoAccess area={`the ${moduleLabels(v.kind).school} overview`} />;
   const sp = await searchParams;
   const supabase = await getSupabase();
   const tz = v.center.time_zone;
@@ -71,8 +72,8 @@ export default async function PathshalaOverview({ searchParams }: { searchParams
   if (!d.term) {
     return (
       <>
-        <PageHeader kicker="Pathshala" accent="pathshala" title="Pathshala" />
-        <EmptyState title="No Pathshala term yet">
+        <PageHeader kicker={moduleLabels(v.kind).school} accent="pathshala" title={moduleLabels(v.kind).school} />
+        <EmptyState title="No term yet">
           <Link className="font-semibold text-navy underline" href="/pathshala/terms">
             Create the first term
           </Link>{" "}
@@ -92,13 +93,13 @@ export default async function PathshalaOverview({ searchParams }: { searchParams
   return (
     <>
       <PageHeader
-        kicker="Pathshala"
+        kicker={moduleLabels(v.kind).school}
         accent="pathshala"
         title={`Term ${term.name}`}
         description={`${formatDate(term.starts_on)} – ${formatDate(term.ends_on)} · ${term.status}`}
         actions={
           <>
-            <Link href="/pathshala/enrollments" className="btn btn-purple">
+            <Link href="/pathshala/enrollments" className="btn btn-primary">
               Enrollment requests{requested ? ` (${requested})` : ""}
             </Link>
             <Link href="/pathshala/classes" className="btn btn-secondary">
@@ -109,10 +110,10 @@ export default async function PathshalaOverview({ searchParams }: { searchParams
       />
       <TermSwitcher terms={d.terms} activeId={term.id} basePath="/pathshala" />
       <StatGrid>
-        <Stat label="Students placed" value={placed.length} sub={`${classes.length} classes`} tone="purple" />
-        <Stat label="Waitlist" value={waitlisted} sub={`${requested} requests to place`} tone="warning" />
+        <Stat label="Students placed" value={placed.length} sub={`${classes.length} classes`} tone="navy" />
+        <Stat label="Waitlist" value={waitlisted} sub={`${requested} requests to place`} tone="brown" />
         <Stat
-          label="Gyan Path sign-offs"
+          label={moduleLabels(v.kind).signoffs}
           value={d.signoffsPending ?? "—"}
           sub={<Link className="underline" href="/pathshala/signoffs">awaiting teachers</Link>}
           tone="navy"
@@ -121,7 +122,7 @@ export default async function PathshalaOverview({ searchParams }: { searchParams
           label="Open concerns"
           value={d.openConcerns ?? "—"}
           sub={<Link className="underline" href="/pathshala/committee/concerns">teachers and parents</Link>}
-          tone="maroon"
+          tone="brown"
         />
       </StatGrid>
 
@@ -157,7 +158,7 @@ export default async function PathshalaOverview({ searchParams }: { searchParams
                         <Link href={`/pathshala/classes/${c.id}`} className="font-semibold text-navy hover:underline">
                           {c.name}
                         </Link>
-                        <div className="text-xs text-muted">
+                        <div className="text-caption text-muted">
                           {levelLabel(levels, c.level_id)}
                           {c.room ? ` · ${c.room}` : ""}
                         </div>
@@ -167,7 +168,7 @@ export default async function PathshalaOverview({ searchParams }: { searchParams
                         <span className="font-semibold">{roster.length}</span>
                         {c.capacity !== null && <span className="text-muted"> / {c.capacity}</span>}
                         {full && <span className="ml-2"><Badge tone="warning">Full</Badge></span>}
-                        {wl > 0 && <div className="text-xs text-muted">{wl} waitlisted</div>}
+                        {wl > 0 && <div className="text-caption text-muted">{wl} waitlisted</div>}
                       </td>
                       <td className={td}>
                         {isNoClass ? (
@@ -184,7 +185,7 @@ export default async function PathshalaOverview({ searchParams }: { searchParams
                           </Badge>
                         )}
                         {summary.state !== "not_taken" && (
-                          <div className="text-xs text-muted">
+                          <div className="text-caption text-muted">
                             {summary.present} present · {summary.late} late · {summary.absent} absent · {summary.excused} excused
                           </div>
                         )}

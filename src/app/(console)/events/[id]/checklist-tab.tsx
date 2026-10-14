@@ -96,7 +96,7 @@ export async function ChecklistTab({ event, viewer }: { event: Tables<"events">;
               {lessons.map((l) => (
                 <li key={l.id} className="rounded-tile bg-track p-3 text-sm">
                   <p className="whitespace-pre-line">{l.text}</p>
-                  <p className="mt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
+                  <p className="mt-1 flex flex-wrap items-center justify-between gap-2 text-caption text-muted">
                     <span>
                       {l.author} · {formatDateTime(l.created_at, tz)}
                     </span>

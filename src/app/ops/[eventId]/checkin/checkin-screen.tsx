@@ -411,7 +411,7 @@ export function CheckInScreen({
         </p>
       </div>
       {eventStatus !== "live" && (
-        <p className="rounded-tile bg-saffron-50 px-3 py-2 text-sm text-brown">This event isn&apos;t marked live yet — check-ins still work.</p>
+        <p className="rounded-tile bg-warning-tint-pending px-3 py-2 text-sm text-warning-ink-pending">This event isn&apos;t marked live yet — check-ins still work.</p>
       )}
 
       {/* Station switcher */}
@@ -442,7 +442,7 @@ export function CheckInScreen({
             notice.tone === "success"
               ? "border-success/30 bg-success-50 text-success"
               : notice.tone === "warning"
-                ? "border-brown/30 bg-saffron-50 text-brown"
+                ? "border-warning-ink-pending/30 bg-warning-tint-pending text-warning-ink-pending"
                 : notice.tone === "danger"
                   ? "border-danger/30 bg-danger-50 text-danger"
                   : "border-navy/20 bg-navy-50 text-navy"
@@ -500,7 +500,7 @@ export function CheckInScreen({
               enterKeyHint="go"
               placeholder="Scan or type ticket / member number"
               aria-label="Ticket or member code"
-              className="field-input text-lg"
+              className="field-input font-mono-pending text-lg placeholder:font-sans"
             />
             <button type="submit" className="btn btn-primary min-w-20" disabled={!manual.trim()}>
               {busy ? "…" : "Go"}
@@ -551,9 +551,9 @@ export function CheckInScreen({
                     type="button"
                     aria-pressed={on}
                     onClick={() => setSelected((cur) => (cur.includes(p.id) ? cur.filter((x) => x !== p.id) : [...cur, p.id]))}
-                    className={`flex min-h-14 w-full items-center gap-3 rounded-tile border-2 px-3 py-2 text-left ${on ? "border-navy bg-navy-100" : "border-line bg-white"}`}
+                    className={`flex min-h-14 w-full items-center gap-3 rounded-tile border-2 px-3 py-2 text-left ${on ? "border-navy bg-navy-100" : "border-control-border-pending bg-white"}`}
                   >
-                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-chip border-2 text-lg font-bold ${on ? "border-navy bg-navy text-white" : "border-line bg-white"}`}>
+                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-chip border-2 text-lg font-bold ${on ? "border-navy bg-navy text-white" : "border-control-border-pending bg-white"}`}>
                       {on ? "✓" : ""}
                     </span>
                     <span className="min-w-0 flex-1">

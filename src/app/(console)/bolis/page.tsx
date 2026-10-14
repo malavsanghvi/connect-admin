@@ -5,8 +5,9 @@ import { areas, can } from "@/lib/access";
 import { formatCents, formatDateTime, humanize } from "@/lib/format";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { BoliForm } from "./boli-form";
+import { moduleLabels } from "@/lib/labels";
 
-export const metadata: Metadata = { title: "Bolis" };
+export const metadata: Metadata = { title: "Event pledges" };
 
 export default async function BolisPage() {
   const v = await requireViewer();
@@ -28,7 +29,7 @@ export default async function BolisPage() {
 
   return (
     <>
-      <PageHeader kicker="Events" accent="events" title="Bolis" description="Digital bolis run in the member app until the cutoff; in-person bolis are recorded in the hall. Both end as pledges." />
+      <PageHeader kicker="Events" accent="events" title={moduleLabels(v.kind).pledges} description="Digital bolis run in the member app until the cutoff; in-person bolis are recorded in the hall. Both end as pledges." />
       <Card>
         {bolis.length === 0 ? (
           <EmptyState title="No bolis yet" />
@@ -55,7 +56,7 @@ export default async function BolisPage() {
                         <Link className="font-semibold text-navy hover:underline" href={`/bolis/${b.id}`}>
                           {b.name}
                         </Link>
-                        {b.event_id && <div className="text-xs text-muted">{events.find((e) => e.id === b.event_id)?.name ?? "Event"}</div>}
+                        {b.event_id && <div className="text-caption text-muted">{events.find((e) => e.id === b.event_id)?.name ?? "Event"}</div>}
                       </td>
                       <td className={td}>{b.kind === "digital" ? "Digital" : "In person"}</td>
                       <td className={td}>{formatDateTime(b.extended_until ?? b.closes_at, tz)}</td>

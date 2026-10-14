@@ -52,7 +52,7 @@ export async function LunchTab({ event, viewer }: { event: Tables<"events">; vie
           <EmptyState title="No slots yet">Slots are created automatically at the first check-in, or you can create them now.</EmptyState>
           {canRun && (
             <div className="mt-3 text-center">
-              <ActionButton action={generateLunchSlots.bind(null, event.id)} label="Create slots now" className="btn btn-maroon" />
+              <ActionButton action={generateLunchSlots.bind(null, event.id)} label="Create slots now" className="btn btn-primary" />
             </div>
           )}
         </Card>

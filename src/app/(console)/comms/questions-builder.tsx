@@ -27,11 +27,11 @@ export function QuestionsBuilder({ initial }: { initial: SurveyQuestion[] }) {
         <div key={q.id} className="rounded-tile border border-line p-3">
           <div className="grid gap-2 sm:grid-cols-[1fr_12rem]">
             <label className="block">
-              <span className="mb-1 block text-xs font-semibold">Question {i + 1}</span>
+              <span className="mb-1 block text-caption font-semibold">Question {i + 1}</span>
               <input value={q.label} onChange={(e) => update(i, { label: e.target.value })} className="field-input" required />
             </label>
             <label className="block">
-              <span className="mb-1 block text-xs font-semibold">Answer type</span>
+              <span className="mb-1 block text-caption font-semibold">Answer type</span>
               <select value={q.type} onChange={(e) => update(i, { type: e.target.value as SurveyQuestion["type"] })} className="field-input">
                 <option value="rating">Rating 1–5</option>
                 <option value="single">Pick one</option>
@@ -42,7 +42,7 @@ export function QuestionsBuilder({ initial }: { initial: SurveyQuestion[] }) {
           </div>
           {(q.type === "single" || q.type === "multi") && (
             <label className="mt-2 block">
-              <span className="mb-1 block text-xs font-semibold">Choices (comma-separated)</span>
+              <span className="mb-1 block text-caption font-semibold">Choices (comma-separated)</span>
               <input
                 value={q.options.join(", ")}
                 onChange={(e) => update(i, { options: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}

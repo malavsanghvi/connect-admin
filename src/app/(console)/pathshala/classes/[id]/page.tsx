@@ -12,6 +12,7 @@ import { formatRate, summarizeAttendance } from "@/lib/logic/attendance";
 import { getSupabase, load, requireViewer, row, rows } from "@/lib/session";
 import { addTeacher, placeEnrollment, removeTeacher, setEnrollmentStatus, waitlistEnrollment } from "../../actions";
 import { ClassForm } from "../class-form";
+import { moduleLabels } from "@/lib/labels";
 
 export const metadata: Metadata = { title: "Class" };
 
@@ -79,14 +80,14 @@ export default async function ClassPage({ params }: { params: Promise<{ id: stri
   return (
     <>
       <PageHeader
-        kicker={`Pathshala · ${level?.track_name ?? ""} · ${term?.name ?? ""}`}
+        kicker={`${moduleLabels(v.kind).school} · ${level?.track_name ?? ""} · ${term?.name ?? ""}`}
         accent="pathshala"
         title={cls.name}
         description={`${level?.name ?? ""}${cls.room ? ` · ${cls.room}` : ""} · ${humanize(cls.meets_on)}${cls.starts_time ? ` ${cls.starts_time.slice(0, 5)}` : ""}${cls.ends_time ? `–${cls.ends_time.slice(0, 5)}` : ""}`}
         back={{ href: canManage || areas.pathshalaAdmin(v.access) ? "/pathshala/classes" : "/pathshala/my-classes", label: "Classes" }}
         actions={
           (isTeacher || canManage) && (
-            <Link href={`/pathshala/classes/${cls.id}/attendance`} className="btn btn-purple">
+            <Link href={`/pathshala/classes/${cls.id}/attendance`} className="btn btn-primary">
               Take attendance
             </Link>
           )
@@ -117,12 +118,12 @@ export default async function ClassPage({ params }: { params: Promise<{ id: stri
                       <tr key={e.id}>
                         <td className={td}>
                           <span className="font-semibold">{studentName(e.student_person_id)}</span>
-                          {e.notes && <div className="text-xs text-muted">{e.notes}</div>}
+                          {e.notes && <div className="text-caption text-muted">{e.notes}</div>}
                         </td>
                         <td className={td}>{ageFrom(student(e.student_person_id)?.date_of_birth ?? null, today) ?? "—"}</td>
                         <td className={td}>
-                          <Badge tone={e.status === "active" ? "success" : "purple"}>{e.status}</Badge>
-                          {e.placed_at && <div className="text-xs text-muted">since {formatDate(e.placed_at)}</div>}
+                          <Badge tone={e.status === "active" ? "success" : "navy"}>{e.status}</Badge>
+                          {e.placed_at && <div className="text-caption text-muted">since {formatDate(e.placed_at)}</div>}
                         </td>
                         {canManage && (
                           <td className={td}>
@@ -136,11 +137,11 @@ export default async function ClassPage({ params }: { params: Promise<{ id: stri
                                 fields={{ status: "withdrawn" }}
                                 label="Withdraw"
                                 className="btn btn-danger"
-                                confirm={`Withdraw ${studentName(e.student_person_id)} from Pathshala this term?`}
+                                confirm={`Withdraw ${studentName(e.student_person_id)} from this term?`}
                               />
                             </div>
                             <Details summary="Move to another class">
-                              <ActionForm action={placeEnrollment.bind(null, e.id)} submitLabel="Move" submitClassName="btn btn-purple">
+                              <ActionForm action={placeEnrollment.bind(null, e.id)} submitLabel="Move" submitClassName="btn btn-primary">
                                 <Select name="class_id" required options={classOptions.filter((o) => o.value !== cls.id)} placeholder="Choose a class" />
                                 <label className="mt-2 flex min-h-11 items-center gap-2 text-sm">
                                   <input type="checkbox" name="over_capacity" className="h-5 w-5 accent-navy" /> Place even if full
@@ -167,14 +168,14 @@ export default async function ClassPage({ params }: { params: Promise<{ id: stri
                     <li key={e.id} className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <p className="font-semibold">{studentName(e.student_person_id)}</p>
-                        <p className="text-xs text-muted">
+                        <p className="text-caption text-muted">
                           {e.class_id ? "Waitlisted for this class" : e.status === "requested" ? "Requested this level" : "Waitlisted for this level"} · since{" "}
                           {formatDate(e.registered_at)}
                         </p>
                       </div>
                       {canManage && (
                         <div className="flex flex-wrap gap-2">
-                          <ActionButton action={placeEnrollment.bind(null, e.id)} fields={{ class_id: cls.id }} label="Place in this class" className="btn btn-purple" />
+                          <ActionButton action={placeEnrollment.bind(null, e.id)} fields={{ class_id: cls.id }} label="Place in this class" className="btn btn-primary" />
                           {!e.class_id && (
                             <ActionButton action={waitlistEnrollment.bind(null, e.id)} fields={{ class_id: cls.id }} label="Waitlist for this class" />
                           )}
@@ -259,7 +260,7 @@ export default async function ClassPage({ params }: { params: Promise<{ id: stri
                     <span>
                       <span className="font-semibold">{d.names.get(t.person_id) ?? "Teacher"}</span>
                       <span className="ml-2">
-                        <Badge tone="purple">{t.role}</Badge>
+                        <Badge tone="navy">{t.role}</Badge>
                       </span>
                     </span>
                     {canManage && (
@@ -277,7 +278,7 @@ export default async function ClassPage({ params }: { params: Promise<{ id: stri
             )}
             {canManage && (
               <div className="mt-4 border-t border-line pt-4">
-                <ActionForm action={addTeacher.bind(null, cls.id)} submitLabel="Add teacher" submitClassName="btn btn-purple" resetOnSuccess>
+                <ActionForm action={addTeacher.bind(null, cls.id)} submitLabel="Add teacher" submitClassName="btn btn-primary" resetOnSuccess>
                   <div className="space-y-3">
                     <PersonPicker name="person_id" label="Person" required hint="Only people your role can see appear in the search." />
                     <Field label="Role">

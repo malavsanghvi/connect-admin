@@ -18,7 +18,7 @@ const ON_STYLE: Record<AttendanceStatus, string> = {
   absent: "bg-danger text-white border-danger",
   excused: "bg-navy text-white border-navy",
 };
-const OFF_STYLE = "bg-white text-ink border-line hover:bg-navy-50";
+const OFF_STYLE = "bg-white text-ink border-control-border-pending hover:bg-navy-50";
 
 export function AttendanceSheet({
   classId,
@@ -309,13 +309,13 @@ function QrButton({
 
   return (
     <>
-      <button type="button" className="btn btn-purple" onClick={show}>
+      <button type="button" className="btn btn-primary" onClick={show}>
         Show QR for this class
       </button>
       {open && (
         <div role="dialog" aria-modal="true" aria-label="Class attendance QR code" className="fixed inset-0 z-50 flex items-center justify-center bg-navy-hover/90 p-4">
           <div className="w-full max-w-md rounded-card bg-white p-5 text-center">
-            <p className="text-eyebrow uppercase text-purple">Scan to mark attendance</p>
+            <p className="text-eyebrow uppercase text-navy">Scan to mark attendance</p>
             <p className="mt-1 text-sm text-muted">Students or parents scan this with the member app. It changes every 10 minutes.</p>
             <div className="mx-auto mt-4 flex aspect-square w-full max-w-xs items-center justify-center rounded-tile border border-line bg-white">
               {dataUrl ? (

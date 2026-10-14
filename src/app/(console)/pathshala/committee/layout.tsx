@@ -1,9 +1,12 @@
+import { moduleLabels } from "@/lib/labels";
+import { requireViewer } from "@/lib/session";
 import { CommitteeTabs } from "./committee-tabs";
 
-export default function CommitteeLayout({ children }: { children: React.ReactNode }) {
+export default async function CommitteeLayout({ children }: { children: React.ReactNode }) {
+  const v = await requireViewer();
   return (
     <>
-      <p className="text-eyebrow uppercase text-purple">Pathshala committee</p>
+      <p className="text-eyebrow uppercase text-navy">{moduleLabels(v.kind).school} committee</p>
       <CommitteeTabs />
       {children}
     </>

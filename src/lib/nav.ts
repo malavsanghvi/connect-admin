@@ -1,11 +1,14 @@
 import { areas, can, eventScopedIds, hasRole, type Access } from "@/lib/access";
+import { NEUTRAL_LABELS, type ModuleLabels } from "@/lib/labels";
 
 export type NavItem = { href: string; label: string };
-export type NavSection = { key: string; label: string; accent: "pathshala" | "events" | "navy"; items: NavItem[] };
+export type NavSection = { key: string; label: string; items: NavItem[] };
 
 // Navigation shows only what the user can use. Pages re-check, RLS enforces.
-export function buildNav(access: Access, opts: { opsEventId?: string | null } = {}): NavSection[] {
+export function buildNav(access: Access, opts: { opsEventId?: string | null; labels?: ModuleLabels } = {}): NavSection[] {
   const sections: NavSection[] = [];
+  // The module names come from the community's kind (src/lib/labels.ts); neutral wording when none is given.
+  const labels = opts.labels ?? NEUTRAL_LABELS;
 
   const pathshala: NavItem[] = [];
   if (areas.pathshalaAdmin(access)) pathshala.push({ href: "/pathshala", label: "Overview" });
@@ -15,10 +18,10 @@ export function buildNav(access: Access, opts: { opsEventId?: string | null } = 
     pathshala.push({ href: "/pathshala/enrollments", label: "Enrollments" });
     pathshala.push({ href: "/pathshala/terms", label: "Terms" });
   }
-  if (areas.signoffs(access)) pathshala.push({ href: "/pathshala/signoffs", label: "Gyan Path sign-offs" });
+  if (areas.signoffs(access)) pathshala.push({ href: "/pathshala/signoffs", label: labels.signoffs });
   if (areas.announcements(access)) pathshala.push({ href: "/pathshala/announcements", label: "Announcements" });
   if (areas.committee(access)) pathshala.push({ href: "/pathshala/committee", label: "Committee" });
-  if (pathshala.length) sections.push({ key: "pathshala", label: "Pathshala", accent: "pathshala", items: pathshala });
+  if (pathshala.length) sections.push({ key: "pathshala", label: labels.school, items: pathshala });
 
   const events: NavItem[] = [];
   if (areas.events(access)) events.push({ href: "/events", label: "Events" });
@@ -28,15 +31,15 @@ export function buildNav(access: Access, opts: { opsEventId?: string | null } = 
     if (areas.kitchen(access, opts.opsEventId))
       events.push({ href: `/ops/${opts.opsEventId}/kitchen`, label: "Kitchen display" });
   }
-  if (areas.bolis(access)) events.push({ href: "/bolis", label: "Bolis" });
-  if (events.length) sections.push({ key: "events", label: "Events", accent: "events", items: events });
+  if (areas.bolis(access)) events.push({ href: "/bolis", label: labels.pledges });
+  if (events.length) sections.push({ key: "events", label: "Events", items: events });
 
   const more: NavItem[] = [];
-  if (areas.store(access)) more.push({ href: "/store", label: "My store" });
+  if (areas.store(access)) more.push({ href: "/store", label: labels.store });
   if (areas.content(access)) more.push({ href: "/content", label: "Content" });
   if (areas.comms(access)) more.push({ href: "/comms", label: "Communications" });
   if (areas.volunteers(access)) more.push({ href: "/volunteers", label: "Volunteers" });
-  if (more.length) sections.push({ key: "more", label: "Community", accent: "navy", items: more });
+  if (more.length) sections.push({ key: "more", label: "Community", items: more });
 
   return sections;
 }

@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 /*
- * The theme is the Weaver Brand Kit: brand-tokens.css is generated from brand/tokens.json (run `pnpm brand:sync`),
- * and module-colors.css holds the few app-only accents the kit does not define. Write no colour values here or in
- * components: use the token classes (bg-navy, text-muted, border-line, rounded-card, ...).
+ * The theme is the Weaver Brand Kit: brand-tokens.css is generated from brand/tokens.json (run `pnpm brand:sync`).
+ * pending-kit-tokens.css holds the few tokens the kit is still adding (temporary, see that file). Write no colour values
+ * here or in components: use the token classes (bg-navy, text-muted, border-line, rounded-card, ...).
  */
 @import "./brand-tokens.css";
-@import "./module-colors.css";
+@import "./pending-kit-tokens.css";
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -40,13 +40,13 @@ body {
   }
 }
 
-/* Form fields: at least the kit's tap target tall, 16px text so phones do not zoom in, the kit's input border. */
+/* Form fields: at least the kit's tap target tall, 16px text so phones do not zoom in, a 3:1 control border. */
 @utility field-input {
   display: block;
   width: 100%;
   min-height: var(--spacing-tap-target);
-  border-radius: var(--radius-tile);
-  border: 1px solid var(--color-line-input);
+  border-radius: var(--radius-field-pending);
+  border: 1px solid var(--color-control-border-pending);
   background: var(--color-white);
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
@@ -115,7 +115,7 @@ body {
     border-color: var(--color-white);
   }
 }
-/* Status and module buttons: the kit has no style for these, so they borrow the kit's colours. */
+/* Status buttons: the kit has no style for these, so they borrow the kit's colours. */
 @utility btn-danger {
   border: 2px solid color-mix(in srgb, var(--color-danger) 35%, transparent);
   background: var(--color-white);
@@ -126,20 +126,6 @@ body {
 }
 @utility btn-success {
   background: var(--color-success);
-  color: var(--color-white);
-  &:hover:not(:disabled) {
-    filter: brightness(0.95);
-  }
-}
-@utility btn-purple {
-  background: var(--color-purple);
-  color: var(--color-white);
-  &:hover:not(:disabled) {
-    filter: brightness(0.95);
-  }
-}
-@utility btn-maroon {
-  background: var(--color-maroon);
   color: var(--color-white);
   &:hover:not(:disabled) {
     filter: brightness(0.95);

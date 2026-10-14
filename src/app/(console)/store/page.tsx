@@ -141,7 +141,7 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
                               <p className="font-semibold">#{o.order_number}</p>
                               <span className="font-semibold">{formatCents(o.total_cents)}</span>
                             </div>
-                            <p className="text-xs text-muted">
+                            <p className="text-caption text-muted">
                               {o.guest_name ?? "Member order"}
                               {o.placed_at ? ` · placed ${formatTime(o.placed_at, tz)}` : ""}
                             </p>
@@ -155,7 +155,7 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
                                   </li>
                                 ))}
                             </ul>
-                            {o.gift_message && <p className="mt-1 text-xs italic">“{o.gift_message}”</p>}
+                            {o.gift_message && <p className="mt-1 text-caption italic">“{o.gift_message}”</p>}
                             <div className="mt-3 flex flex-wrap gap-2">
                               {(NEXT_LABEL[o.status] ?? []).map((n) => (
                                 <ActionButton key={n.to} action={moveOrder.bind(null, o.id)} fields={{ to: n.to }} label={n.label} className={n.cls} />
@@ -231,7 +231,7 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
                           {formatDateTime(w.starts_at, tz)} – {formatTime(w.ends_at, tz)}
                           {w.location ? ` · ${w.location}` : ""}
                         </p>
-                        <p className="text-xs text-muted">
+                        <p className="text-caption text-muted">
                           Order by {formatDateTime(w.order_cutoff_at, tz)} · {w.orders_count}
                           {w.capacity ? ` of ${w.capacity}` : ""} orders
                           {w.event_id ? ` · ${events.find((e) => e.id === w.event_id)?.name ?? "event"}` : ""}

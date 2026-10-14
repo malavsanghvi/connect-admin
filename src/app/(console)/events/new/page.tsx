@@ -45,7 +45,7 @@ export default async function NewEventPage() {
             slot.
           </p>
           {link ? (
-            <a href={link} target="_blank" rel="noopener noreferrer" className="btn btn-maroon">
+            <a href={link} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
               Create an event in the Weaver portal
               <span className="sr-only"> (opens in a new tab)</span>
             </a>

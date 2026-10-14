@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import { kitColor } from "@/lib/brand-kit";
 import "./globals.css";
 
@@ -7,6 +7,8 @@ import "./globals.css";
 // The variable names must match FONT_VARIABLES in scripts/sync-brand-tokens.mjs.
 const bricolage = Bricolage_Grotesque({ variable: "--font-bricolage", subsets: ["latin"], axes: ["opsz"], display: "swap" });
 const hanken = Hanken_Grotesk({ variable: "--font-hanken", subsets: ["latin"], display: "swap" });
+// TODO(kit): the kit is adding JetBrains Mono for identifiers; until its token arrives it is used as font-mono-pending.
+const jetbrainsMono = JetBrains_Mono({ variable: "--font-jetbrains-mono", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "Weaver Admin", template: "%s · Weaver Admin" },
@@ -21,7 +23,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${hanken.variable} h-full antialiased`}>
+    <html lang="en" className={`${bricolage.variable} ${hanken.variable} ${jetbrainsMono.variable} h-full antialiased`}>
       <body className="min-h-full bg-canvas font-sans text-ink">{children}</body>
     </html>
   );

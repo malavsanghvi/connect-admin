@@ -99,7 +99,7 @@ export default async function TemplatePage({ params }: { params: Promise<{ id: s
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div>
                             <p className="font-semibold">{it.name}</p>
-                            <p className="text-xs text-muted">
+                            <p className="text-caption text-muted">
                               {humanize(it.priority)} · {humanize(it.action_type)}
                               {it.offset_days !== null ? ` · ${it.offset_days < 0 ? `${-it.offset_days} days before` : `${it.offset_days} days after`}` : ""}
                               {it.confidential ? " · confidential" : ""}
@@ -125,7 +125,7 @@ export default async function TemplatePage({ params }: { params: Promise<{ id: s
                 {manage && (
                   <div className="mt-3">
                     <Details summary={`Add a ${PHASE_LABEL[phase].toLowerCase()} item`}>
-                      <ActionForm action={saveTemplateItem.bind(null, template.id, null)} submitLabel="Add item" resetOnSuccess submitClassName="btn btn-purple">
+                      <ActionForm action={saveTemplateItem.bind(null, template.id, null)} submitLabel="Add item" resetOnSuccess submitClassName="btn btn-primary">
                         <ItemFields item={null} phase={phase} />
                       </ActionForm>
                     </Details>
@@ -144,7 +144,7 @@ export default async function TemplatePage({ params }: { params: Promise<{ id: s
                 {lessons.map((l) => (
                   <li key={l.id} className="rounded-tile bg-track p-3 text-sm">
                     <p className="whitespace-pre-line">{l.text}</p>
-                    <p className="mt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
+                    <p className="mt-1 flex flex-wrap items-center justify-between gap-2 text-caption text-muted">
                       <span>
                         {l.author} · {formatDateTime(l.created_at, tz)}
                       </span>
@@ -175,7 +175,7 @@ export default async function TemplatePage({ params }: { params: Promise<{ id: s
                         <Link href={`/events/${e.id}?tab=checklist`} className="font-semibold text-navy hover:underline">
                           {e.name}
                         </Link>
-                        <p className="text-xs text-muted">
+                        <p className="text-caption text-muted">
                           {e.starts_at ? formatDate(e.starts_at, tz) : "No date"}
                           {e.program_year ? ` · ${e.program_year}` : ""}
                           {n ? ` · ${n} lesson${n === 1 ? "" : "s"}` : ""}

@@ -6,6 +6,7 @@ import { TenantMark } from "@/components/tenant-mark";
 import { LoadProblem } from "@/components/ui";
 import { tenantBranding } from "@/lib/brand";
 import { requireEnv } from "@/lib/env";
+import { moduleLabels } from "@/lib/labels";
 import { buildNav } from "@/lib/nav";
 import { getViewer } from "@/lib/session";
 import { signOut } from "@/app/login/actions";
@@ -28,7 +29,7 @@ export default async function ConsoleLayout({ children }: { children: React.Reac
   }
 
   const v = res.viewer;
-  const sections = buildNav(v.access, { opsEventId: v.opsEventId });
+  const sections = buildNav(v.access, { opsEventId: v.opsEventId, labels: moduleLabels(v.kind) });
   // The community's own logo, shown once someone is signed in (the browser tab keeps Weaver's icon).
   const brand = tenantBranding(v.center, requireEnv().supabaseUrl);
 

@@ -10,6 +10,16 @@ import { FONT_VARIABLES, renderTokens } from "../scripts/sync-brand-tokens.mjs";
 import { PRODUCT_DESCRIPTOR, PRODUCT_NAME, kitColor } from "@/lib/brand-kit";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
+
+/** WCAG contrast ratio of two #rrggbb colours. */
+function contrast(a: string, b: string): number {
+  const lum = (hex: string) => {
+    const [r, g, bl] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+}
 const read = (rel: string) => readFileSync(join(ROOT, rel), "utf8").replace(/\r\n/g, "\n");
 
 /** Every file under `dir` (relative to the repo root) with one of the extensions, as repo-relative posix paths. */
@@ -75,6 +85,9 @@ describe("the theme is the brand kit", () => {
     expect(layout).toMatch(/Hanken_Grotesk\(\{[^}]*variable: "--font-hanken"/);
     expect(FONT_VARIABLES).toEqual({ display: "--font-bricolage", sans: "--font-hanken" });
     expect(layout).not.toMatch(/Fraunces|DM_Sans/);
+    // TODO(kit): the kit is adding JetBrains Mono for identifiers; until then it is the font-mono-pending face.
+    expect(layout).toMatch(/JetBrains_Mono\(\{[^}]*variable: "--font-jetbrains-mono"/);
+    expect(read("src/app/pending-kit-tokens.css")).toContain('var(--font-jetbrains-mono, "JetBrains Mono")');
   });
 
   it("the favicon and the logo file are the kit's mark, one file in two places", () => {
@@ -86,7 +99,8 @@ describe("the theme is the brand kit", () => {
 // A colour value may be written only in these files. Every entry says why; keep the list short.
 const COLOUR_ALLOWLIST: Record<string, string> = {
   "src/app/brand-tokens.css": "generated from brand/tokens.json: the one place the kit's colours are written",
-  "src/app/module-colors.css": "app-only module accents the kit does not define (Pathshala, events, store); owner decision pending in docs/BRAND_CONFORMANCE.md",
+  // TODO(kit): delete this entry and the file when the kit's own control-border token is vendored (docs/BRAND_CONFORMANCE.md, "Waiting on the kit").
+  "src/app/pending-kit-tokens.css": "TEMPORARY: one colour (a 3:1 control border) the kit is still adding; every other value in it aliases a kit token",
   "src/app/icon.svg": "the official Weaver mark, a verbatim copy of the kit's logos/weaver-mark.svg: its colours are the logo's own",
   "public/brand/weaver-mark.svg": "the same official mark, served to the page for the logo lockup and the web manifest",
 };
@@ -112,6 +126,22 @@ describe("no colour is written outside the token files", () => {
     const retired = /(?<![\w-])(?:bg|text|border|ring|accent|divide|from|to|via|fill|stroke|outline|decoration|caret|placeholder)-(?:navy-soft|navy-deep|success-soft|danger-soft|warning(?:-soft)?|sand|card|maroon-50|purple-50)(?![\w-])/;
     expect(hits(files, retired)).toEqual([]);
   });
+
+  it("has no module colours: purple, maroon and store green are folded into navy, brown and success", () => {
+    const accents = /(?<![\w-])(?:(?:bg|text|border|ring|accent|divide|from|to|via|fill|stroke|outline)-(?:purple|maroon|store)(?:-soft)?|btn-(?:purple|maroon))(?![\w-])/;
+    expect(hits(files, accents)).toEqual([]);
+  });
+
+  it("keeps the temporary kit tokens clearly temporary: every name ends in -pending, a TODO(kit) says why, and the control border is 3:1", () => {
+    const css = read("src/app/pending-kit-tokens.css");
+    expect(css).toContain("TODO(kit)");
+    const names = [...css.matchAll(/^\s*(--[a-z0-9-]+):/gm)].map((m) => m[1]);
+    expect(names.length).toBeGreaterThan(0);
+    for (const n of names) expect(n, n).toMatch(/-pending$/);
+    const border = css.match(/--color-control-border-pending:\s*(#[0-9a-f]{6})/i)?.[1] ?? "";
+    expect(contrast(border, kitColor("white"))).toBeGreaterThanOrEqual(3);
+    expect(contrast(border, kitColor("canvas"))).toBeGreaterThanOrEqual(3);
+  });
 });
 
 describe("shape, size and type follow the kit", () => {
@@ -136,8 +166,19 @@ describe("shape, size and type follow the kit", () => {
     expect(css).toMatch(/@utility btn \{[^}]*border-radius: var\(--radius-pill\)/);
   });
 
+  it("keeps 12px text (text-xs) to the compact word-bearing chips; everything else is the kit's caption size or larger", () => {
+    const allowed = ["src/components/ui.tsx", "src/app/(console)/comms/page.tsx", "src/app/setup/page.tsx"];
+    expect(hits(ui.filter((f) => !allowed.includes(f)), /(?<![\w-])text-xs(?![\w-])/)).toEqual([]);
+  });
+
   it("draws focus as the kit says: a 2px solid navy outline, offset 2px", () => {
     expect(read("src/app/globals.css")).toMatch(/focus-visible \{\s*outline: 2px solid var\(--color-navy\);\s*outline-offset: 2px;/);
+  });
+});
+
+describe("module names come from the community, not from code", () => {
+  it("has no tradition's words in the navigation builder or the nav component", () => {
+    expect(hits(["src/lib/nav.ts", "src/components/nav.tsx"], /\b(?:Pathshala|Bolis?|Gyan)\b/, { skipComments: true })).toEqual([]);
   });
 });
 

@@ -8,7 +8,7 @@ import { pathshalaYearFor } from "@/lib/logic/eams";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { createYear } from "../actions";
 
-export const metadata: Metadata = { title: "Create Pathshala year" };
+export const metadata: Metadata = { title: "Create a school year" };
 
 function nextYear(label: string) {
   const start = Number(label.slice(0, 4)) + 1;
@@ -17,7 +17,7 @@ function nextYear(label: string) {
 
 export default async function YearPage() {
   const v = await requireViewer();
-  if (!can(v.access, "events.view", "events.manage")) return <NoAccess area="Pathshala year planning" />;
+  if (!can(v.access, "events.view", "events.manage")) return <NoAccess area="school year planning" />;
   const supabase = await getSupabase();
   const tz = v.center.time_zone;
   const res = await load(async () => {
@@ -25,7 +25,7 @@ export default async function YearPage() {
       supabase.from("event_templates").select("id, name, description").eq("center_id", v.center.id).order("name"),
       supabase.from("events").select("id, name, starts_at, program_year, template_id").eq("center_id", v.center.id).not("program_year", "is", null).order("starts_at", { nullsFirst: true }),
     ]);
-    return { templates: rows(templates, "templates"), events: rows(events, "Pathshala year events") };
+    return { templates: rows(templates, "templates"), events: rows(events, "school year events") };
   });
   if (!res.ok) return <LoadProblem message={res.error} />;
   const { templates, events } = res.data;
@@ -37,7 +37,7 @@ export default async function YearPage() {
   return (
     <>
       <PageHeader
-        title="Create a Pathshala year"
+        title="Create a school year"
         accent="pathshala"
         description="Makes one event per template, with the template's before, during and after checklist as actions. Dates are optional — set them now or later on each event."
       />
@@ -55,20 +55,20 @@ export default async function YearPage() {
                 action={createYear}
                 submitLabel="Create the year"
                 pendingLabel="Creating events…"
-                submitClassName="btn btn-purple"
+                submitClassName="btn btn-primary"
                 confirm="Create one event for each ticked template?"
               >
-                <Field label="Pathshala year" hint={years.length ? `Existing: ${years.join(", ")}` : "No years yet"}>
+                <Field label="School year" hint={years.length ? `Existing: ${years.join(", ")}` : "No years yet"}>
                   <input name="program_year" required defaultValue={suggested} pattern="\d{4}-\d{4}" className="field-input" />
                 </Field>
                 <ul className="mt-4 divide-y divide-line">
                   {templates.map((t) => (
                     <li key={t.id} className="py-3">
                       <label className="flex min-h-11 items-start gap-3">
-                        <input type="checkbox" name="template_id" value={t.id} defaultChecked className="mt-1 h-5 w-5 accent-purple" />
+                        <input type="checkbox" name="template_id" value={t.id} defaultChecked className="mt-1 h-5 w-5 accent-navy" />
                         <span className="min-w-0 flex-1">
                           <span className="font-semibold">{t.name}</span>
-                          {t.description && <span className="block text-xs text-muted">{t.description}</span>}
+                          {t.description && <span className="block text-caption text-muted">{t.description}</span>}
                         </span>
                       </label>
                       <input type="hidden" name={`default_name_${t.id}`} value={t.name} />

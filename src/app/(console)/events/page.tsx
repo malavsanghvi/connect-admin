@@ -51,7 +51,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
         description="RSVPs, checklists, volunteers, lunch slots and the day-of report."
         actions={
           can(v.access, "events.manage") && (
-            <Link href="/events/new" className="btn btn-maroon">
+            <Link href="/events/new" className="btn btn-primary">
               New event
             </Link>
           )
@@ -70,7 +70,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
           <Link
             key={s ?? "all"}
             href={`/events?view=${view}${s ? `&status=${s}` : ""}`}
-            className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold ${status === s ? "border-maroon bg-maroon text-white" : "border-line bg-white text-maroon"}`}
+            className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold ${status === s ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
           >
             {s ? humanize(s) : "Any status"}
           </Link>
@@ -102,9 +102,9 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                         <Link href={`/events/${e.id}`} className="font-semibold text-navy hover:underline">
                           {e.name}
                         </Link>
-                        <div className="text-xs text-muted">
+                        <div className="text-caption text-muted">
                           {e.venue ?? ""}
-                          {e.program_year ? ` · Pathshala ${e.program_year}` : ""}
+                          {e.program_year ? ` · School year ${e.program_year}` : ""}
                           {e.confidential ? " · confidential" : ""}
                         </div>
                       </td>
@@ -112,7 +112,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
                       <td className={td}>{humanize(e.audience)}</td>
                       <td className={td}>
                         {active} households{e.capacity ? ` · cap ${e.capacity}` : ""}
-                        <div className="text-xs text-muted">{confirmed} confirmed</div>
+                        <div className="text-caption text-muted">{confirmed} confirmed</div>
                       </td>
                       <td className={td}>
                         <Badge tone={STATUS_TONE[e.status] ?? "neutral"}>{humanize(e.status)}</Badge>

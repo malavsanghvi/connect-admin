@@ -5,7 +5,7 @@ import { presetOf, type AudiencePreset } from "@/lib/logic/audience";
 
 type Opt = { id: string; name: string };
 
-/** Audience presets for comms: all members, zones, Pathshala parents by class, event RSVPs, or custom JSON. */
+/** Audience presets for comms: all members, zones, parents by class, event RSVPs, or custom JSON. */
 export function AudienceFields({
   zones,
   classes,
@@ -23,7 +23,7 @@ export function AudienceFields({
   const presets: { key: AudiencePreset; label: string; hint: string }[] = [
     { key: "all_members", label: "All members", hint: "Needs a second approver before it can be scheduled" },
     { key: "zone", label: "Zones", hint: "Families in the chosen zones" },
-    { key: "pathshala_class", label: "Pathshala parents", hint: "Parents of students in the chosen classes" },
+    { key: "pathshala_class", label: "Parents by class", hint: "Parents of students in the chosen classes" },
     { key: "event_rsvps", label: "Event RSVPs", hint: "Households who RSVP'd to an event" },
     { key: "custom", label: "Custom", hint: "A segment definition in JSON" },
   ];
@@ -34,12 +34,12 @@ export function AudienceFields({
         {presets.map((p) => (
           <label
             key={p.key}
-            className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-tile border-2 p-3 ${preset === p.key ? "border-navy bg-navy-50" : "border-line bg-white"}`}
+            className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-tile border-2 p-3 ${preset === p.key ? "border-navy bg-navy-50" : "border-control-border-pending bg-white"}`}
           >
             <input type="radio" name="audience_preset" value={p.key} checked={preset === p.key} onChange={() => setPreset(p.key)} className="mt-1 h-5 w-5 accent-navy" />
             <span>
               <span className="block text-sm font-semibold">{p.label}</span>
-              <span className="block text-xs text-muted">{p.hint}</span>
+              <span className="block text-caption text-muted">{p.hint}</span>
             </span>
           </label>
         ))}
@@ -101,7 +101,7 @@ export function AudienceFields({
           name="custom_json"
           rows={4}
           defaultValue={presetOf(initial) === "custom" ? JSON.stringify(initial, null, 2) : '{\n  "life_members": true\n}'}
-          className="field-input mt-3 font-mono text-sm"
+          className="field-input mt-3 font-mono-pending text-sm"
           aria-label="Custom audience JSON"
         />
       )}

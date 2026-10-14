@@ -6,7 +6,7 @@ import { saveBoli } from "./actions";
 
 export function BoliForm({ boli, events, tz }: { boli: Tables<"bolis"> | null; events: { id: string; name: string }[]; tz: string }) {
   return (
-    <ActionForm action={saveBoli.bind(null, boli?.id ?? null)} submitLabel={boli ? "Save boli" : "Create boli"} submitClassName="btn btn-maroon">
+    <ActionForm action={saveBoli.bind(null, boli?.id ?? null)} submitLabel={boli ? "Save boli" : "Create boli"} submitClassName="btn btn-primary">
       <FormGrid>
         <Field label="Item" className="sm:col-span-2" hint="e.g. First aarti on Samvatsari">
           <input name="name" required defaultValue={boli?.name ?? ""} className="field-input" />

@@ -61,7 +61,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
           {messages.map((m) => (
             <li key={m.id} className={`max-w-[85%] rounded-tile p-3 text-sm ${m.from_role ? "ml-auto bg-navy-50" : "bg-track"}`}>
               <p className="whitespace-pre-line">{m.body}</p>
-              <p className="mt-1 text-xs text-muted">
+              <p className="mt-1 text-caption text-muted">
                 {m.from_role ? `${inbox?.name ?? "Inbox"}${m.author_user ? ` (${m.author_user === v.userId ? "you" : (users.get(m.author_user) ?? "staff")})` : ""}` : from} ·{" "}
                 {formatDateTime(m.created_at, tz)}
               </p>
