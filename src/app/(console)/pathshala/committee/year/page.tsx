@@ -64,7 +64,7 @@ export default async function YearPage() {
                 <ul className="mt-4 divide-y divide-line">
                   {templates.map((t) => (
                     <li key={t.id} className="py-3">
-                      <label className="flex min-h-11 items-start gap-3">
+                      <label className="flex min-h-tap-target items-start gap-3">
                         <input type="checkbox" name="template_id" value={t.id} defaultChecked className="mt-1 h-5 w-5 accent-navy" />
                         <span className="min-w-0 flex-1">
                           <span className="font-semibold">{t.name}</span>

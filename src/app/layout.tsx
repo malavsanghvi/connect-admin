@@ -7,7 +7,7 @@ import "./globals.css";
 // The variable names must match FONT_VARIABLES in scripts/sync-brand-tokens.mjs.
 const bricolage = Bricolage_Grotesque({ variable: "--font-bricolage", subsets: ["latin"], axes: ["opsz"], display: "swap" });
 const hanken = Hanken_Grotesk({ variable: "--font-hanken", subsets: ["latin"], display: "swap" });
-// TODO(kit): the kit is adding JetBrains Mono for identifiers; until its token arrives it is used as font-mono-pending.
+// The kit's identifier face (ticket, member and household numbers); the variable name must match FONT_VARIABLES.mono.
 const jetbrainsMono = JetBrains_Mono({ variable: "--font-jetbrains-mono", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {

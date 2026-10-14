@@ -34,7 +34,7 @@ export function AudienceFields({
         {presets.map((p) => (
           <label
             key={p.key}
-            className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-tile border-2 p-3 ${preset === p.key ? "border-navy bg-navy-50" : "border-control-border-pending bg-white"}`}
+            className={`flex min-h-12 cursor-pointer items-start gap-3 rounded-tile border-2 p-3 ${preset === p.key ? "border-navy bg-navy-50" : "border-line-control bg-white"}`}
           >
             <input type="radio" name="audience_preset" value={p.key} checked={preset === p.key} onChange={() => setPreset(p.key)} className="mt-1 h-5 w-5 accent-navy" />
             <span>
@@ -47,7 +47,7 @@ export function AudienceFields({
       {preset === "zone" && (
         <div className="mt-3 grid gap-1 sm:grid-cols-2">
           {zones.map((z) => (
-            <label key={z.id} className="flex min-h-11 items-center gap-2 text-sm">
+            <label key={z.id} className="flex min-h-tap-target items-center gap-2 text-sm">
               <input type="checkbox" name="zone_ids" value={z.id} defaultChecked={initIds("zone_ids").includes(z.id)} className="h-5 w-5 accent-navy" />
               {z.name}
             </label>
@@ -58,7 +58,7 @@ export function AudienceFields({
         <div className="mt-3 grid gap-1 sm:grid-cols-2">
           {classes.length === 0 && <p className="text-sm text-muted">No classes you can see.</p>}
           {classes.map((c) => (
-            <label key={c.id} className="flex min-h-11 items-center gap-2 text-sm">
+            <label key={c.id} className="flex min-h-tap-target items-center gap-2 text-sm">
               <input type="checkbox" name="class_ids" value={c.id} defaultChecked={initIds("pathshala_class_ids").includes(c.id)} className="h-5 w-5 accent-navy" />
               {c.name}
             </label>
@@ -82,7 +82,7 @@ export function AudienceFields({
               ["attended", "Attended"],
               ["waitlisted", "Waitlisted"],
             ].map(([v, l]) => (
-              <label key={v} className="flex min-h-11 items-center gap-2 text-sm">
+              <label key={v} className="flex min-h-tap-target items-center gap-2 text-sm">
                 <input
                   type="checkbox"
                   name="rsvp_statuses"
@@ -101,7 +101,7 @@ export function AudienceFields({
           name="custom_json"
           rows={4}
           defaultValue={presetOf(initial) === "custom" ? JSON.stringify(initial, null, 2) : '{\n  "life_members": true\n}'}
-          className="field-input mt-3 font-mono-pending text-sm"
+          className="field-input mt-3 text-sm"
           aria-label="Custom audience JSON"
         />
       )}

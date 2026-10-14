@@ -2,6 +2,7 @@
 
 import { startTransition, useActionState, useEffect, useRef, type ReactNode } from "react";
 import type { ActionResult } from "@/lib/result";
+import { Icon } from "@/components/icon";
 
 type ServerAction = (formData: FormData) => Promise<ActionResult<unknown>>;
 
@@ -95,7 +96,8 @@ export function ActionForm({
         {extraButtons}
         {!pending && state?.ok && (state.message ?? successMessage) && (
           <span role="status" className="text-sm font-semibold text-success">
-            ✓ {state.message ?? successMessage}
+            <Icon name="check" className="mr-1 inline h-4 w-4 align-[-2px]" strokeWidth={3} />
+            {state.message ?? successMessage}
           </span>
         )}
       </div>

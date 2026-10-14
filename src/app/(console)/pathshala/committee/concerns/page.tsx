@@ -60,7 +60,7 @@ export default async function ConcernsPage({ searchParams }: { searchParams: Pro
           <Link
             key={s ?? "any"}
             href={`/pathshala/committee/concerns?view=${view}${s ? `&source=${s}` : ""}`}
-            className={`inline-flex min-h-11 items-center rounded-full border px-4 font-semibold ${source === s ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
+            className={`inline-flex min-h-tap-target items-center rounded-full border px-4 font-semibold ${source === s ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
           >
             {s ? `From ${s}s` : "Everyone"}
           </Link>

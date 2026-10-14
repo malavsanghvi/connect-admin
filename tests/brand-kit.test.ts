@@ -6,7 +6,7 @@ import { join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { FONT_VARIABLES, renderTokens } from "../scripts/sync-brand-tokens.mjs";
+import { FONT_VARIABLES, readIcons, renderIcons, renderTokens } from "../scripts/sync-brand-tokens.mjs";
 import { PRODUCT_DESCRIPTOR, PRODUCT_NAME, kitColor } from "@/lib/brand-kit";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -61,33 +61,59 @@ describe("the theme is the brand kit", () => {
     expect(read("src/app/brand-tokens.css")).toBe(expected);
   });
 
+  it("src/components/brand-icons.generated.ts is exactly what brand/icons generates, and every icon in use exists", () => {
+    const kit = JSON.parse(read("brand/tokens.json"));
+    const icons = readIcons(kit, join(ROOT, "brand/icons"));
+    expect(icons.length).toBe(42);
+    expect(read("src/components/brand-icons.generated.ts")).toBe(renderIcons(icons));
+    const names = new Set(icons.map((i: string[]) => i[0]));
+    const used = SOURCE.filter((f) => f.endsWith(".tsx")).flatMap((f) => [...read(f).matchAll(/<Icon name="([a-z-]+)"/g)].map((m) => m[1]));
+    expect(used.length).toBeGreaterThan(0);
+    for (const n of used) expect(names.has(n), n).toBe(true);
+  });
+
   it("every colour in the kit's tokens.json is a #rrggbb value or a reference to one", () => {
     const kit = JSON.parse(read("brand/tokens.json"));
     expect(kit.name).toBe("Weaver Brand Kit");
     for (const t of kit.color.tokens) expect(t.value, t.name).toMatch(/^(#[0-9a-f]{6}|\{[a-z0-9-]+\})$/);
   });
 
-  it("the generated theme carries the kit's brand colours, its two faces and the 48px tap target", () => {
+  it("the generated theme carries the kit's brand colours, its three faces and its control sizes", () => {
     const css = read("src/app/brand-tokens.css");
     expect(css).toContain("--color-navy: #2b2a8a;");
     expect(css).toContain("--color-canvas: #fffaf5;");
     expect(css).toMatch(/--font-display: var\(--font-bricolage, "Bricolage Grotesque"\)/);
     expect(css).toMatch(/--font-sans: var\(--font-hanken, "Hanken Grotesk"\)/);
+    expect(css).toMatch(/--font-mono: var\(--font-jetbrains-mono, "JetBrains Mono"\)/);
     expect(css).toContain("--spacing-tap-target: 48px;");
+    expect(css).toContain("--spacing-control-primary: 52px;");
+    for (const t of ["--color-line-control", "--color-faint", "--color-warning-ink", "--color-warning-50", "--color-saffron-strong", "--radius-field", "--radius-tag", "--text-identifier"]) expect(css, t).toContain(t + ":");
     expect(css).not.toContain("--color-mark-"); // the mark's colours are the logo's, never the interface's
     expect(kitColor("navy")).toBe("#2b2a8a");
     expect(() => kitColor("no-such-colour")).toThrow();
   });
 
-  it("layout.tsx loads Bricolage Grotesque (with its optical-size axis) and Hanken Grotesk under the variables the theme names", () => {
+  it("layout.tsx loads Bricolage Grotesque (with its optical-size axis), Hanken Grotesk and JetBrains Mono under the variables the theme names", () => {
     const layout = read("src/app/layout.tsx");
     expect(layout).toMatch(/Bricolage_Grotesque\(\{[^}]*variable: "--font-bricolage"[^}]*axes: \["opsz"\]/);
     expect(layout).toMatch(/Hanken_Grotesk\(\{[^}]*variable: "--font-hanken"/);
-    expect(FONT_VARIABLES).toEqual({ display: "--font-bricolage", sans: "--font-hanken" });
+    expect(FONT_VARIABLES).toEqual({ display: "--font-bricolage", sans: "--font-hanken", mono: "--font-jetbrains-mono" });
     expect(layout).not.toMatch(/Fraunces|DM_Sans/);
-    // TODO(kit): the kit is adding JetBrains Mono for identifiers; until then it is the font-mono-pending face.
     expect(layout).toMatch(/JetBrains_Mono\(\{[^}]*variable: "--font-jetbrains-mono"/);
-    expect(read("src/app/pending-kit-tokens.css")).toContain('var(--font-jetbrains-mono, "JetBrains Mono")');
+  });
+
+  it("the kit's text and fill pairs pass the contrast the kit claims for them", () => {
+    const pair = (fg: string, bg: string, min: number) => expect(contrast(kitColor(fg), kitColor(bg)), `${fg} on ${bg}`).toBeGreaterThanOrEqual(min);
+    pair("line-control", "white", 3);
+    pair("line-control", "canvas", 3);
+    for (const bg of ["white", "canvas", "ground"]) pair("faint", bg, 4.5);
+    pair("warning-ink", "warning-50", 4.5);
+    pair("warning", "warning-50", 4.5);
+    pair("saffron-strong", "white", 4.5);
+    pair("brown", "white", 4.5);
+    pair("success", "success-50", 4.5);
+    pair("danger", "danger-50", 4.5);
+    pair("muted", "canvas", 4.5);
   });
 
   it("the favicon and the logo file are the kit's mark, one file in two places", () => {
@@ -99,8 +125,6 @@ describe("the theme is the brand kit", () => {
 // A colour value may be written only in these files. Every entry says why; keep the list short.
 const COLOUR_ALLOWLIST: Record<string, string> = {
   "src/app/brand-tokens.css": "generated from brand/tokens.json: the one place the kit's colours are written",
-  // TODO(kit): delete this entry and the file when the kit's own control-border token is vendored (docs/BRAND_CONFORMANCE.md, "Waiting on the kit").
-  "src/app/pending-kit-tokens.css": "TEMPORARY: one colour (a 3:1 control border) the kit is still adding; every other value in it aliases a kit token",
   "src/app/icon.svg": "the official Weaver mark, a verbatim copy of the kit's logos/weaver-mark.svg: its colours are the logo's own",
   "public/brand/weaver-mark.svg": "the same official mark, served to the page for the logo lockup and the web manifest",
 };
@@ -123,7 +147,7 @@ describe("no colour is written outside the token files", () => {
   });
 
   it("does not use the names of the colours the app had before the kit", () => {
-    const retired = /(?<![\w-])(?:bg|text|border|ring|accent|divide|from|to|via|fill|stroke|outline|decoration|caret|placeholder)-(?:navy-soft|navy-deep|success-soft|danger-soft|warning(?:-soft)?|sand|card|maroon-50|purple-50)(?![\w-])/;
+    const retired = /(?<![\w-])(?:bg|text|border|ring|accent|divide|from|to|via|fill|stroke|outline|decoration|caret|placeholder)-(?:navy-soft|navy-deep|success-soft|danger-soft|warning-soft|sand|card|maroon-50|purple-50)(?![\w-])/;
     expect(hits(files, retired)).toEqual([]);
   });
 
@@ -132,15 +156,14 @@ describe("no colour is written outside the token files", () => {
     expect(hits(files, accents)).toEqual([]);
   });
 
-  it("keeps the temporary kit tokens clearly temporary: every name ends in -pending, a TODO(kit) says why, and the control border is 3:1", () => {
-    const css = read("src/app/pending-kit-tokens.css");
-    expect(css).toContain("TODO(kit)");
-    const names = [...css.matchAll(/^\s*(--[a-z0-9-]+):/gm)].map((m) => m[1]);
-    expect(names.length).toBeGreaterThan(0);
-    for (const n of names) expect(n, n).toMatch(/-pending$/);
-    const border = css.match(/--color-control-border-pending:\s*(#[0-9a-f]{6})/i)?.[1] ?? "";
-    expect(contrast(border, kitColor("white"))).toBeGreaterThanOrEqual(3);
-    expect(contrast(border, kitColor("canvas"))).toBeGreaterThanOrEqual(3);
+  it("has no temporary \"-pending\" token names left, and never draws a control with line-input (1.4:1)", () => {
+    expect(hits(SOURCE, /(?<![\w])[a-z-]+-pending(?![\w])/)).toEqual([]);
+    expect(hits(files, /line-input/)).toEqual([]);
+  });
+
+  it("sets the identifier face (font-mono) only where an identifier is shown or typed", () => {
+    const allowed = ["src/app/ops/[eventId]/checkin/checkin-screen.tsx", "src/components/person-picker.tsx"];
+    expect(hits(SOURCE.filter((f) => /\.tsx$/.test(f) && !allowed.includes(f)), /(?<![\w-])font-mono(?![\w-])/)).toEqual([]);
   });
 });
 
@@ -155,15 +178,26 @@ describe("shape, size and type follow the kit", () => {
     expect(hits(ui, /(?<![\w-])shadow-(?:xs|sm|md|lg|xl|2xl)(?![\w-])/)).toEqual([]);
   });
 
-  it("sets no control shorter than 44px (min-h-11)", () => {
-    expect(hits(ui, /(?<![\w:-])min-h-(?:[1-9]|10)(?![\w.-])/)).toEqual([]);
+  it("sets no control shorter than the kit's tap target (48px: min-h-tap-target, min-h-12 or more)", () => {
+    expect(hits(ui, /(?<![\w:-])min-h-(?:[1-9]|10|11)(?![\w.-])/)).toEqual([]);
   });
 
-  it("buttons and fields are at least the kit's tap target tall", () => {
+  it("buttons and fields are control-primary tall on a phone and the kit's tap target from tablets up, never shorter", () => {
     const css = read("src/app/globals.css");
-    expect(css).toMatch(/@utility btn \{[^}]*min-height: var\(--spacing-tap-target\)/);
-    expect(css).toMatch(/@utility field-input \{[^}]*min-height: var\(--spacing-tap-target\)/);
+    for (const u of ["btn", "field-input"]) {
+      expect(css, u).toMatch(new RegExp(`@utility ${u} \\{[^}]*min-height: var\\(--spacing-control-primary\\)`));
+      expect(css, u).toMatch(new RegExp(`@utility ${u} \\{[\\s\\S]*?@media \\(min-width: 640px\\) \\{\\s*min-height: var\\(--spacing-tap-target\\)`));
+    }
     expect(css).toMatch(/@utility btn \{[^}]*border-radius: var\(--radius-pill\)/);
+    expect(css).toMatch(/@utility field-input \{[^}]*border: 1px solid var\(--color-line-control\)/);
+    expect(css).toMatch(/@utility field-input \{[^}]*border-radius: var\(--radius-field\)/);
+    expect(css).toMatch(/::placeholder \{\s*color: var\(--color-faint\)/);
+  });
+
+  it("keeps the badge a kit tag: radius-tag, with the kit's warning pair", () => {
+    const ui = read("src/components/ui.tsx");
+    expect(ui).toContain("rounded-tag");
+    expect(ui).toContain('warning: "bg-warning-50 text-warning-ink border-warning-200"');
   });
 
   it("keeps 12px text (text-xs) to the compact word-bearing chips; everything else is the kit's caption size or larger", () => {

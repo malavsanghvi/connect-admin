@@ -1,27 +1,30 @@
 #!/usr/bin/env node
-// Regenerates src/app/brand-tokens.css from brand/tokens.json, the Weaver Brand Kit's design tokens
-// (the kit lives in connect-crm/brand; brand/tokens.json here is a verbatim copy of its tokens.json).
+// Regenerates, from the Weaver Brand Kit's files vendored in brand/ (a verbatim copy of connect-crm brand/):
+//   src/app/brand-tokens.css                   the app's whole Tailwind theme, from brand/tokens.json
+//   src/components/brand-icons.generated.ts    the markup of every icon in brand/icons, for the Icon component
 //
-//   node scripts/sync-brand-tokens.mjs                  rewrite src/app/brand-tokens.css from brand/tokens.json
-//   node scripts/sync-brand-tokens.mjs --check          exit 1 when src/app/brand-tokens.css is out of date
-//   node scripts/sync-brand-tokens.mjs --from <dir>     first copy tokens.json and the mark (logos/weaver-mark.svg and
-//                                                       the 256/512 PNGs) from a checkout of the kit, e.g.
-//                                                       --from ../connect-crm/brand, then rewrite the CSS
+//   node scripts/sync-brand-tokens.mjs                  rewrite both files from brand/
+//   node scripts/sync-brand-tokens.mjs --check          exit 1 when either file is out of date
+//   node scripts/sync-brand-tokens.mjs --from <dir>     first copy tokens.json, the icons and the mark (logos/weaver-mark.svg
+//                                                       and the 256/512 PNGs) from a checkout of the kit, e.g.
+//                                                       --from ../connect-crm/brand, then rewrite
 //
-// The CSS is the app's whole theme: Tailwind's own colour palette is switched off, so a colour is a kit token or it
-// does not exist. tests/brand-kit.test.ts fails when the CSS and the JSON disagree.
+// Tailwind's own colour palette is switched off in the CSS, so a colour is a kit token or it does not exist.
+// tests/brand-kit.test.ts fails when the generated files and brand/ disagree.
 
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 export const ROOT = resolve(here, "..");
 export const TOKENS_JSON = resolve(ROOT, "brand/tokens.json");
+export const ICONS_DIR = resolve(ROOT, "brand/icons");
 export const TOKENS_CSS = resolve(ROOT, "src/app/brand-tokens.css");
+export const ICONS_TS = resolve(ROOT, "src/components/brand-icons.generated.ts");
 
-/** The next/font variables layout.tsx sets for the two faces. The kit names the families; next/font serves them. */
-export const FONT_VARIABLES = { display: "--font-bricolage", sans: "--font-hanken" };
+/** The next/font variables layout.tsx sets for the kit's three faces. The kit names the families; next/font serves them. */
+export const FONT_VARIABLES = { display: "--font-bricolage", sans: "--font-hanken", mono: "--font-jetbrains-mono" };
 
 /** Split a CSS font-family list on its top-level commas. */
 function splitFamilies(list) {
@@ -53,10 +56,11 @@ export function renderTokens(kit) {
   }
 
   line();
-  line("  /* Type: the two faces, then the kit's text styles (text-body, text-eyebrow, ...). */");
+  line("  /* Type: the three faces, then the kit's text styles (text-body, text-eyebrow, text-identifier, ...). */");
   const fam = kit.type.families;
   line(`  --font-display: ${fontStack(fam.display, FONT_VARIABLES.display)};`);
   line(`  --font-sans: ${fontStack(fam.sans, FONT_VARIABLES.sans)};`);
+  line(`  --font-mono: ${fontStack(fam.mono, FONT_VARIABLES.mono)};`);
   for (const group of kit.type.groups) {
     for (const s of group.styles) {
       line(`  --text-${s.name}: ${s.fontSize};`);
@@ -72,10 +76,40 @@ export function renderTokens(kit) {
   for (const t of kit.shadow.tokens) line(`  --${t.name}: ${t.value};`);
 
   line();
-  line("  /* Spacing: p-card-pad, px-gutter, min-h-tap-target, max-w-container, ... */");
+  line("  /* Spacing and control sizes: p-card-pad, px-gutter, min-h-tap-target, min-h-control-primary, max-w-container, ... */");
   for (const t of kit.spacing.tokens) line(`  --spacing-${t.name}: ${t.value};`);
   line("}");
   return out.join("\n") + "\n";
+}
+
+/** The icons in brand/icons, each as its inner markup. Every file must carry the kit's root (24px grid, navy ink, stroke 2, round caps). */
+export function readIcons(kit, dir = ICONS_DIR) {
+  const navy = kit.color.tokens.find((t) => t.name === "navy").value;
+  const root = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${navy}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">`;
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".svg"))
+    .sort()
+    .map((file) => {
+      const text = readFileSync(join(dir, file), "utf8").replace(/\r\n/g, "\n").trim();
+      if (!text.startsWith(root) || !text.endsWith("</svg>")) throw new Error(`brand/icons/${file} does not have the kit's root element`);
+      const inner = text.slice(root.length, -"</svg>".length).split("\n").map((l) => l.trim()).join("");
+      return [file.replace(/\.svg$/, ""), inner];
+    });
+}
+
+/** The generated module for the Icon component. The shapes only: the icon takes the colour of its text. */
+export function renderIcons(icons) {
+  return [
+    "// GENERATED by scripts/sync-brand-tokens.mjs from brand/icons/*.svg (the Weaver Brand Kit's icons). Do not edit by hand.",
+    "// Regenerate with `pnpm brand:sync`; tests/brand-kit.test.ts fails when this file and the icon files disagree.",
+    "",
+    "export const ICON_MARKUP = {",
+    ...icons.map(([name, markup]) => `  ${JSON.stringify(name)}: ${JSON.stringify(markup)},`),
+    "} as const;",
+    "",
+    "export type IconName = keyof typeof ICON_MARKUP;",
+    "",
+  ].join("\n");
 }
 
 function main(argv) {
@@ -90,24 +124,32 @@ function main(argv) {
       console.log(`copied ${rel} -> ${to.slice(ROOT.length + 1)}`);
     };
     take("tokens.json", TOKENS_JSON);
+    take("icons/README.md", resolve(ICONS_DIR, "README.md"));
+    for (const f of readdirSync(resolve(dir, "icons")).filter((n) => n.endsWith(".svg"))) take(`icons/${f}`, resolve(ICONS_DIR, f));
     take("logos/weaver-mark.svg", resolve(ROOT, "public/brand/weaver-mark.svg"));
     take("logos/weaver-mark.svg", resolve(ROOT, "src/app/icon.svg"));
     take("logos/weaver-mark-256.png", resolve(ROOT, "public/brand/weaver-mark-256.png"));
     take("logos/weaver-mark-512.png", resolve(ROOT, "public/brand/weaver-mark-512.png"));
   }
 
-  const css = renderTokens(JSON.parse(readFileSync(TOKENS_JSON, "utf8")));
+  const kit = JSON.parse(readFileSync(TOKENS_JSON, "utf8"));
+  const files = [
+    [TOKENS_CSS, renderTokens(kit)],
+    [ICONS_TS, renderIcons(readIcons(kit))],
+  ];
   if (argv.includes("--check")) {
-    const have = existsSync(TOKENS_CSS) ? readFileSync(TOKENS_CSS, "utf8").replace(/\r\n/g, "\n") : "";
-    if (have !== css) {
-      console.error("src/app/brand-tokens.css is out of date with brand/tokens.json. Run: pnpm brand:sync");
+    const stale = files.filter(([path, text]) => (existsSync(path) ? readFileSync(path, "utf8").replace(/\r\n/g, "\n") : "") !== text);
+    if (stale.length > 0) {
+      console.error(`${stale.map(([p]) => p.slice(ROOT.length + 1)).join(", ")} out of date with brand/. Run: pnpm brand:sync`);
       process.exit(1);
     }
-    console.log("src/app/brand-tokens.css is up to date.");
+    console.log("Generated brand files are up to date.");
     return;
   }
-  writeFileSync(TOKENS_CSS, css);
-  console.log(`wrote ${TOKENS_CSS.slice(ROOT.length + 1)}`);
+  for (const [path, text] of files) {
+    writeFileSync(path, text);
+    console.log(`wrote ${path.slice(ROOT.length + 1)}`);
+  }
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2));

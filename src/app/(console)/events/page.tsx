@@ -70,7 +70,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
           <Link
             key={s ?? "all"}
             href={`/events?view=${view}${s ? `&status=${s}` : ""}`}
-            className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold ${status === s ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
+            className={`inline-flex min-h-tap-target items-center rounded-full border px-4 text-sm font-semibold ${status === s ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
           >
             {s ? humanize(s) : "Any status"}
           </Link>

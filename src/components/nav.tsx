@@ -30,7 +30,7 @@ function Links({ sections, onNavigate }: { sections: NavSection[]; onNavigate?: 
                     href={item.href}
                     onClick={onNavigate}
                     aria-current={on ? "page" : undefined}
-                    className={`flex min-h-11 items-center rounded-pill px-3 text-sm font-semibold ${
+                    className={`flex min-h-tap-target items-center rounded-pill px-3 text-sm font-semibold ${
                       on ? "bg-white text-navy" : "text-white hover:bg-white/10"
                     }`}
                   >

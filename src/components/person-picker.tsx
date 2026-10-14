@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Icon } from "@/components/icon";
 
-type Option = { id: string; name: string; detail: string | null };
+type Option = { id: string; name: string; detail: string | null; /** A member or household number, set in the identifier face. */ identifier?: string | null };
 
 const NONE: Option[] = [];
 
@@ -98,10 +99,10 @@ export function PersonPicker({
               <button
                 type="button"
                 aria-label={`Remove ${p.name}`}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted hover:bg-white"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-full text-muted hover:bg-white"
                 onClick={() => setPicked((cur) => cur.filter((c) => c.id !== p.id))}
               >
-                ×
+                <Icon name="close" className="h-5 w-5" />
               </button>
             </li>
           ))}
@@ -133,8 +134,9 @@ export function PersonPicker({
           {results.length === 0 && <li className="px-3 py-2 text-sm text-muted">No one found that you&apos;re allowed to see.</li>}
           {results.map((r) => (
             <li key={r.id}>
-              <button type="button" onClick={() => choose(r)} className="flex min-h-11 w-full flex-col items-start px-3 py-2 text-left hover:bg-navy-50">
+              <button type="button" onClick={() => choose(r)} className="flex min-h-tap-target w-full flex-col items-start px-3 py-2 text-left hover:bg-navy-50">
                 <span className="text-sm font-semibold">{r.name}</span>
+                {r.identifier && <span className="whitespace-nowrap font-mono text-identifier text-ink">{r.identifier}</span>}
                 {r.detail && <span className="text-caption text-muted">{r.detail}</span>}
               </button>
             </li>

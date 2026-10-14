@@ -68,7 +68,7 @@ After a migration there, copy the regenerated file here. Do not edit it by hand.
 | `pnpm lint` | ESLint (Next.js core-web-vitals + TypeScript rules) |
 | `pnpm typecheck` | `tsc --noEmit` |
 | `pnpm test` | Vitest unit tests for the pure rules in `src/lib` (attendance summary, offline scan queue, committee due-date classification, resolution outcome, access mirror, formatting) and the brand guards (`tests/brand-kit.test.ts`) |
-| `pnpm brand:sync` | Regenerates `src/app/brand-tokens.css` from `brand/tokens.json` (the Weaver Brand Kit's tokens); `-- --from ../connect-crm/brand` first copies the kit's tokens and mark |
+| `pnpm brand:sync` | Regenerates `src/app/brand-tokens.css` from `brand/tokens.json` (the Weaver Brand Kit's tokens); `-- --from ../connect-crm/brand` first copies the kit's tokens, icons and mark; also regenerates the `Icon` shapes |
 
 ## Layout
 

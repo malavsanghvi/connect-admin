@@ -59,7 +59,7 @@ export async function RsvpsTab({ event, viewer, status }: { event: Tables<"event
       <div className="mb-4 flex flex-wrap gap-2">
         <Link
           href={`/events/${event.id}?tab=rsvps`}
-          className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold ${!status ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
+          className={`inline-flex min-h-tap-target items-center rounded-full border px-4 text-sm font-semibold ${!status ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
         >
           All ({rsvps.length})
         </Link>
@@ -67,7 +67,7 @@ export async function RsvpsTab({ event, viewer, status }: { event: Tables<"event
           <Link
             key={s}
             href={`/events/${event.id}?tab=rsvps&rsvp=${s}`}
-            className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold ${status === s ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
+            className={`inline-flex min-h-tap-target items-center rounded-full border px-4 text-sm font-semibold ${status === s ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
           >
             {statusLabel(s)} ({report.households[s]})
           </Link>
@@ -99,7 +99,7 @@ export async function RsvpsTab({ event, viewer, status }: { event: Tables<"event
                             {r.commitment_mode && r.commitment_mode !== "none" ? ` · commitment ${humanize(r.commitment_mode)}` : ""}
                             {r.confirmed_at ? ` · confirmed ${formatDateTime(r.confirmed_at, tz)}` : ""}
                           </p>
-                          {flags.length > 0 && <p className="mt-1 text-caption font-semibold text-warning-ink-pending">Flags: {flags.join(", ")}</p>}
+                          {flags.length > 0 && <p className="mt-1 text-caption font-semibold text-warning-ink">Flags: {flags.join(", ")}</p>}
                         </div>
                         <Badge tone={r.status === "attended" ? "success" : r.status === "confirmed" ? "navy" : r.status === "cancelled" || r.status === "no_show" ? "danger" : "muted"}>
                           {statusLabel(r.status)}

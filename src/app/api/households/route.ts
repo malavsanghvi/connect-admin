@@ -23,6 +23,6 @@ export async function GET(request: NextRequest) {
   }
   return NextResponse.json({
     ok: true,
-    people: (data ?? []).map((h) => ({ id: h.id, name: h.display_name, detail: [h.household_number, h.city].filter(Boolean).join(" · ") || null })),
+    people: (data ?? []).map((h) => ({ id: h.id, name: h.display_name, identifier: h.household_number ?? null, detail: h.city ?? null })),
   });
 }

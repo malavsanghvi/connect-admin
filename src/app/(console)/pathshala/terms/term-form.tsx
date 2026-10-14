@@ -50,7 +50,7 @@ export function TermForm({ term, tz }: { term: Tables<"pathshala_terms"> | null;
           <input name="sibling_discount_pct" type="number" min={0} max={100} defaultValue={term?.sibling_discount_pct ?? 0} className="field-input" />
         </Field>
         <Field label="No-class dates" hint="One date per line (YYYY-MM-DD). Dates outside the term are ignored.">
-          <textarea name="no_class_dates" rows={4} defaultValue={(term?.no_class_dates ?? []).join("\n")} className="field-input font-mono-pending" />
+          <textarea name="no_class_dates" rows={4} defaultValue={(term?.no_class_dates ?? []).join("\n")} className="field-input" />
         </Field>
       </FormGrid>
       <Checkbox name="membership_required" label="Membership required to register" defaultChecked={term?.membership_required ?? true} />

@@ -23,7 +23,7 @@ export function CommitteeTabs() {
             <Link
               href={t.href}
               aria-current={active === t.href ? "page" : undefined}
-              className={`inline-flex min-h-11 items-center border-b-2 px-3 text-sm font-semibold ${
+              className={`inline-flex min-h-tap-target items-center border-b-2 px-3 text-sm font-semibold ${
                 active === t.href ? "border-navy text-navy" : "border-transparent text-muted hover:text-ink"
               }`}
             >

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from
 import { ATTENDANCE_STATUSES, formatRate, summarizeAttendance, type AttendanceStatus } from "@/lib/logic/attendance";
 import { attendanceQrPayload, randomToken, secondsLeft, tokenExpiry } from "@/lib/logic/tokens";
 import { closeAttendanceQr, markAllPresent, markAttendance, openAttendanceQr } from "../../../actions";
+import { Icon } from "@/components/icon";
 
 type Student = { enrollmentId: string; name: string };
 type Mark = { status: AttendanceStatus; note: string | null };
@@ -18,7 +19,7 @@ const ON_STYLE: Record<AttendanceStatus, string> = {
   absent: "bg-danger text-white border-danger",
   excused: "bg-navy text-white border-navy",
 };
-const OFF_STYLE = "bg-white text-ink border-control-border-pending hover:bg-navy-50";
+const OFF_STYLE = "bg-white text-ink border-line-control hover:bg-navy-50";
 
 export function AttendanceSheet({
   classId,
@@ -109,7 +110,8 @@ export function AttendanceSheet({
         </div>
         {bulk.message && (
           <p role="status" className="mt-1 text-sm font-semibold text-success">
-            ✓ {bulk.message}
+            <Icon name="check" className="mr-1 inline h-4 w-4 align-[-2px]" strokeWidth={3} />
+            {bulk.message}
           </p>
         )}
         {bulk.error && (
@@ -137,7 +139,7 @@ export function AttendanceSheet({
                     {st?.saving ? (
                       <span className="text-muted">Saving…</span>
                     ) : st?.error ? null : st?.savedAt ? (
-                      <span className="font-semibold text-success">✓ Saved</span>
+                      <span className="font-semibold text-success"><Icon name="check" className="mr-1 inline h-4 w-4 align-[-2px]" strokeWidth={3} />Saved</span>
                     ) : m ? (
                       <span className="text-muted">{LABELS[m.status]}</span>
                     ) : (
@@ -157,7 +159,7 @@ export function AttendanceSheet({
                         onClick={() => save(s.enrollmentId, status, m?.note ?? null)}
                         className={`min-h-14 rounded-pill border-2 px-2 text-base font-semibold transition-colors disabled:opacity-60 ${on ? ON_STYLE[status] : OFF_STYLE}`}
                       >
-                        {on ? "✓ " : ""}
+                        {on && <Icon name="check" className="mr-1 inline h-5 w-5 align-[-3px]" strokeWidth={3} />}
                         {LABELS[status]}
                       </button>
                     );
@@ -182,7 +184,7 @@ export function AttendanceSheet({
                         onSave={(note) => m && save(s.enrollmentId, m.status, note)}
                       />
                     ) : (
-                      <button type="button" className="min-h-11 text-sm font-semibold text-navy underline" onClick={() => setNoteOpen((c) => ({ ...c, [s.enrollmentId]: true }))}>
+                      <button type="button" className="min-h-tap-target text-sm font-semibold text-navy underline" onClick={() => setNoteOpen((c) => ({ ...c, [s.enrollmentId]: true }))}>
                         Add a note
                       </button>
                     )}

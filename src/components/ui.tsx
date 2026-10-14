@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Icon } from "@/components/icon";
 import { RetryButton } from "@/components/retry-button";
 
 export function cx(...parts: (string | false | null | undefined)[]) {
@@ -33,8 +34,9 @@ export function PageHeader({
     <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
         {back && (
-          <Link href={back.href} className="mb-2 inline-flex min-h-11 items-center text-sm font-semibold text-navy hover:underline">
-            ← {back.label}
+          <Link href={back.href} className="mb-2 inline-flex min-h-tap-target items-center text-sm font-semibold text-navy hover:underline">
+            <Icon name="arrow" className="h-4 w-4 rotate-180" />
+            {back.label}
           </Link>
         )}
         {kicker && <p className={cx("text-eyebrow uppercase", accentText[accent])}>{kicker}</p>}
@@ -84,15 +86,14 @@ const toneClass: Record<Tone, string> = {
   success: "bg-success-50 text-success border-success/20",
   ok: "bg-success-50 text-success border-success/20",
   danger: "bg-danger-50 text-danger border-danger/20",
-  // TODO(kit): warning-tint-pending and warning-ink-pending are the kit's warning tint and ink once connect-crm brand/tokens.json has them.
-  warning: "bg-warning-tint-pending text-warning-ink-pending border-warning-ink-pending/20",
+  warning: "bg-warning-50 text-warning-ink border-warning-200",
   caution: "bg-gold/30 text-brown-900 border-brown-900/20",
   muted: "bg-white text-muted border-line",
 };
 
 export function Badge({ tone = "neutral", children }: { tone?: Tone; children: ReactNode }) {
   return (
-    <span className={cx("inline-flex items-center whitespace-nowrap rounded-tag-pending border px-2.5 py-0.5 text-xs font-semibold", toneClass[tone])}>
+    <span className={cx("inline-flex items-center whitespace-nowrap rounded-tag border px-2.5 py-0.5 text-xs font-semibold", toneClass[tone])}>
       {children}
     </span>
   );
@@ -172,7 +173,7 @@ export function Field({
 
 export function Checkbox({ name, label, defaultChecked, value = "on", hint }: { name: string; label: string; defaultChecked?: boolean; value?: string; hint?: string }) {
   return (
-    <label className="flex min-h-11 cursor-pointer items-start gap-3 rounded-tile py-2">
+    <label className="flex min-h-tap-target cursor-pointer items-start gap-3 rounded-tile py-2">
       <input type="checkbox" name={name} value={value} defaultChecked={defaultChecked} className="mt-0.5 h-5 w-5 shrink-0 accent-navy" />
       <span>
         <span className="text-sm font-semibold">{label}</span>
@@ -199,12 +200,12 @@ export function Tabs({ tabs, active }: { tabs: { key: string; label: string; hre
                 href={t.href}
                 aria-current={on ? "page" : undefined}
                 className={cx(
-                  "inline-flex min-h-11 items-center gap-2 border-b-2 px-3 text-sm font-semibold",
+                  "inline-flex min-h-tap-target items-center gap-2 border-b-2 px-3 text-sm font-semibold",
                   on ? "border-navy text-navy" : "border-transparent text-muted hover:text-ink",
                 )}
               >
                 {t.label}
-                {t.count !== undefined && <span className="rounded-tag-pending bg-track px-2 text-xs text-ink">{t.count}</span>}
+                {t.count !== undefined && <span className="rounded-tag bg-track px-2 text-xs text-ink">{t.count}</span>}
               </Link>
             </li>
           );
@@ -225,19 +226,26 @@ export const td = "border-b border-line px-3 py-2 align-top text-sm";
 export function Notice({ tone = "navy", children }: { tone?: "navy" | "warning" | "danger" | "success"; children: ReactNode }) {
   const c = {
     navy: "border-navy/20 bg-navy-50 text-navy",
-    warning: "border-warning-ink-pending/20 bg-warning-tint-pending text-warning-ink-pending",
+    warning: "border-warning-200 bg-warning-50 text-warning-ink",
     danger: "border-danger/30 bg-danger-50 text-danger",
     success: "border-success/20 bg-success-50 text-success",
   }[tone];
-  return <div className={cx("rounded-tile border p-3 text-sm", c)}>{children}</div>;
+  if (tone !== "warning") return <div className={cx("rounded-tile border p-3 text-sm", c)}>{children}</div>;
+  // The kit's warning message: warning-50 fill, 1px warning-200 border, an alert icon in warning, warning-ink text.
+  return (
+    <div className={cx("flex items-start gap-2 rounded-tile border p-3 text-sm", c)}>
+      <Icon name="alert" className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+      <div className="min-w-0">{children}</div>
+    </div>
+  );
 }
 
 export function Details({ summary, children, open }: { summary: ReactNode; children: ReactNode; open?: boolean }) {
   return (
     <details open={open} className="group rounded-card border border-line bg-white">
-      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 px-4 py-2 font-semibold text-navy">
+      <summary className="flex min-h-tap-target cursor-pointer list-none items-center justify-between gap-2 px-4 py-2 font-semibold text-navy">
         <span>{summary}</span>
-        <span aria-hidden className="text-muted transition-transform group-open:rotate-90">›</span>
+        <Icon name="chevron" className="h-5 w-5 -rotate-90 text-muted transition-transform group-open:rotate-0" />
       </summary>
       <div className="border-t border-line p-4">{children}</div>
     </details>

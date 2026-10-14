@@ -2,11 +2,9 @@
 
 /*
  * The theme is the Weaver Brand Kit: brand-tokens.css is generated from brand/tokens.json (run `pnpm brand:sync`).
- * pending-kit-tokens.css holds the few tokens the kit is still adding (temporary, see that file). Write no colour values
- * here or in components: use the token classes (bg-navy, text-muted, border-line, rounded-card, ...).
+ * Write no colour values here or in components: use the token classes (bg-navy, text-muted, border-line-control, rounded-card, ...).
  */
 @import "./brand-tokens.css";
-@import "./pending-kit-tokens.css";
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -26,6 +24,14 @@ body {
   }
 }
 
+/* Placeholders are the kit's faint text (4.5:1 or more), never Tailwind's half-transparent text colour. */
+@layer base {
+  ::placeholder {
+    color: var(--color-faint);
+    opacity: 1;
+  }
+}
+
 /* Focus: a 2px solid navy outline, 2px offset (4px on buttons), visible on every control. */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--color-navy);
@@ -40,27 +46,31 @@ body {
   }
 }
 
-/* Form fields: at least the kit's tap target tall, 16px text so phones do not zoom in, a 3:1 control border. */
+/* Form fields (brand/components/Control): white, a 1px line-control border (3:1), radius-field, 16px text so phones do not zoom in.
+   control-primary (52px) on a phone, tap-target (48px) from tablets up: never lower, these are touch screens. */
 @utility field-input {
   display: block;
   width: 100%;
-  min-height: var(--spacing-tap-target);
-  border-radius: var(--radius-field-pending);
-  border: 1px solid var(--color-control-border-pending);
+  min-height: var(--spacing-control-primary);
+  border-radius: var(--radius-field);
+  border: 1px solid var(--color-line-control);
   background: var(--color-white);
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
   color: var(--color-ink);
+  @media (min-width: 640px) {
+    min-height: var(--spacing-tap-target);
+  }
   &:disabled {
-    background: var(--color-track);
+    background: var(--color-canvas);
     color: var(--color-muted);
   }
 }
 
-/* Buttons: pills, at least the kit's tap target tall, 16px bold. Styles follow brand/components/Button. */
+/* Buttons: pills, 16px bold; control-primary (52px) on a phone, tap-target (48px) from tablets up. Styles follow brand/components/Button. */
 @utility btn {
   display: inline-flex;
-  min-height: var(--spacing-tap-target);
+  min-height: var(--spacing-control-primary);
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -72,6 +82,9 @@ body {
   text-align: center;
   cursor: pointer;
   transition: background-color 150ms, border-color 150ms, filter 120ms;
+  @media (min-width: 640px) {
+    min-height: var(--spacing-tap-target);
+  }
   &:focus-visible {
     outline-offset: 4px;
   }

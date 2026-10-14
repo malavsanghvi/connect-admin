@@ -220,7 +220,7 @@ export default async function CommsPage({ searchParams }: { searchParams: Promis
                         <input type="datetime-local" name="closes_at" className="field-input" />
                       </Field>
                     </FormGrid>
-                    <label className="flex min-h-11 items-center gap-2 text-sm">
+                    <label className="flex min-h-tap-target items-center gap-2 text-sm">
                       <input type="checkbox" name="anonymous" className="h-5 w-5 accent-navy" /> Anonymous answers (no names stored)
                     </label>
                     <AudienceFields zones={d.options.zones} classes={d.options.classes} events={d.options.events} initial={{ all_members: true }} />
@@ -340,7 +340,7 @@ function InboxTab({
       <Card title="Inboxes">
         <ul className="space-y-1">
           <li>
-            <Link href="/comms?tab=inbox" className={`flex min-h-11 items-center justify-between rounded-tile px-2 ${!current ? "bg-navy-50 font-semibold" : ""}`}>
+            <Link href="/comms?tab=inbox" className={`flex min-h-tap-target items-center justify-between rounded-tile px-2 ${!current ? "bg-navy-50 font-semibold" : ""}`}>
               All inboxes <span className="text-xs">{threads.filter((t) => t.status !== "closed").length}</span>
             </Link>
           </li>
@@ -348,7 +348,7 @@ function InboxTab({
             const n = threads.filter((t) => t.inbox_id === i.id && t.status !== "closed").length;
             return (
               <li key={i.id}>
-                <Link href={`/comms?tab=inbox&inbox=${i.id}`} className={`flex min-h-11 items-center justify-between rounded-tile px-2 ${current?.id === i.id ? "bg-navy-50 font-semibold" : ""}`}>
+                <Link href={`/comms?tab=inbox&inbox=${i.id}`} className={`flex min-h-tap-target items-center justify-between rounded-tile px-2 ${current?.id === i.id ? "bg-navy-50 font-semibold" : ""}`}>
                   {i.name} <span className="text-xs">{n}</span>
                 </Link>
               </li>

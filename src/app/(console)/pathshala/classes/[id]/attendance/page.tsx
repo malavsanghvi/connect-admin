@@ -94,7 +94,7 @@ export default async function AttendancePage({
                 key={d}
                 href={`?date=${d}`}
                 aria-current={d === heldOn ? "date" : undefined}
-                className={`inline-flex min-h-11 items-center rounded-full border px-3 text-sm font-semibold ${d === heldOn ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
+                className={`inline-flex min-h-tap-target items-center rounded-full border px-3 text-sm font-semibold ${d === heldOn ? "border-navy bg-navy text-white" : "border-line bg-white text-navy"}`}
               >
                 {formatDate(d)}
               </Link>

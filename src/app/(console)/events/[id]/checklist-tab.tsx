@@ -10,6 +10,7 @@ import { getSupabase, load, rows, type Viewer } from "@/lib/session";
 import { ActionEditor } from "@/app/(console)/pathshala/committee/action-form";
 import { ActionRow, PHASE_LABEL } from "@/app/(console)/pathshala/committee/action-row";
 import { addLesson, pushLessonsToTemplate, removeLesson, setActionState } from "@/app/(console)/pathshala/committee/actions";
+import { Icon } from "@/components/icon";
 
 export async function ChecklistTab({ event, viewer }: { event: Tables<"events">; viewer: Viewer }) {
   const supabase = await getSupabase();
@@ -61,7 +62,7 @@ export async function ChecklistTab({ event, viewer }: { event: Tables<"events">;
                       eventName={null}
                       extra={
                         a.state !== "completed" && a.state !== "removed" ? (
-                          <ActionButton action={setActionState.bind(null, a.id)} fields={{ state: "completed" }} label="✓ Done" className="btn btn-success" />
+                          <ActionButton action={setActionState.bind(null, a.id)} fields={{ state: "completed" }} label={<><Icon name="check" className="h-5 w-5" strokeWidth={3} />Done</>} className="btn btn-success" />
                         ) : null
                       }
                     />

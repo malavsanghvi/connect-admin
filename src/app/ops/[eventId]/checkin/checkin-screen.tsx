@@ -16,6 +16,7 @@ import { extractTicketToken, randomToken } from "@/lib/logic/tokens";
 import { friendlyError } from "@/lib/result";
 import { CameraScanner } from "./camera-scanner";
 import { WalkInPanel } from "./walk-in-panel";
+import { Icon } from "@/components/icon";
 
 type Station = "entry" | "food" | "gifts";
 const STATIONS: { key: Station; label: string; verb: string; done: string }[] = [
@@ -411,7 +412,7 @@ export function CheckInScreen({
         </p>
       </div>
       {eventStatus !== "live" && (
-        <p className="rounded-tile bg-warning-tint-pending px-3 py-2 text-sm text-warning-ink-pending">This event isn&apos;t marked live yet — check-ins still work.</p>
+        <p className="rounded-tile bg-warning-50 px-3 py-2 text-sm text-warning-ink">This event isn&apos;t marked live yet — check-ins still work.</p>
       )}
 
       {/* Station switcher */}
@@ -442,7 +443,7 @@ export function CheckInScreen({
             notice.tone === "success"
               ? "border-success/30 bg-success-50 text-success"
               : notice.tone === "warning"
-                ? "border-warning-ink-pending/30 bg-warning-tint-pending text-warning-ink-pending"
+                ? "border-warning-200 bg-warning-50 text-warning-ink"
                 : notice.tone === "danger"
                   ? "border-danger/30 bg-danger-50 text-danger"
                   : "border-navy/20 bg-navy-50 text-navy"
@@ -500,19 +501,19 @@ export function CheckInScreen({
               enterKeyHint="go"
               placeholder="Scan or type ticket / member number"
               aria-label="Ticket or member code"
-              className="field-input font-mono-pending text-lg placeholder:font-sans"
+              className="field-input font-mono text-lg placeholder:font-sans"
             />
             <button type="submit" className="btn btn-primary min-w-20" disabled={!manual.trim()}>
               {busy ? "…" : "Go"}
             </button>
           </form>
           <div className="grid grid-cols-2 gap-2">
-            <button type="button" className="btn btn-secondary min-h-12" onClick={() => setCamera((c) => !c)}>
+            <button type="button" className="btn btn-secondary" onClick={() => setCamera((c) => !c)}>
               {camera ? "Stop camera" : "Use camera"}
             </button>
             <button
               type="button"
-              className="btn btn-secondary min-h-12"
+              className="btn btn-secondary"
               onClick={() => {
                 setWalkInName("");
                 setMode("walkin");
@@ -522,7 +523,7 @@ export function CheckInScreen({
               Walk-in by phone
             </button>
           </div>
-          <label className="flex min-h-11 items-center gap-3 text-sm">
+          <label className="flex min-h-tap-target items-center gap-3 text-sm">
             <input type="checkbox" checked={kiosk} onChange={(e) => setKiosk(e.target.checked)} className="h-5 w-5 accent-navy" />
             <span>
               <strong>Kiosk mode</strong> — {stationInfo.verb.toLowerCase()} the whole party on scan, no confirm step
@@ -551,10 +552,10 @@ export function CheckInScreen({
                     type="button"
                     aria-pressed={on}
                     onClick={() => setSelected((cur) => (cur.includes(p.id) ? cur.filter((x) => x !== p.id) : [...cur, p.id]))}
-                    className={`flex min-h-14 w-full items-center gap-3 rounded-tile border-2 px-3 py-2 text-left ${on ? "border-navy bg-navy-100" : "border-control-border-pending bg-white"}`}
+                    className={`flex min-h-14 w-full items-center gap-3 rounded-tile border-2 px-3 py-2 text-left ${on ? "border-navy bg-navy-100" : "border-line-control bg-white"}`}
                   >
-                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-chip border-2 text-lg font-bold ${on ? "border-navy bg-navy text-white" : "border-control-border-pending bg-white"}`}>
-                      {on ? "✓" : ""}
+                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-chip border-2 text-lg font-bold ${on ? "border-navy bg-navy text-white" : "border-line-control bg-white"}`}>
+                      {on && <Icon name="check" className="h-6 w-6" strokeWidth={3} />}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-base font-semibold">{p.name}</span>

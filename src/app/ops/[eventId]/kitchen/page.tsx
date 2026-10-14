@@ -133,7 +133,7 @@ export default async function KitchenPage({ params }: { params: Promise<{ eventI
                   <ActionButton action={setSlotStatus.bind(null, eventId, s.id)} fields={{ status: "now_serving" }} label="Start serving" className="btn btn-success min-h-14" />
                 )}
                 {canRun && s.status === "now_serving" && (
-                  <ActionButton action={setSlotStatus.bind(null, eventId, s.id)} fields={{ status: "done" }} label="Done" className="btn btn-secondary min-h-12" />
+                  <ActionButton action={setSlotStatus.bind(null, eventId, s.id)} fields={{ status: "done" }} label="Done" className="btn btn-secondary" />
                 )}
               </li>
             ))}
@@ -142,7 +142,7 @@ export default async function KitchenPage({ params }: { params: Promise<{ eventI
       </section>
       <section className="rounded-card border border-line bg-white p-4">
         <h2 className="mb-2 font-display text-xl font-semibold">Store orders due</h2>
-        {storeNote && <p className="mb-2 rounded-tile bg-warning-tint-pending p-2 text-sm text-warning-ink-pending">{storeNote}</p>}
+        {storeNote && <p className="mb-2 rounded-tile bg-warning-50 p-2 text-sm text-warning-ink">{storeNote}</p>}
         {windows.length === 0 ? (
           <p className="text-sm text-muted">No pickup windows for this event or today.</p>
         ) : (

@@ -120,7 +120,7 @@ export default async function EnrollmentsPage({ searchParams }: { searchParams: 
                                   </optgroup>
                                 </select>
                               </label>
-                              <label className="mt-1 flex min-h-11 items-center gap-2 text-sm">
+                              <label className="mt-1 flex min-h-tap-target items-center gap-2 text-sm">
                                 <input type="checkbox" name="over_capacity" className="h-5 w-5 accent-navy" /> Place even if full
                               </label>
                             </ActionForm>

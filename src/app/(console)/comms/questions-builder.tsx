@@ -51,7 +51,7 @@ export function QuestionsBuilder({ initial }: { initial: SurveyQuestion[] }) {
             </label>
           )}
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <label className="flex min-h-11 items-center gap-2 text-sm">
+            <label className="flex min-h-tap-target items-center gap-2 text-sm">
               <input type="checkbox" checked={q.required} onChange={(e) => update(i, { required: e.target.checked })} className="h-5 w-5 accent-navy" />
               Required
             </label>

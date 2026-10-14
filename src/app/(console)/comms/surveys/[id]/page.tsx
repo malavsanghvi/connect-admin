@@ -114,7 +114,7 @@ export default async function SurveyPage({ params }: { params: Promise<{ id: str
                   <input type="datetime-local" name="closes_at" defaultValue={toDateTimeLocal(s.closes_at, tz)} className="field-input" />
                 </Field>
               </FormGrid>
-              <label className="flex min-h-11 items-center gap-2 text-sm">
+              <label className="flex min-h-tap-target items-center gap-2 text-sm">
                 <input type="checkbox" name="anonymous" defaultChecked={s.anonymous} className="h-5 w-5 accent-navy" /> Anonymous answers
               </label>
               <AudienceFields zones={options.zones} classes={options.classes} events={options.events} initial={s.audience} />

@@ -93,7 +93,7 @@ export function WalkInPanel({
           Back to scanner
         </button>
       </div>
-      {!online && <p className="rounded-tile bg-warning-tint-pending p-3 text-sm text-warning-ink-pending">Walk-in registration needs a connection. Scans still work offline.</p>}
+      {!online && <p className="rounded-tile bg-warning-50 p-3 text-sm text-warning-ink">Walk-in registration needs a connection. Scans still work offline.</p>}
       {prefillName && <p className="text-sm">Registering <strong>{prefillName}</strong>, who had no RSVP.</p>}
       <form
         onSubmit={(e) => {
@@ -131,7 +131,7 @@ export function WalkInPanel({
                   Check in this party
                 </button>
               ) : (
-                <p className="mt-1 text-sm text-warning-ink-pending">This RSVP has no valid ticket — send them to the help desk.</p>
+                <p className="mt-1 text-sm text-warning-ink">This RSVP has no valid ticket — send them to the help desk.</p>
               )}
             </div>
           ))}
@@ -146,7 +146,7 @@ export function WalkInPanel({
                     const on = (picked[h.householdId] ?? []).includes(m.personId!);
                     return (
                       <li key={m.personId}>
-                        <label className="flex min-h-11 items-center gap-3">
+                        <label className="flex min-h-tap-target items-center gap-3">
                           <input
                             type="checkbox"
                             checked={on}
@@ -188,7 +188,7 @@ export function WalkInPanel({
       )}
 
       <details className="rounded-tile border border-line" open={Boolean(prefillName) || (lookup !== null && lookup.households.length === 0 && lookup.existing.length === 0)}>
-        <summary className="flex min-h-11 cursor-pointer items-center px-3 font-semibold text-navy">Register as a guest</summary>
+        <summary className="flex min-h-tap-target cursor-pointer items-center px-3 font-semibold text-navy">Register as a guest</summary>
         <div className="space-y-3 border-t border-line p-3">
           <label className="block">
             <span className="mb-1 block text-sm font-semibold">Party name</span>

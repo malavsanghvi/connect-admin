@@ -143,7 +143,7 @@ export default async function ClassPage({ params }: { params: Promise<{ id: stri
                             <Details summary="Move to another class">
                               <ActionForm action={placeEnrollment.bind(null, e.id)} submitLabel="Move" submitClassName="btn btn-primary">
                                 <Select name="class_id" required options={classOptions.filter((o) => o.value !== cls.id)} placeholder="Choose a class" />
-                                <label className="mt-2 flex min-h-11 items-center gap-2 text-sm">
+                                <label className="mt-2 flex min-h-tap-target items-center gap-2 text-sm">
                                   <input type="checkbox" name="over_capacity" className="h-5 w-5 accent-navy" /> Place even if full
                                 </label>
                               </ActionForm>

@@ -32,7 +32,7 @@ function GuideFields({ s }: { s: Tables<"guide_sections"> | null }) {
         </Field>
       </FormGrid>
       <Field label="Text (Markdown)" className="mt-3">
-        <textarea name="body_md" required rows={8} defaultValue={s?.body_md ?? ""} className="field-input font-mono-pending text-sm" />
+        <textarea name="body_md" required rows={8} defaultValue={s?.body_md ?? ""} className="field-input text-sm" />
       </Field>
       <div className="flex flex-wrap gap-x-6">
         <Checkbox name="public" label="Visible to guests" defaultChecked={s?.public ?? true} />

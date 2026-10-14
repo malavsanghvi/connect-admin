@@ -7,6 +7,7 @@ import { formatDate, formatDateTime } from "@/lib/format";
 import { getSupabase, load, requireViewer, rows } from "@/lib/session";
 import { decideSignoff } from "../actions";
 import { moduleLabels } from "@/lib/labels";
+import { Icon } from "@/components/icon";
 
 export const metadata: Metadata = { title: "Sign-offs" };
 
@@ -100,12 +101,12 @@ export default async function SignoffsPage({ searchParams }: { searchParams: Pro
                       <div className="w-full md:max-w-sm">
                         <ActionForm
                           action={decideSignoff.bind(null, s.id)}
-                          submitLabel="✓ Sign off"
-                          submitClassName="btn btn-success min-h-12 flex-1"
+                          submitLabel={<><Icon name="check" className="h-5 w-5" strokeWidth={3} />Sign off</>}
+                          submitClassName="btn btn-success flex-1"
                           pendingLabel="Saving…"
                           successMessage="Done."
                           extraButtons={
-                            <button type="submit" name="decision" value="needs_work" className="btn btn-danger min-h-12 flex-1">
+                            <button type="submit" name="decision" value="needs_work" className="btn btn-danger flex-1">
                               Needs work
                             </button>
                           }
