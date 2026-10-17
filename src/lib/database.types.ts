@@ -1601,6 +1601,81 @@ export type Database = {
         };
         Relationships: [];
       };
+      care_settings: {
+        Row: {
+          center_id: string;
+          thank_window_days: number;
+          first_gift_personal: boolean;
+          personal_from_cents: number | null;
+          count_fees: boolean;
+          thanks_from: string;
+          created_at: string;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          center_id: string;
+          thank_window_days?: number;
+          first_gift_personal?: boolean;
+          personal_from_cents?: number | null;
+          count_fees?: boolean;
+          thanks_from: string;
+          created_at?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          center_id?: string;
+          thank_window_days?: number;
+          first_gift_personal?: boolean;
+          personal_from_cents?: number | null;
+          count_fees?: boolean;
+          thanks_from?: string;
+          created_at?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [];
+      };
+      care_thanks: {
+        Row: {
+          id: string;
+          center_id: string;
+          payment_id: string;
+          gift_on: string;
+          due_on: string;
+          needs_personal: boolean;
+          opened_at: string;
+          set_aside_at: string | null;
+          set_aside_by: string | null;
+          set_aside_reason: string | null;
+        };
+        Insert: {
+          id?: string;
+          center_id: string;
+          payment_id: string;
+          gift_on: string;
+          due_on: string;
+          needs_personal?: boolean;
+          opened_at?: string;
+          set_aside_at?: string | null;
+          set_aside_by?: string | null;
+          set_aside_reason?: string | null;
+        };
+        Update: {
+          id?: string;
+          center_id?: string;
+          payment_id?: string;
+          gift_on?: string;
+          due_on?: string;
+          needs_personal?: boolean;
+          opened_at?: string;
+          set_aside_at?: string | null;
+          set_aside_by?: string | null;
+          set_aside_reason?: string | null;
+        };
+        Relationships: [];
+      };
       care_touches: {
         Row: {
           id: string;
@@ -13836,6 +13911,19 @@ export type Database = {
         };
         Returns: boolean;
       };
+      care_dashboard: {
+        Args: {
+          p_center: string;
+        };
+        Returns: Json;
+      };
+      care_health_facts: {
+        Args: {
+          p_center: string;
+          p_households: string[];
+        };
+        Returns: Json;
+      };
       care_holders: {
         Args: {
           p_center: string;
@@ -13849,6 +13937,12 @@ export type Database = {
         Returns: boolean;
       };
       care_household_card: {
+        Args: {
+          p_household: string;
+        };
+        Returns: Json;
+      };
+      care_household_thanks: {
         Args: {
           p_household: string;
         };
@@ -13882,6 +13976,34 @@ export type Database = {
           p_center: string;
         };
         Returns: boolean;
+      };
+      care_settings_get: {
+        Args: {
+          p_center: string;
+        };
+        Returns: Json;
+      };
+      care_thanks_counts: {
+        Args: {
+          p_center: string;
+        };
+        Returns: Json;
+      };
+      care_thanks_queue: {
+        Args: {
+          p_center: string;
+          p_filter?: string;
+          p_limit?: number;
+          p_offset?: number;
+        };
+        Returns: Json;
+      };
+      care_thanks_summary: {
+        Args: {
+          p_center: string;
+          p_days?: number;
+        };
+        Returns: Json;
       };
       care_view_centers: {
         Args: Record<PropertyKey, never>;
@@ -17179,6 +17301,12 @@ export type Database = {
         };
         Returns: undefined;
       };
+      reopen_care_thank: {
+        Args: {
+          p_thank: string;
+        };
+        Returns: undefined;
+      };
       reopen_platform_setup_step: {
         Args: {
           p_key: string;
@@ -17734,6 +17862,14 @@ export type Database = {
         };
         Returns: Json;
       };
+      save_care_settings: {
+        Args: {
+          p_center: string;
+          p_settings: Json;
+          p_last_30?: boolean;
+        };
+        Returns: Json;
+      };
       save_email_automation_wording: {
         Args: {
           p_center: string;
@@ -17926,6 +18062,13 @@ export type Database = {
         Args: {
           p_center: string;
           p_share: boolean;
+        };
+        Returns: undefined;
+      };
+      set_aside_care_thank: {
+        Args: {
+          p_thank: string;
+          p_reason: string;
         };
         Returns: undefined;
       };
