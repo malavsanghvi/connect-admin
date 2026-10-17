@@ -6052,6 +6052,9 @@ export type Database = {
           note: string | null;
           created_at: string;
           created_by: string | null;
+          asked_by_message_at: string | null;
+          asked_message_id: string | null;
+          requested_by_member_at: string | null;
         };
         Insert: {
           id?: string;
@@ -6066,6 +6069,9 @@ export type Database = {
           note?: string | null;
           created_at?: string;
           created_by?: string | null;
+          asked_by_message_at?: string | null;
+          asked_message_id?: string | null;
+          requested_by_member_at?: string | null;
         };
         Update: {
           id?: string;
@@ -6080,6 +6086,126 @@ export type Database = {
           note?: string | null;
           created_at?: string;
           created_by?: string | null;
+          asked_by_message_at?: string | null;
+          asked_message_id?: string | null;
+          requested_by_member_at?: string | null;
+        };
+        Relationships: [];
+      };
+      match_employer_asks: {
+        Row: {
+          id: string;
+          center_id: string;
+          person_id: string;
+          channel: string;
+          asked_at: string;
+          asked_by: string | null;
+          message_id: string | null;
+          queued: boolean;
+          reason: string | null;
+        };
+        Insert: {
+          id?: string;
+          center_id: string;
+          person_id: string;
+          channel: string;
+          asked_at?: string;
+          asked_by?: string | null;
+          message_id?: string | null;
+          queued: boolean;
+          reason?: string | null;
+        };
+        Update: {
+          id?: string;
+          center_id?: string;
+          person_id?: string;
+          channel?: string;
+          asked_at?: string;
+          asked_by?: string | null;
+          message_id?: string | null;
+          queued?: boolean;
+          reason?: string | null;
+        };
+        Relationships: [];
+      };
+      match_payments: {
+        Row: {
+          payment_id: string;
+          center_id: string;
+          claim_id: string;
+          person_id: string;
+          household_id: string;
+          employer_name: string;
+          recorded_by: string | null;
+          recorded_at: string;
+        };
+        Insert: {
+          payment_id: string;
+          center_id: string;
+          claim_id: string;
+          person_id: string;
+          household_id: string;
+          employer_name: string;
+          recorded_by?: string | null;
+          recorded_at?: string;
+        };
+        Update: {
+          payment_id?: string;
+          center_id?: string;
+          claim_id?: string;
+          person_id?: string;
+          household_id?: string;
+          employer_name?: string;
+          recorded_by?: string | null;
+          recorded_at?: string;
+        };
+        Relationships: [];
+      };
+      match_process_files: {
+        Row: {
+          id: string;
+          program_id: string;
+          kind: string;
+          caption: string;
+          storage_path: string;
+          content_type: string;
+          bytes: number;
+          sha256: string | null;
+          added_by: string | null;
+          created_at: string;
+          removed_at: string | null;
+          removed_by: string | null;
+          removed_reason: string | null;
+        };
+        Insert: {
+          id?: string;
+          program_id: string;
+          kind: string;
+          caption: string;
+          storage_path: string;
+          content_type: string;
+          bytes: number;
+          sha256?: string | null;
+          added_by?: string | null;
+          created_at?: string;
+          removed_at?: string | null;
+          removed_by?: string | null;
+          removed_reason?: string | null;
+        };
+        Update: {
+          id?: string;
+          program_id?: string;
+          kind?: string;
+          caption?: string;
+          storage_path?: string;
+          content_type?: string;
+          bytes?: number;
+          sha256?: string | null;
+          added_by?: string | null;
+          created_at?: string;
+          removed_at?: string | null;
+          removed_by?: string | null;
+          removed_reason?: string | null;
         };
         Relationships: [];
       };
@@ -13553,6 +13679,19 @@ export type Database = {
         };
         Returns: Json;
       };
+      add_match_process_file: {
+        Args: {
+          p_program: string;
+          p_path: string;
+          p_content_type: string;
+          p_bytes: number;
+          p_sha256: string;
+          p_kind: string;
+          p_caption: string;
+          p_reason: string;
+        };
+        Returns: string;
+      };
       add_message_suppression: {
         Args: {
           p_center: string;
@@ -13696,6 +13835,14 @@ export type Database = {
           p_person: string;
           p_program: string;
           p_note?: string;
+        };
+        Returns: Json;
+      };
+      ask_match_employers: {
+        Args: {
+          p_center: string;
+          p_people?: string[];
+          p_limit?: number;
         };
         Returns: Json;
       };
@@ -15784,12 +15931,34 @@ export type Database = {
         };
         Returns: boolean;
       };
+      match_ask_readable: {
+        Args: {
+          p_center: string;
+          p_person: string;
+        };
+        Returns: boolean;
+      };
       match_catch_list: {
         Args: {
           p_center: string;
           p_filter?: string;
           p_limit?: number;
           p_offset?: number;
+        };
+        Returns: Json;
+      };
+      match_claim_get: {
+        Args: {
+          p_center: string;
+          p_claim: string;
+        };
+        Returns: Json;
+      };
+      match_claim_message_preview: {
+        Args: {
+          p_center: string;
+          p_person: string;
+          p_program: string;
         };
         Returns: Json;
       };
@@ -15830,6 +15999,14 @@ export type Database = {
           p_person: string;
         };
         Returns: boolean;
+      };
+      match_employer_ask_list: {
+        Args: {
+          p_center: string;
+          p_limit?: number;
+          p_offset?: number;
+        };
+        Returns: Json;
       };
       match_employers_queue: {
         Args: {
@@ -16109,6 +16286,12 @@ export type Database = {
           p_center: string;
         };
         Returns: string[];
+      };
+      my_match_card: {
+        Args: {
+          p_center: string;
+        };
+        Returns: Json;
       };
       my_match_employer: {
         Args: {
@@ -17298,6 +17481,16 @@ export type Database = {
         };
         Returns: Json;
       };
+      record_match_payment: {
+        Args: {
+          p_center: string;
+          p_claim: string;
+          p_amount_cents: number;
+          p_received_on?: string;
+          p_note?: string;
+        };
+        Returns: Json;
+      };
       record_member_legal_answers: {
         Args: {
           p_center: string;
@@ -17460,6 +17653,13 @@ export type Database = {
         };
         Returns: undefined;
       };
+      remove_match_process_file: {
+        Args: {
+          p_file: string;
+          p_reason: string;
+        };
+        Returns: Json;
+      };
       remove_my_match_employer: {
         Args: {
           p_center: string;
@@ -17500,6 +17700,12 @@ export type Database = {
           p_items: string[];
         };
         Returns: undefined;
+      };
+      report_my_match_request: {
+        Args: {
+          p_center: string;
+        };
+        Returns: Json;
       };
       report_payment: {
         Args: {
@@ -18202,6 +18408,14 @@ export type Database = {
           p_vars: Json;
         };
         Returns: string;
+      };
+      send_match_claim_message: {
+        Args: {
+          p_center: string;
+          p_person: string;
+          p_program: string;
+        };
+        Returns: Json;
       };
       send_pledge_email: {
         Args: {
@@ -19028,6 +19242,13 @@ export type Database = {
           p_center: string;
         };
         Returns: Json;
+      };
+      undo_my_match_request: {
+        Args: {
+          p_center: string;
+          p_claim: string;
+        };
+        Returns: boolean;
       };
       undo_person_deceased: {
         Args: {
